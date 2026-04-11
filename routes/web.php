@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// AUTH ROUTES
+require __DIR__.'/auth.php';
+
 // STATIC PAGES ROUTES
 // TODO: Replace with dynamic routes and controllers when implementing functionality
 Route::view('/', 'pages.user.home')->name('home');
@@ -25,9 +28,3 @@ Route::view('/admin/orders', 'pages.admin.orders')->name('admin.orders');
 Route::view('/admin/orders/{id}', 'pages.admin.order_details')->name('admin.orders.show');
 Route::view('/admin/users', 'pages.admin.users')->name('admin.users');
 Route::view('/admin/users/{id}/edit', 'pages.admin.edit_user')->name('admin.users.edit');
-
-// AUTH ROUTES
-Route::view('/login', 'pages.auth.login')->name('login');
-Route::view('/register', 'pages.auth.register')->name('register');
-Route::view('/password/reset', 'pages.auth.passwords.email')->name('password.request');
-Route::view('/password/reset/{token}', 'pages.auth.passwords.reset')->name('password.reset');

@@ -12,8 +12,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <!-- User Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/user/styles.css') }}" />
+
+    <!-- Scripts -->
+    <script src="{{ asset('assets/js/user/main.js') }}"></script>
+    <script src="{{ asset('assets/js/user/cart.js') }}"></script>
 
     <!-- Additional Styles -->
     @stack('styles')
@@ -63,23 +67,23 @@
                     </li>
                     <li class="relative animate-fade-in-up delay-300">
                         <a href=""
-                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform block py-2 md:py-0 flex items-center">
+                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform py-2 md:py-0 flex items-center">
                             <i class="fa fa-shopping-cart text-lg"></i>
                             <span class="md:hidden ml-2">Cart</span>
                             <span id="cart-badge"
-                                class="w-5 h-5 absolute -top-2 -right-2 md:-top-2 md:-right-2 bg-red-500 text-sm text-white p-1 rounded-full hidden flex items-center justify-center animate-pulse">0</span>
+                                class="w-5 h-5 absolute -top-2 -right-2 md:-top-2 md:-right-2 bg-red-500 text-sm text-white p-1 rounded-full flex items-center justify-center animate-pulse">0</span>
                         </a>
                     </li>
                     <!-- Admin Dashboard Link (conditional) -->
                     <li class="animate-fade-in-up delay-500">
                         <a href=""
-                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform block py-2 md:py-0 flex items-center"><i
+                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform py-2 md:py-0 flex items-center"><i
                                 class="fa fa-user-gear text-lg"></i><span class="md:hidden ml-2">Admin Panel</span></a>
                     </li>
                     <!-- User Profile Link -->
                     <li class="animate-fade-in-up delay-700">
                         <a href=""
-                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform block py-2 md:py-0 flex items-center"><i
+                            class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform py-2 md:py-0 flex items-center"><i
                                 class="fa fa-user text-lg"></i><span class="md:hidden ml-2">Profile</span></a>
                     </li>
                     <!-- Logout Button -->
@@ -92,7 +96,7 @@
                         </form>
                     </li>
                     <li class="animate-fade-in-up delay-700">
-                        <a href=""
+                        <a href="{{ route('login') }}"
                             class="w-full md:w-auto bg-blue-600 text-sm text-white px-4 py-2 rounded-lg hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 transform inline-block">
                             <i class="fas fa-sign-in-alt mr-1"></i>Login
                         </a>
@@ -105,9 +109,6 @@
     <!-- Main Content -->
     @yield('content')
 
-    <!-- Scripts -->
-    <script src="{{ asset('assets/js/user/main.js') }}"></script>
-    <script src="{{ asset('assets/js/user/cart.js') }}"></script>
 
     <!-- Additional Scripts -->
     @stack('scripts')

@@ -13,13 +13,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ assets / css / auth / styles . css }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/auth/styles.css') }}" />
+
+    <!-- Scripts -->
+    <script src="{{ asset('assets/js/auth/main.js') }}"></script>
 
     <!-- Additional CSS will be inserted here -->
     @stack('styles')
 </head>
 
 <body class="auth-bg min-h-screen relative">
+    <!-- Toastr Notifications -->
+    @include('components.toastr')
+
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl float-animation"></div>
@@ -32,22 +38,10 @@
     <!-- Main Content -->
     <main class="min-h-screen flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="w-full max-w-md animate-scale-in">
-            <!-- Logo Section -->
-            <div class="text-center mb-8 animate-bounce-in">
-                <a href=""
-                    class="text-4xl font-bold text-white hover:text-blue-200 transition-colors duration-300 animate-fade-in-down mb-3 flex items-center justify-center">
-                    <i class="fas fa-store mr-2 text-blue-200"></i>E-Commerce
-                </a>
-                <p class="text-blue-100">@yield('title')</p>
-            </div>
-
             <!-- Content -->
             @yield('content')
         </div>
     </main>
-
-    <!-- Scripts -->
-    <script src="{{ assets / js / auth / scripts . js }}"></script>
 
     <!-- Additional Scripts will be inserted here -->
     @stack('scripts')

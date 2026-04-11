@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'E-Commerce Admin')</title>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ assets / css / admin / styles . css }}" />
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('assets/css/admin/styles.css') }}" />
+
+    <!-- Scripts -->
+    <script src="{{ asset('assets/js/admin/main.js') }}"></script>
 
     <!-- Additional CSS will be inserted here -->
     @stack('styles')
@@ -252,9 +255,6 @@
             @yield('content')
         </div>
     </main>
-
-    <!-- Scripts -->
-    <script src="{{ assets / js / admin / main . js }}"></script>
 
     <!-- Additional Scripts -->
     @stack('scripts')
