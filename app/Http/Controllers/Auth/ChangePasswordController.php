@@ -12,6 +12,7 @@ class ChangePasswordController extends Controller{
 
     public function __invoke(ChangePasswordReqeust $request){
         $user = User::find(Auth::id());
+
         if(!Hash::check($request->current_password, $user->password)){
             return back()->with('error', 'Current password incorrect!');
         }

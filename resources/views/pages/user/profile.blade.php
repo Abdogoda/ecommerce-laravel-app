@@ -102,18 +102,36 @@
                                 <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
                                 <input type="text" id="name" name="name" value="{{ Auth::user()->name }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('name')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email
                                     Address</label>
                                 <input type="email" id="email" name="email" value="{{ Auth::user()->email }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('email')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone
                                     Number</label>
                                 <input type="tel" id="phone" name="phone" value="{{ Auth::user()->phone }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('phone')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -121,17 +139,35 @@
                                 <label for="country" class="block text-sm font-medium text-gray-300 mb-2">Country</label>
                                 <input type="text" id="country" name="country" value="{{ Auth::user()->country }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('country')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="state" class="block text-sm font-medium text-gray-300 mb-2">State</label>
                                 <input type="text" id="state" name="state" value="{{ Auth::user()->state }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('state')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="city" class="block text-sm font-medium text-gray-300 mb-2">City</label>
                                 <input type="text" id="city" name="city" value="{{ Auth::user()->city }}"
                                     autocomplete="off"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('city')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="zip_code" class="block text-sm font-medium text-gray-300 mb-2">Zip
@@ -139,6 +175,12 @@
                                 <input type="text" id="zip_code" name="zip_code"
                                     value="{{ Auth::user()->zip_code }}" autocomplete="off"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                @error('zip_code')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div>
@@ -148,6 +190,12 @@
                                 class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-h-[100px] resize-none">
                                 {{ Auth::user()->address }}
                             </textarea>
+                            @error('address')
+                                <div class="text-red-300 text-sm mt-2 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                            @enderror
                         </div>
                         <div class="flex justify-end">
                             <button type="submit"
@@ -165,7 +213,8 @@
                             <i class="fas fa-lock mr-3 text-purple-400"></i>Change Password
                         </h3>
                     </div>
-                    <form action="#" method="POST" class="space-y-6">
+                    <form action="{{ route('password.change') }}" method="POST" class="space-y-6">
+                        @csrf
                         <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label for="current_password" class="block text-sm font-medium text-gray-300 mb-2">Current
@@ -179,6 +228,12 @@
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                @error('current_password')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="new_password" class="block text-sm font-medium text-gray-300 mb-2">New
@@ -192,6 +247,12 @@
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                @error('new_password')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                             <div>
                                 <label for="new_password_confirmation"
@@ -205,6 +266,12 @@
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                @error('new_password_confirmation')
+                                    <div class="text-red-300 text-sm mt-2 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="flex justify-end">

@@ -33,6 +33,12 @@ function initializeUserCommon() {
 
   // Initialize user-specific event listeners
   initializeUserEventListeners();
+
+  // Initialize tab switching based on localStorage
+  if (document.querySelector(".tab-content")) {
+    const activeTab = localStorage.getItem("activeTab") || document.querySelector(".tab-content").id;
+    switchTab(activeTab);
+  }
 }
 
 /**
