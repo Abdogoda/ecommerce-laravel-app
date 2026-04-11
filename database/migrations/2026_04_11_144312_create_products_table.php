@@ -11,17 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
             $table->text('description')->nullable();
 
             $table->string('slug')->unique();
-            $table->string('icon')->nullable();   // icon class or media path
-            $table->boolean('is_active')->default(true);
+            $table->decimal('price', 10, 2);
+            $table->unsignedInteger('stock')->default(0);
+            $table->foreignId('category_id')->nullable()->references('id')->on('categories');
 
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
             $table->timestamps();
+
         });
     }
 
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('products');
     }
 };
