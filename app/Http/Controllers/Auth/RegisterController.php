@@ -15,8 +15,7 @@ class RegisterController extends Controller{
 
         $user = User::create($validated);
 
-        // TODO: Send OTP to email for verification
-        // Mail::to($user->email)->send(new VerifyAccountMail($user->otp, $user->email));
+        $user->sendOneTimePassword();
 
         return redirect()->route('email.verify', $user->email)->with('success', 'Registration successful! Please verify your email.');
     }

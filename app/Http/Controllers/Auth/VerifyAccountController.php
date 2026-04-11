@@ -10,8 +10,9 @@ class VerifyAccountController extends Controller{
 
     public function __invoke(VerifyAccountRequest $request){
         $user = User::where('email', $request->email)->first();
-        if($user->otp != implode("", $request->otp)){
-            return back()->with('error', 'Invalid OTP or email address');
+        
+        if(!$user->consumeOneTimePassword(implode("", $request->otp))->isOk()){
+            return back()->with('error', 'Invalid OTP, please try again.');
         }
 
         $user->email_verified_at = now();
