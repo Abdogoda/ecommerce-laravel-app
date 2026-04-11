@@ -447,7 +447,7 @@
 
     <!-- Modals -->
     <div id="verifyAccountModal"
-        class="modal-overlay hidden fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50">
+        class="modal-overlay hidden fixed inset-0 bg-gray-900/80 backdrop-blur-sm justify-center items-center z-50">
         <div
             class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold mb-4 text-white flex items-center">
@@ -474,7 +474,7 @@
     </div>
 
     <div id="logoutOtherDevicesModal"
-        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm items-center justify-center z-50">
         <div
             class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
@@ -508,7 +508,7 @@
     </div>
 
     <div id="deleteAccountModal"
-        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm items-center justify-center z-50">
         <div
             class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold text-red-400 mb-4 flex items-center">

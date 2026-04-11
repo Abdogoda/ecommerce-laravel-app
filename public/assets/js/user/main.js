@@ -264,6 +264,7 @@ function openModal(modalId) {
     // Force reflow to ensure the modal is rendered before adding the show class
     modal.offsetHeight;
     modal.classList.add("show");
+    modal.classList.add("flex");
 
     // Prevent body scroll
     document.body.style.overflow = "hidden";
