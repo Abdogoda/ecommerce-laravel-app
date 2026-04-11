@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-4 mt-8 hidden">
+                    <div class="flex flex-wrap gap-4 mt-8">
                         <button onclick="openModal('changeShippingAddressModal')"
                             class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
                             <i class="fas fa-edit mr-2"></i>Change Shipping Address
