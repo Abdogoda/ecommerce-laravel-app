@@ -24,6 +24,9 @@
 </head>
 
 <body class="bg-gray-900 text-white">
+    <!-- Toastr Notifications -->
+    @include('components.toastr')
+
     <!-- Header -->
     <header class="bg-gray-800/95 backdrop-blur-sm py-6 px-6 animate-fade-in-down shadow-2xl sticky top-0 z-50">
         <div class="w-full md:max-w-7xl mx-auto flex justify-between items-center gap-3">

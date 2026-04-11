@@ -66,7 +66,7 @@
                             Remember me
                         </label>
                     </div>
-                    <a href="../auth/forgot-password.html"
+                    <a href="{{ route('password.request') }}"
                         class="text-sm text-blue-300 hover:text-blue-200 transition-colors duration-300 hover:underline">
                         Forgot password?
                     </a>

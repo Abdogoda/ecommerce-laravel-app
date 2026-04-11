@@ -18,12 +18,11 @@ class LoginController extends Controller{
         }
 
         if(!$user->email_verified_at){
-            // TODO: Send OTP to email for verification
-            // Mail::to($user->email)->send(new VerifyAccountMail($user->otp, $user->email));
+            $user->sendOneTimePassword();
             return redirect()->route('email.verify', $user->email)->with('warning', 'Please verify your email first!');
         }
 
         Auth::login($user);
-        return redirect()->intended('/profile')->with('success', 'You are in');
+        return redirect()->intended(route('home'))->with('success', 'Logged in successfully!');
     }
 }

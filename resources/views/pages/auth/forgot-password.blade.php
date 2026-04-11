@@ -13,7 +13,8 @@
 
         <!-- Forgot Password Form -->
         <div class="glass rounded-2xl p-8 shadow-2xl animate-fade-in-up" style="animation-delay: 0.3s">
-            <form action="#" method="POST" id="forgot-password-form" class="space-y-6">
+            <form action="{{ route('password.email') }}" method="POST" id="forgot-password-form" class="space-y-6">
+                @csrf
                 <div>
                     <label for="email" class="block text-sm font-semibold text-white mb-2">
                         <i class="fas fa-envelope mr-2 text-orange-300"></i>Email
@@ -22,10 +23,12 @@
                     <input type="email" id="email" name="email" autofocus autocomplete="email"
                         class="input-focus w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300"
                         placeholder="Enter your email address" required />
-                    <div id="email-error" class="text-red-300 text-sm mt-2 hidden flex items-center">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span></span>
-                    </div>
+                    @error('email')
+                        <div id="email-error" class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
 
                 <button type="submit"

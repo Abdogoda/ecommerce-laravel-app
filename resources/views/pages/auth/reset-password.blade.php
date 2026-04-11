@@ -13,21 +13,25 @@
 
         <!-- Reset Password Form -->
         <div class="glass rounded-2xl p-8 shadow-2xl animate-fade-in-up" style="animation-delay: 0.3s">
-            <form action="#" method="POST" id="reset-password-form" class="space-y-6">
-                <input type="hidden" name="token" value="sample-reset-token" />
+            <form action="{{ route('password.update') }}" method="POST" id="reset-password-form" class="space-y-6">
+                @csrf
+                <input type="hidden" name="token" value="{{ $token }}" />
 
                 <div>
                     <label for="email" class="block text-sm font-semibold text-white mb-2">
                         <i class="fas fa-envelope mr-2 text-purple-300"></i>Email
                         Address
                     </label>
-                    <input type="email" id="email" name="email" autofocus autocomplete="email"
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" autofocus
+                        autocomplete="email"
                         class="input-focus w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
                         placeholder="Enter your email address" required />
-                    <div id="email-error" class="text-red-300 text-sm mt-2 hidden flex items-center">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span></span>
-                    </div>
+                    @error('email')
+                        <div id="email-error" class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
 
                 <div>
@@ -44,22 +48,12 @@
                             <i class="fas fa-eye" id="password-toggle"></i>
                         </button>
                     </div>
-                    <!-- Password Strength Indicator -->
-                    <div class="mt-2">
-                        <div class="flex space-x-1">
-                            <div class="strength-bar flex-1 bg-gray-600" id="strength-1"></div>
-                            <div class="strength-bar flex-1 bg-gray-600" id="strength-2"></div>
-                            <div class="strength-bar flex-1 bg-gray-600" id="strength-3"></div>
-                            <div class="strength-bar flex-1 bg-gray-600" id="strength-4"></div>
+                    @error('password')
+                        <div id="password-error" class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
                         </div>
-                        <p class="text-xs text-white/60 mt-1" id="strength-text">
-                            Password strength
-                        </p>
-                    </div>
-                    <div id="password-error" class="text-red-300 text-sm mt-2 hidden flex items-center">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span></span>
-                    </div>
+                    @enderror
                 </div>
 
                 <div>
@@ -78,10 +72,12 @@
                             <i class="fas fa-eye" id="password_confirmation-toggle"></i>
                         </button>
                     </div>
-                    <div id="password_confirmation-error" class="text-red-300 text-sm mt-2 hidden flex items-center">
-                        <i class="fas fa-exclamation-triangle mr-1"></i>
-                        <span></span>
-                    </div>
+                    @error('password_confirmation')
+                        <div id="password_confirmation-error" class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
 
                 <button type="submit"

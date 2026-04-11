@@ -23,6 +23,9 @@
 </head>
 
 <body class="admin-bg text-white flex min-h-screen">
+    <!-- Toastr Notifications -->
+    @include('components.toastr')
+
     <!-- Sidebar -->
     <sidebar id="sidebar"
         class="glass w-64 min-h-screen fixed transition-all duration-300 transform -translate-x-full md:translate-x-0 z-50 border-r border-white/10 flex flex-col">
