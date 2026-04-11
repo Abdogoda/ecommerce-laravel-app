@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>0 - E-Commerce</title>
+    <title>@yield('title', 'E-Commerce')</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,11 +13,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <!-- User Styles -->
-    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="{{ asset('assets/css/user/styles.css') }}" />
 
-    <!-- Tailwind Configuration -->
-
-    <!-- Additional CSS will be inserted here -->
+    <!-- Additional Styles -->
+    @stack('styles')
 </head>
 
 <body class="bg-gray-900 text-white">
@@ -104,11 +103,14 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-full py-8 px-6">
-        <section class="w-full md:max-w-7xl md:px-0 mx-auto">
+    @yield('content')
 
-        </section>
-    </main>
+    <!-- Scripts -->
+    <script src="{{ asset('assets/js/user/main.js') }}"></script>
+    <script src="{{ asset('assets/js/user/cart.js') }}"></script>
+
+    <!-- Additional Scripts -->
+    @stack('scripts')
 </body>
 
 </html>

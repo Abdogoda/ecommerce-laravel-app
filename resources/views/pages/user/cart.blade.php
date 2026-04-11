@@ -1,226 +1,159 @@
 @extends('layouts.user-app')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-        <h1
-          class="text-5xl font-bold text-center mb-12 text-white animate-fade-in-up"
-        >
-          <i class="fas fa-shopping-cart mr-4 text-blue-400"></i>
-          <span
-            class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
-          >
-            Your Shopping Cart
-          </span>
-          <div
-            class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mt-4 rounded-full"
-          ></div>
-        </h1>
+    <main class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 px-6 py-16">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-center mb-12 text-white animate-fade-in-up">
+                <i class="fas fa-shopping-cart mr-4 text-blue-400"></i>
+                <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    Your Shopping Cart
+                </span>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mt-4 rounded-full"></div>
+            </h1>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <!-- Cart Items -->
-          <div class="lg:col-span-2 animate-fade-in-left">
-            <div id="cart-items" class="space-y-6">
-              <!-- Sample Cart Item 1 -->
-              <div
-                class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-4">
-                    <div class="relative overflow-hidden rounded-xl">
-                      <img
-                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                        alt="Premium Headphones"
-                        class="w-20 h-20 object-cover"
-                      />
-                      <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
-                      ></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Cart Items -->
+                <div class="lg:col-span-2 animate-fade-in-left">
+                    <div id="cart-items" class="space-y-6">
+                        <!-- Sample Cart Item 1 -->
+                        <div
+                            class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative overflow-hidden rounded-xl">
+                                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                                            alt="Premium Headphones" class="w-20 h-20 object-cover" />
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-white mb-1">
+                                            Premium Headphones
+                                        </h3>
+                                        <p class="text-gray-400 text-sm mb-2">
+                                            High-quality wireless headphones
+                                        </p>
+                                        <p class="text-2xl font-bold text-blue-400">$99.99</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2">
+                                        <button onclick="updateQuantity(1, -1)"
+                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
+                                            <i class="fas fa-minus text-xs"></i>
+                                        </button>
+                                        <span id="quantity-1"
+                                            class="text-lg font-semibold min-w-[2rem] text-center">1</span>
+                                        <button onclick="updateQuantity(1, 1)"
+                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <button onclick="removeFromCart(1)"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25">
+                                        <i class="fas fa-trash mr-2"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Cart Item 2 -->
+                        <div
+                            class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative overflow-hidden rounded-xl">
+                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                                            alt="Smart Watch Pro" class="w-20 h-20 object-cover" />
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-white mb-1">
+                                            Smart Watch Pro
+                                        </h3>
+                                        <p class="text-gray-400 text-sm mb-2">
+                                            Advanced fitness tracking
+                                        </p>
+                                        <p class="text-2xl font-bold text-purple-400">$149.99</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2">
+                                        <button onclick="updateQuantity(2, -1)"
+                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
+                                            <i class="fas fa-minus text-xs"></i>
+                                        </button>
+                                        <span id="quantity-2"
+                                            class="text-lg font-semibold min-w-[2rem] text-center">1</span>
+                                        <button onclick="updateQuantity(2, 1)"
+                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <button onclick="removeFromCart(2)"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25">
+                                        <i class="fas fa-trash mr-2"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty cart message (hidden by default) -->
+                        <div id="empty-cart" class="text-center text-gray-400 hidden py-12">
+                            <i class="fas fa-shopping-cart text-6xl text-gray-600 mb-4"></i>
+                            <p class="text-xl mb-4">Your cart is empty</p>
+                            <a href="../user/products.html"
+                                class="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 transform">
+                                <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                      <h3 class="text-xl font-semibold text-white mb-1">
-                        Premium Headphones
-                      </h3>
-                      <p class="text-gray-400 text-sm mb-2">
-                        High-quality wireless headphones
-                      </p>
-                      <p class="text-2xl font-bold text-blue-400">$99.99</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-4">
-                    <div
-                      class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2"
-                    >
-                      <button
-                        onclick="updateQuantity(1, -1)"
-                        class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center"
-                      >
-                        <i class="fas fa-minus text-xs"></i>
-                      </button>
-                      <span
-                        id="quantity-1"
-                        class="text-lg font-semibold min-w-[2rem] text-center"
-                        >1</span
-                      >
-                      <button
-                        onclick="updateQuantity(1, 1)"
-                        class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center"
-                      >
-                        <i class="fas fa-plus text-xs"></i>
-                      </button>
-                    </div>
-                    <button
-                      onclick="removeFromCart(1)"
-                      class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25"
-                    >
-                      <i class="fas fa-trash mr-2"></i>Remove
-                    </button>
-                  </div>
                 </div>
-              </div>
 
-              <!-- Sample Cart Item 2 -->
-              <div
-                class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-4">
-                    <div class="relative overflow-hidden rounded-xl">
-                      <img
-                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                        alt="Smart Watch Pro"
-                        class="w-20 h-20 object-cover"
-                      />
-                      <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
-                      ></div>
+                <!-- Cart Summary -->
+                <div class="lg:col-span-1 animate-fade-in-right">
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 sticky top-24">
+                        <h3 class="text-2xl font-semibold text-white mb-6 flex items-center">
+                            <i class="fas fa-receipt mr-3 text-green-400"></i>Order Summary
+                        </h3>
+
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                                <span class="text-gray-300">Subtotal:</span>
+                                <span class="text-white font-semibold" id="cart-subtotal">$249.98</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                                <span class="text-gray-300">Shipping:</span>
+                                <span class="text-green-400 font-semibold">Free</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                                <span class="text-gray-300">Tax:</span>
+                                <span class="text-white font-semibold">$25.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-3 border-t-2 border-blue-500">
+                                <span class="text-xl font-bold text-white">Total:</span>
+                                <span id="cart-total" class="text-2xl font-bold text-blue-400">$274.98</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <button id="clearCartButton" onclick="openModal('clearCartModal')"
+                                class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25">
+                                <i class="fas fa-trash mr-2"></i>Clear Cart
+                            </button>
+
+                            <a id="checkoutButton" href="checkout.html"
+                                class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-green-500/25 block text-center">
+                                <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+                            </a>
+
+                            <a href="../user/products.html"
+                                class="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg text-center block">
+                                <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                      <h3 class="text-xl font-semibold text-white mb-1">
-                        Smart Watch Pro
-                      </h3>
-                      <p class="text-gray-400 text-sm mb-2">
-                        Advanced fitness tracking
-                      </p>
-                      <p class="text-2xl font-bold text-purple-400">$149.99</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-4">
-                    <div
-                      class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2"
-                    >
-                      <button
-                        onclick="updateQuantity(2, -1)"
-                        class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center"
-                      >
-                        <i class="fas fa-minus text-xs"></i>
-                      </button>
-                      <span
-                        id="quantity-2"
-                        class="text-lg font-semibold min-w-[2rem] text-center"
-                        >1</span
-                      >
-                      <button
-                        onclick="updateQuantity(2, 1)"
-                        class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center"
-                      >
-                        <i class="fas fa-plus text-xs"></i>
-                      </button>
-                    </div>
-                    <button
-                      onclick="removeFromCart(2)"
-                      class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25"
-                    >
-                      <i class="fas fa-trash mr-2"></i>Remove
-                    </button>
-                  </div>
                 </div>
-              </div>
-
-              <!-- Empty cart message (hidden by default) -->
-              <div
-                id="empty-cart"
-                class="text-center text-gray-400 hidden py-12"
-              >
-                <i class="fas fa-shopping-cart text-6xl text-gray-600 mb-4"></i>
-                <p class="text-xl mb-4">Your cart is empty</p>
-                <a
-                  href="../user/products.html"
-                  class="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 transform"
-                >
-                  <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
-                </a>
-              </div>
             </div>
-          </div>
-
-          <!-- Cart Summary -->
-          <div class="lg:col-span-1 animate-fade-in-right">
-            <div
-              class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 sticky top-24"
-            >
-              <h3
-                class="text-2xl font-semibold text-white mb-6 flex items-center"
-              >
-                <i class="fas fa-receipt mr-3 text-green-400"></i>Order Summary
-              </h3>
-
-              <div class="space-y-4 mb-6">
-                <div
-                  class="flex justify-between items-center py-2 border-b border-gray-700"
-                >
-                  <span class="text-gray-300">Subtotal:</span>
-                  <span class="text-white font-semibold" id="cart-subtotal"
-                    >$249.98</span
-                  >
-                </div>
-                <div
-                  class="flex justify-between items-center py-2 border-b border-gray-700"
-                >
-                  <span class="text-gray-300">Shipping:</span>
-                  <span class="text-green-400 font-semibold">Free</span>
-                </div>
-                <div
-                  class="flex justify-between items-center py-2 border-b border-gray-700"
-                >
-                  <span class="text-gray-300">Tax:</span>
-                  <span class="text-white font-semibold">$25.00</span>
-                </div>
-                <div
-                  class="flex justify-between items-center py-3 border-t-2 border-blue-500"
-                >
-                  <span class="text-xl font-bold text-white">Total:</span>
-                  <span id="cart-total" class="text-2xl font-bold text-blue-400"
-                    >$274.98</span
-                  >
-                </div>
-              </div>
-
-              <div class="space-y-4">
-                <button
-                  id="clearCartButton"
-                  onclick="openModal('clearCartModal')"
-                  class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25"
-                >
-                  <i class="fas fa-trash mr-2"></i>Clear Cart
-                </button>
-
-                <a
-                  id="checkoutButton"
-                  href="checkout.html"
-                  class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-green-500/25 block text-center"
-                >
-                  <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
-                </a>
-
-                <a
-                  href="../user/products.html"
-                  class="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg text-center block"
-                >
-                  <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+    </main>
 @endsection

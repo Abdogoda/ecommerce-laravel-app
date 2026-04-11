@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>0 - E-Commerce Admin</title>
+    <title>@yield('title', 'E-Commerce Admin')</title>
 
-    <!-- Admin Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ assets / css / admin / styles . css }}" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
@@ -14,11 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <!-- Scripts -->
-    <!-- Admin Scripts -->
-    <script src="{{ assets / js / admin / main . js }}"></script>
 
     <!-- Additional CSS will be inserted here -->
+    @stack('styles')
 </head>
 
 <body class="admin-bg text-white flex min-h-screen">
@@ -251,9 +249,15 @@
 
         <!-- Page Content -->
         <div class="p-6 animate-fade-in">
-
+            @yield('content')
         </div>
     </main>
+
+    <!-- Scripts -->
+    <script src="{{ assets / js / admin / main . js }}"></script>
+
+    <!-- Additional Scripts -->
+    @stack('scripts')
 </body>
 
 </html>
