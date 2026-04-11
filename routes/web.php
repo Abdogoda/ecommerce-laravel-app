@@ -5,16 +5,8 @@ use Illuminate\Support\Facades\Route;
 // AUTH ROUTES
 require __DIR__.'/auth.php';
 
-// STATIC PAGES ROUTES
-// TODO: Replace with dynamic routes and controllers when implementing functionality
-Route::view('/', 'pages.user.home')->name('home');
-Route::view('/categories', 'pages.user.categories')->name('categories');
-Route::view('/products', 'pages.user.products')->name('products.index');
-Route::view('/products/{id}', 'pages.user.products')->name('products.show');
-Route::view('/cart', 'pages.user.cart')->name('cart');
-Route::view('/checkout', 'pages.user.checkout')->name('checkout');
-Route::view('/profile', 'pages.user.profile')->name('profile');
-Route::view('/order', 'pages.user.order')->name('order');
+// USER ROUTES
+require __DIR__.'/user.php';
 
 // ADMIN ROUTES
 Route::view('/admin', 'pages.admin.dashboard')->name('admin.dashboard');

@@ -16,27 +16,42 @@
             <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-gray-700/50 animate-fade-in-up">
                 <div class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
                     <div class="relative">
-                        <div
-                            class="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-4xl text-white font-bold shadow-2xl">
-                            JD
-                        </div>
+                        @if (Auth::user()->avatar)
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile Image"
+                                class="w-32 h-32 rounded-full object-cover border-2 border-blue-500">
+                        @else
+                            <div
+                                class="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-4xl text-white font-bold shadow-2xl">
+                                {{ substr(Auth::user()->name, 0, 2) }}
+                            </div>
+                        @endif
                         <button onclick="openModal('addImageModal')"
                             class="absolute -bottom-0 -right-0 bg-blue-500 hover:bg-blue-600 p-2 rounded-full text-white transition-colors">
                             <i class="fas fa-edit text-sm"></i>
                         </button>
                     </div>
                     <div class="text-center md:text-left">
-                        <h2 class="text-3xl font-bold text-white mb-2">John Doe</h2>
+                        <h2 class="text-3xl font-bold text-white mb-2">{{ Auth::user()->name }}</h2>
                         <p class="text-gray-400 mb-2">
-                            <i class="fas fa-envelope mr-2"></i>john@example.com
+                            <i class="fas fa-envelope mr-2"></i>{{ Auth::user()->email }}
                         </p>
                         <p class="text-gray-400 mb-4">
-                            <i class="fas fa-phone mr-2"></i>+1234567890
+                            <i class="fas fa-phone mr-2"></i>{{ Auth::user()->phone }}
                         </p>
                         <div class="flex justify-center md:justify-start space-x-2">
-                            <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">
-                                <i class="fas fa-check-circle mr-1"></i>Verified
-                            </span>
+                            @if (Auth::user()->email_verified_at)
+                                <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-check-circle mr-1"></i>Verified
+                                </span>
+                            @else
+                                <form action="{{ route('email.request', Auth::user()->email) }}" method="post">
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-xmark-circle mr-1"></i>Unverified
+                                    </button>
+                                </form>
+                            @endif
                             <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">
                                 <i class="fas fa-crown mr-1"></i>Premium
                             </span>
@@ -79,40 +94,50 @@
                             Profile
                         </h3>
                     </div>
-                    <form action="#" method="POST" class="space-y-6">
+                    <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
+                        @csrf
+                        @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                                <input type="text" id="name" name="name" value="John Doe"
+                                <input type="text" id="name" name="name" value="{{ Auth::user()->name }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email
                                     Address</label>
-                                <input type="email" id="email" name="email" value="john@example.com"
+                                <input type="email" id="email" name="email" value="{{ Auth::user()->email }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                             <div>
                                 <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone
                                     Number</label>
-                                <input type="tel" id="phone" name="phone" value="+1234567890"
+                                <input type="tel" id="phone" name="phone" value="{{ Auth::user()->phone }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div>
                                 <label for="country" class="block text-sm font-medium text-gray-300 mb-2">Country</label>
-                                <input type="text" id="country" name="country" value="United States"
+                                <input type="text" id="country" name="country" value="{{ Auth::user()->country }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                             <div>
                                 <label for="state" class="block text-sm font-medium text-gray-300 mb-2">State</label>
-                                <input type="text" id="state" name="state" value="California"
+                                <input type="text" id="state" name="state" value="{{ Auth::user()->state }}"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                             <div>
                                 <label for="city" class="block text-sm font-medium text-gray-300 mb-2">City</label>
-                                <input type="text" id="city" name="city" value="Los Angeles" autocomplete="off"
+                                <input type="text" id="city" name="city" value="{{ Auth::user()->city }}"
+                                    autocomplete="off"
+                                    class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                            </div>
+                            <div>
+                                <label for="zip_code" class="block text-sm font-medium text-gray-300 mb-2">Zip
+                                    Code</label>
+                                <input type="text" id="zip_code" name="zip_code"
+                                    value="{{ Auth::user()->zip_code }}" autocomplete="off"
                                     class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
                         </div>
@@ -121,7 +146,7 @@
                                 Details</label>
                             <textarea type="text" id="address" name="address" autocomplete="off"
                                 class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-h-[100px] resize-none">
-                              123 Main Street, Apt 4B
+                                {{ Auth::user()->address }}
                             </textarea>
                         </div>
                         <div class="flex justify-end">
@@ -357,7 +382,7 @@
     <div id="verifyAccountModal"
         class="modal-overlay hidden fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50">
         <div
-            class="modal-content bg-black/90 bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
+            class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold mb-4 text-white flex items-center">
                 <i class="fas fa-shield-check mr-3 text-blue-400"></i>
                 Verify Account?
@@ -384,7 +409,7 @@
     <div id="logoutOtherDevicesModal"
         class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
         <div
-            class="modal-content bg-black/90 bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
+            class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
                 <i class="fas fa-sign-out-alt mr-3"></i>
                 Confirm Logout
@@ -418,7 +443,7 @@
     <div id="deleteAccountModal"
         class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
         <div
-            class="modal-content bg-black/90 bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
+            class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50">
             <h3 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
                 <i class="fas fa-exclamation-triangle mr-3"></i>
                 Confirm Account Deletion
@@ -453,7 +478,7 @@
     <div id="addImageModal"
         class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
         <div
-            class="modal-content bg-black/90 bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50 animate-bounce-in transition-all duration-300">
+            class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50 animate-bounce-in transition-all duration-300">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold text-white">
                     <i class="fas fa-user-plus mr-2 text-blue-500"></i>

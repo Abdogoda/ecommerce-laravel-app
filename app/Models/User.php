@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\OneTimePasswords\Models\Concerns\HasOneTimePasswords;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'is_active'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'email_verified_at', 'is_active', 'country', 'state', 'city', 'zip_code', 'address'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

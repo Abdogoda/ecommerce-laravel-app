@@ -11,7 +11,13 @@ class UpdateProfileController extends Controller{
     
     public function __invoke(UpdateProfileReqeust $request){
         $user = User::find(Auth::id());
-        $user->update($request->validated());
+        $validated = $request->validated();
+
+        if($request->has('email') && $request->email !== $user->email){
+            $validated['email_verified_at'] = null;
+        }
+
+        $user->update($validated);
 
         return back()->with('success', 'Profile updated successfully');
     }
