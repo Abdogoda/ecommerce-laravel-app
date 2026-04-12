@@ -55,9 +55,9 @@ function openModal(id) {
     syncModalBodyScrollLock();
 
     // Focus first input if exists
-    const firstInput = modal.querySelector("input, textarea");
+    const firstInput = modal.querySelector("input[type='text'], input[type='email'], input[type='search'], input[type='password'], textarea, select");
     if (firstInput) {
-      setTimeout(() => firstInput.focus(), 100);
+      setTimeout(() => firstInput.focus(), 50);
     }
   }
 }

@@ -15,6 +15,11 @@ enum PermissionEnum: string
     case ACTIVATE_USERS = 'activate users';
     case DEACTIVATE_USERS = 'deactivate users';
 
+    case VIEW_ROLES = 'view roles';
+    case CREATE_ROLES = 'create roles';
+    case EDIT_ROLES = 'edit roles';
+    case DELETE_ROLES = 'delete roles';
+
     case VIEW_PRODUCTS = 'view products';
     case CREATE_PRODUCTS = 'create products';
     case EDIT_PRODUCTS = 'edit products';

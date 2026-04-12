@@ -10,7 +10,7 @@
                 </h1>
                 <div class="flex items-center space-x-4">
                     <div id="breadcrumb" class="text-sm text-gray-400">
-                        <a href="../dashboard.html" class="text-gray-400 hover:underline">Admin</a>
+                        <a href="{{ route('admin.dashboard') }}" class="text-gray-400 hover:underline">Admin</a>
                         <i class="fas fa-chevron-right mx-2"></i>
                         <span class="text-white">Categories</span>
                     </div>

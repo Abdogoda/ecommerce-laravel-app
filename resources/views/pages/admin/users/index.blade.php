@@ -12,7 +12,7 @@
                         </h1>
                         <div class="flex items-center space-x-4">
                             <div id="breadcrumb" class="text-sm text-gray-400">
-                                <a href="../dashboard.html" class="text-gray-400 hover:underline">Admin</a>
+                                <a href="{{ route('admin.dashboard') }}" class="text-gray-400 hover:underline">Admin</a>
                                 <i class="fas fa-chevron-right mx-2"></i>
                                 <span class="text-white">Users</span>
                             </div>
@@ -391,7 +391,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-3">Assign Roles</label>
                         @forelse ($roles as $role)
-                            <div class="space-y-3">
+                            <div class="space-y-3 mb-3">
                                 <label
                                     class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
                                     <input type="checkbox" id="role{{ $role->id }}" name="roles[]"
@@ -443,14 +443,32 @@
             <div
                 class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
                 <div>
-                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 mb-4">
-                        <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center mr-3">
+                                <i class="fas fa-trash text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Delete User</h3>
+                        </div>
+                        <button onclick="closeModal('deleteModal')" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    <h2 class="text-center text-lg font-bold text-white mb-2">Delete User</h2>
-                    <p class="text-center text-gray-300 mb-6" id="deleteMessage">
-                        Are you sure you want to delete this user? This action cannot be
-                        undone.
-                    </p>
+
+                    <div class="mb-6">
+                        <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+                                <p class="text-red-400 font-medium">
+                                    Warning: This action cannot be undone!
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300" id="deleteMessage">
+                            Are you sure you want to delete this user?
+                        </p>
+                    </div>
 
                     <form method="POST">
                         @method('DELETE')
@@ -466,7 +484,7 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="flex justify-center space-x-3">
+                        <div class="flex justify-end space-x-3">
                             <button type="button" onclick="closeModal('deleteModal')"
                                 class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
                                 Cancel

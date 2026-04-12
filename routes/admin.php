@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Enums\PermissionEnum;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
@@ -18,6 +19,15 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::delete('/{user}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_USERS->value]);
     });
 
+    // Role management routes
+    Route::controller(RoleController::class)->middleware(['can:'.PermissionEnum::VIEW_ROLES->value])->prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware(['can:'.PermissionEnum::CREATE_ROLES->value]);
+        Route::put('/{role}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
+        Route::put('/{role}/permissions', 'updatePermissions')->name('updatePermissions')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
+        Route::delete('/{role}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ROLES->value]);
+    });
+
     Route::view('products', 'pages.admin.products')->name('products.index');
     Route::view('products/create', 'pages.admin.create_product')->name('products.create');
     Route::view('products/{id}/edit', 'pages.admin.edit_product')->name('products.edit');
@@ -26,7 +36,6 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
     Route::view('categories/{id}/edit', 'pages.admin.edit_category')->name('categories.edit');
     Route::view('orders', 'pages.admin.orders')->name('orders.index');
     Route::view('orders/{id}', 'pages.admin.order_details')->name('orders.show');
-    Route::view('roles', 'pages.admin.roles')->name('roles.index');
     Route::view('messages', 'pages.admin.messages')->name('messages.index');
     Route::view('profile', 'pages.admin.profile')->name('profile');
 });
