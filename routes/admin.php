@@ -14,6 +14,7 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::post('/', 'store')->name('store')->middleware(['can:'.PermissionEnum::CREATE_USERS->value]);
         Route::get('/{user}/edit', 'edit')->name('edit')->middleware(['can:'.PermissionEnum::EDIT_USERS->value]);
         Route::put('/{user}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_USERS->value]);
+        Route::put('/{user}/roles', 'assignRole')->name('assignRole')->middleware(['can:'.PermissionEnum::ASSIGN_ROLES->value]);
         Route::delete('/{user}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_USERS->value]);
     });
 

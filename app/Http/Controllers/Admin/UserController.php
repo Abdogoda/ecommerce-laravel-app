@@ -79,6 +79,11 @@ class UserController extends Controller
     public function assignRole(SyncUserRolesRequest $request, User $user)
     {
         $validated = $request->validated();
+
+        if (!isset($validated['roles']) || empty($validated['roles'])) {
+            $validated['roles'] = [];
+        }
+        
         $user->syncRoles($validated['roles']);
         
         return redirect()->route('admin.users.index')->with('success', 'User roles updated successfully.');

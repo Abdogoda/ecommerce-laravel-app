@@ -171,7 +171,7 @@
                                     @endcan
                                     @can(\App\Enums\PermissionEnum::ASSIGN_ROLES->value)
                                         <button
-                                            onclick="openRoleModal({{ $user->id }}, [{{ implode(',', $user->roles->pluck('id')->toArray()) }}])"
+                                            onclick="openRoleModal({{ $user->id }}, {{ $user->roles->pluck('id')->toJson() }})"
                                             class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
                                             title="Change Roles">
                                             <i class="fas fa-user-shield text-sm"></i>
@@ -368,90 +368,76 @@
         </div>
     @endcan
 
-    <!-- Role Management Modal -->
-    <div id="roleModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
-        <div
-            class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white">
-                    <i class="fas fa-user-shield mr-2 text-purple-500"></i>
-                    Change User Roles
-                </h3>
-                <button onclick="closeModal('roleModal')"
-                    class="text-gray-400 hover:text-white text-xl transition-colors">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <form id="roleForm" class="space-y-4">
-                <input type="hidden" id="roleUserId" name="user_id" />
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-3">Assign Roles</label>
-                    <div class="space-y-3">
-                        <label
-                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
-                            <input type="checkbox" id="role1" name="roles[]" value="1"
-                                class="w-4 h-4 text-red-600 bg-gray-800 border-gray-600 rounded focus:ring-red-500" />
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-crown text-red-500"></i>
-                                <span class="text-white font-medium">Admin</span>
-                            </div>
-                            <span class="ml-auto text-xs text-gray-400">Full system access</span>
-                        </label>
-
-                        <label
-                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
-                            <input type="checkbox" id="role2" name="roles[]" value="2"
-                                class="w-4 h-4 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500" />
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-user text-blue-500"></i>
-                                <span class="text-white font-medium">User</span>
-                            </div>
-                            <span class="ml-auto text-xs text-gray-400">Basic user access</span>
-                        </label>
-
-                        <label
-                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
-                            <input type="checkbox" id="role3" name="roles[]" value="3"
-                                class="w-4 h-4 text-yellow-600 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" />
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-user-tie text-yellow-500"></i>
-                                <span class="text-white font-medium">Manager</span>
-                            </div>
-                            <span class="ml-auto text-xs text-gray-400">Management access</span>
-                        </label>
-                    </div>
+    @can(\App\Enums\PermissionEnum::ASSIGN_ROLES->value)
+        <!-- Role Management Modal -->
+        <div id="roleModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">
+                        <i class="fas fa-user-shield mr-2 text-purple-500"></i>
+                        Change User Roles
+                    </h3>
+                    <button onclick="closeModal('roleModal')"
+                        class="text-gray-400 hover:text-white text-xl transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
 
-                <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                    <div class="flex items-start space-x-2">
-                        <i class="fas fa-exclamation-triangle text-yellow-500 mt-0.5"></i>
-                        <div class="text-sm text-yellow-200">
-                            <p class="font-medium">Important:</p>
-                            <p>
-                                Changing roles will immediately affect user permissions. Make
-                                sure the user should have access to the selected roles.
-                            </p>
+                <form id="roleForm" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-3">Assign Roles</label>
+                        @forelse ($roles as $role)
+                            <div class="space-y-3">
+                                <label
+                                    class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
+                                    <input type="checkbox" id="role{{ $role->id }}" name="roles[]"
+                                        value="{{ $role->name }}"
+                                        class="w-4 h-4 text-red-600 bg-gray-800 border-gray-600 rounded focus:ring-red-500" />
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-white font-medium">{{ $role->name }}</span>
+                                    </div>
+                                    <span class="ml-auto text-xs text-gray-400">{{ $role->permissions->count() }}
+                                        permissions</span>
+                                </label>
+                            </div>
+                        @empty
+                            <p class="text-gray-500 text-sm">No roles available. Please create roles first.</p>
+                        @endforelse
+                    </div>
+
+                    <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mt-0.5"></i>
+                            <div class="text-sm text-yellow-200">
+                                <p class="font-medium">Important:</p>
+                                <p>
+                                    Changing roles will immediately affect user permissions. Make
+                                    sure the user should have access to the selected roles.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="closeModal('roleModal')"
-                        class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
-                        <i class="fas fa-save mr-2"></i>
-                        Update Roles
-                    </button>
-                </div>
-            </form>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('roleModal')"
+                            class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>
+                            Update Roles
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    @endcan
 
-    @can('delete users')
+    @can(\App\Enums\PermissionEnum::DELETE_USERS->value)
         <!-- Delete User Confirmation Modal -->
         <div id="deleteModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
             <div
@@ -517,16 +503,14 @@
 
         // Open Role Modal
         function openRoleModal(userId, userRoles) {
-            document.getElementById("roleUserId").value = userId;
+            document.getElementById("roleForm").action = `/admin/users/${userId}/roles`;
 
-            // Clear all checkboxes
             document
                 .querySelectorAll('input[name="roles[]"]')
                 .forEach((checkbox) => {
                     checkbox.checked = false;
                 });
 
-            // Check user's current roles
             userRoles.forEach((roleId) => {
                 const checkbox = document.getElementById("role" + roleId);
                 if (checkbox) {
