@@ -56,7 +56,7 @@
                     <ul class="space-y-1">
                         <!-- Dashboard -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.dashboard') }}"
                                 class="sidebar-item active flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-chart-line text-blue-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -66,7 +66,7 @@
 
                         <!-- Users Management -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.users.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-users text-green-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -76,7 +76,7 @@
 
                         <!-- Roles -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.roles.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-user-shield text-purple-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -94,7 +94,7 @@
                     <ul class="space-y-1">
                         <!-- Categories -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.categories.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-tags text-yellow-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -104,7 +104,7 @@
 
                         <!-- Products -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.products.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-box text-orange-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -122,7 +122,7 @@
                     <ul class="space-y-1">
                         <!-- Orders -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.orders.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-shopping-cart text-red-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -132,7 +132,7 @@
 
                         <!-- Messages -->
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.messages.index') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -147,7 +147,7 @@
                 <div class="border-t border-white/10 pt-4">
                     <ul class="space-y-1">
                         <li>
-                            <a href=""
+                            <a href="{{ route('admin.profile') }}"
                                 class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-user-circle text-indigo-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
@@ -155,7 +155,7 @@
                             </a>
                         </li>
                         <li>
-                            <form method="POST" action="#" class="w-full">
+                            <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 <button type="submit"
                                     class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-red-400 group w-full text-left">
                                     <i
@@ -181,7 +181,7 @@
                     <div class="block md:hidden animate-bounce-in">
                         <div class="flex items-center space-x-3">
                             <div>
-                                <a href=""
+                                <a href="{{ route('admin.dashboard') }}"
                                     class="text-xl font-bold text-white hover:text-purple-600 transition-colors">
                                     E-Commerce
                                 </a>
@@ -220,13 +220,14 @@
                     </button>
 
                     <!-- User Profile -->
-                    <a href="" title="Profile" class="flex items-center space-x-2 glass px-3 py-2 rounded-xl">
+                    <a href="{{ route('admin.profile') }}" title="Profile"
+                        class="flex items-center space-x-2 glass px-3 py-2 rounded-xl">
                         <div
                             class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                            Admin User
+                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                         </div>
                         <div class="hidden sm:block">
-                            <p class="text-sm font-medium text-white">Admin User</p>
+                            <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
                             <p class="text-xs text-gray-400">Administrator</p>
                         </div>
                     </a>
