@@ -78,12 +78,14 @@
                         </a>
                     </li>
                     @auth
-                        <!-- Admin Dashboard Link (conditional) -->
-                        <li class="animate-fade-in-up delay-500">
-                            <a href="" title="Admin Dashboard"
-                                class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform py-2 md:py-0 flex items-center"><i
-                                    class="fa fa-user-gear text-lg"></i><span class="md:hidden ml-2">Admin Panel</span></a>
-                        </li>
+                        @can('view dashboard')
+                            <!-- Admin Dashboard Link (conditional) -->
+                            <li class="animate-fade-in-up delay-500">
+                                <a href="{{ route('admin.dashboard') }}" title="Admin Dashboard"
+                                    class="hover:text-blue-400 transition-all duration-300 hover:scale-105 transform py-2 md:py-0 flex items-center"><i
+                                        class="fa fa-user-gear text-lg"></i><span class="md:hidden ml-2">Admin Panel</span></a>
+                            </li>
+                        @endcan
                         <!-- User Profile Link -->
                         <li class="animate-fade-in-up delay-700">
                             <a href="{{ route('profile') }}" title="User Profile"

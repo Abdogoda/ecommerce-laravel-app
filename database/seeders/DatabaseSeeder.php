@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class
         ]);
 
-        // Create a Super Admin user
+        // Create a Admin user
         $superAdmin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
-            ['name' => 'Super Admin', 'password' => bcrypt('123456789'), 'email_verified_at' => now()]
+            ['name' => 'Admin Account', 'password' => bcrypt('admin'), 'email_verified_at' => now()]
         );
-        $superAdmin->assignRole('Super Admin');
-        $this->command->info('  Super Admin user created with email: admin@gmail.com');
+        $superAdmin->assignRole('Admin');
+        $this->command->info('  Admin user created with email: admin@gmail.com');
     }
 }
