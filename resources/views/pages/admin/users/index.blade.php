@@ -170,14 +170,15 @@
                                         </button>
                                     @endcan
                                     @can(\App\Enums\PermissionEnum::ASSIGN_ROLES->value)
-                                        <button onclick="openRoleModal(1, [1, 2])"
+                                        <button
+                                            onclick="openRoleModal({{ $user->id }}, [{{ implode(',', $user->roles->pluck('id')->toArray()) }}])"
                                             class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
                                             title="Change Roles">
                                             <i class="fas fa-user-shield text-sm"></i>
                                         </button>
                                     @endcan
                                     @can(\App\Enums\PermissionEnum::DELETE_USERS->value)
-                                        <button onclick="openDeleteModal(1, 'John Doe')"
+                                        <button onclick="openDeleteModal({{ $user->id }}, '{{ $user->name }}')"
                                             class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
                                             title="Delete User">
                                             <i class="fas fa-trash text-sm"></i>
@@ -450,33 +451,51 @@
         </div>
     </div>
 
-    <!-- Delete User Confirmation Modal -->
-    <div id="deleteModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
-        <div
-            class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
-            <div class="text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 mb-4">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2">Delete User</h3>
-                <p class="text-gray-300 mb-6" id="deleteMessage">
-                    Are you sure you want to delete this user? This action cannot be
-                    undone.
-                </p>
-                <div class="flex justify-center space-x-3">
-                    <button onclick="closeModal('deleteModal')"
-                        class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
-                        Cancel
-                    </button>
-                    <button onclick="confirmDelete()" class="btn-danger px-6 py-2 rounded-lg text-white font-medium"
-                        id="confirmDeleteBtn">
-                        <i class="fas fa-trash mr-2"></i>
-                        Delete User
-                    </button>
+    @can('delete users')
+        <!-- Delete User Confirmation Modal -->
+        <div id="deleteModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+                <div>
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                    </div>
+                    <h2 class="text-center text-lg font-bold text-white mb-2">Delete User</h2>
+                    <p class="text-center text-gray-300 mb-6" id="deleteMessage">
+                        Are you sure you want to delete this user? This action cannot be
+                        undone.
+                    </p>
+
+                    <form method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <div class="mb-6">
+                            <input type="password" name="password" required autofocus
+                                placeholder="Enter your password to confirm deletion"
+                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300" />
+                            @error('password')
+                                <div class="text-red-300 text-sm mt-2 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="flex justify-center space-x-3">
+                            <button type="button" onclick="closeModal('deleteModal')"
+                                class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn-danger px-6 py-2 rounded-lg text-white font-medium"
+                                id="confirmDeleteBtn">
+                                <i class="fas fa-trash mr-2"></i>
+                                Delete User
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+    @endcan
 @endsection
 
 @push('scripts')
@@ -493,6 +512,7 @@
             document.getElementById("editUserForm").action = `/admin/users/${userId}`;
 
             openModal("editUserModal");
+            document.getElementById("edit_user_name").focus();
         }
 
         // Open Role Modal
@@ -519,13 +539,11 @@
 
         // Open Delete Modal
         function openDeleteModal(userId, userName) {
-            userToDelete = {
-                id: userId,
-                name: userName
-            };
+            document.getElementById("confirmDeleteBtn").formAction = `/admin/users/${userId}`;
             document.getElementById("deleteMessage").textContent =
                 `Are you sure you want to delete "${userName}"? This action cannot be undone.`;
             openModal("deleteModal");
+            document.querySelector("#deleteModal input[name='password']").focus();
         }
     </script>
 @endpush

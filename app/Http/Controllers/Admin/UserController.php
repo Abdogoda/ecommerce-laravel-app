@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\SyncUserRolesRequest;
 use App\Http\Requests\Admin\Users\CreateUserRequest;
 use App\Http\Requests\Admin\Users\UpdateUserRequest;
+use App\Http\Requests\PasswordRequiredRequest;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -69,7 +70,7 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function destroy(PasswordRequiredRequest $request, User $user)
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
