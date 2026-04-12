@@ -24,6 +24,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Enhance interactivity
   enhanceInteractivity();
+
+  // Randomly assign color classes
+  const randomColorClasses = document.querySelectorAll(".random-color-class");
+  randomColorClasses.forEach((element) => {
+    const colorClass = getRandomColorClass();
+    element.classList.add(...colorClass.split(" "));
+  });
 });
 
 // Modal functions
@@ -43,6 +50,7 @@ function openModal(id) {
   const modal = document.getElementById(id);
   if (modal) {
     modal.classList.remove("hidden");
+    modal.classList.add("flex");
     modal.classList.add("animate-fade-in");
     syncModalBodyScrollLock();
 
@@ -58,6 +66,7 @@ function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) {
     modal.classList.add("hidden");
+    modal.classList.remove("flex");
     modal.classList.remove("animate-fade-in");
     syncModalBodyScrollLock();
   }
@@ -370,4 +379,19 @@ function togglePassword(inputId) {
     icon.classList.remove("fa-eye-slash");
     icon.classList.add("fa-eye");
   }
+}
+
+// Function to return a random bg and text color class
+function getRandomColorClass() {
+  const colors = [
+    "bg-red-500/20 text-red-400",
+    "bg-green-500/20 text-green-400",
+    "bg-blue-500/20 text-blue-400",
+    "bg-yellow-500/20 text-yellow-400",
+    "bg-purple-500/20 text-purple-400",
+    "bg-pink-500/20 text-pink-400",
+    "bg-indigo-500/20 text-indigo-400",
+    "bg-gray-500/20 text-gray-400",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
 }

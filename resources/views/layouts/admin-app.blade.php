@@ -57,7 +57,7 @@
                         <!-- Dashboard -->
                         <li>
                             <a href="{{ route('admin.dashboard') }}"
-                                class="sidebar-item active flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-chart-line text-blue-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Dashboard</span>
@@ -67,7 +67,7 @@
                         <!-- Users Management -->
                         <li>
                             <a href="{{ route('admin.users.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-users text-green-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Users</span>
@@ -77,7 +77,7 @@
                         <!-- Roles -->
                         <li>
                             <a href="{{ route('admin.roles.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.roles.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-user-shield text-purple-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Roles</span>
@@ -95,7 +95,7 @@
                         <!-- Categories -->
                         <li>
                             <a href="{{ route('admin.categories.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.categories.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-tags text-yellow-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Categories</span>
@@ -105,7 +105,7 @@
                         <!-- Products -->
                         <li>
                             <a href="{{ route('admin.products.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.products.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-box text-orange-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Products</span>
@@ -123,7 +123,7 @@
                         <!-- Orders -->
                         <li>
                             <a href="{{ route('admin.orders.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-shopping-cart text-red-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Orders</span>
@@ -133,7 +133,7 @@
                         <!-- Messages -->
                         <li>
                             <a href="{{ route('admin.messages.index') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.messages.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Messages</span>
@@ -148,7 +148,7 @@
                     <ul class="space-y-1">
                         <li>
                             <a href="{{ route('admin.profile') }}"
-                                class="sidebar-item flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
                                 <i
                                     class="fas fa-user-circle text-indigo-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Profile</span>

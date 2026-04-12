@@ -1,481 +1,531 @@
 @extends('layouts.admin-app')
 
 @section('content')
-<div class="p-6 page-enter">
+    <div class="p-6 page-enter">
         <!-- Page Header -->
         <div class="mb-8">
-          <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
-          >
-            <div>
-              <div
-                class="flex gap-0 items-start flex-col sm:flex-row sm:gap-5 sm:items-center mb-2"
-              >
-                <h1 class="text-3xl font-bold text-white mb-2">
-                  User Management
-                </h1>
-                <div class="flex items-center space-x-4">
-                  <div id="breadcrumb" class="text-sm text-gray-400">
-                    <a
-                      href="../dashboard.html"
-                      class="text-gray-400 hover:underline"
-                      >Admin</a
-                    >
-                    <i class="fas fa-chevron-right mx-2"></i>
-                    <span class="text-white">Users</span>
-                  </div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <div class="flex gap-0 items-start flex-col sm:flex-row sm:gap-5 sm:items-center mb-2">
+                        <h1 class="text-3xl font-bold text-white mb-2">
+                            User Management
+                        </h1>
+                        <div class="flex items-center space-x-4">
+                            <div id="breadcrumb" class="text-sm text-gray-400">
+                                <a href="../dashboard.html" class="text-gray-400 hover:underline">Admin</a>
+                                <i class="fas fa-chevron-right mx-2"></i>
+                                <span class="text-white">Users</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Manage user Users and permissions across the system
+                    </p>
                 </div>
-              </div>
-              <p class="text-gray-400">
-                Manage user Users and permissions across the system
-              </p>
+                @can('create users')
+                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+                        <button onclick="openModal('addUserModal')"
+                            class="btn-primary px-6 py-2 rounded-xl text-white font-medium flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add User
+                        </button>
+                    </div>
+                @endcan
             </div>
-            <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-              <button
-                onclick="openModal('addUserModal')"
-                class="btn-primary px-6 py-2 rounded-xl text-white font-medium flex items-center"
-              >
-                <i class="fas fa-plus mr-2"></i>
-                Add User
-              </button>
-            </div>
-          </div>
         </div>
 
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div class="stats-card rounded-xl p-6 card-entrance delay-0">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-400 text-sm font-medium">Total Users</p>
-                <p class="text-3xl font-bold text-white mt-2">1,234</p>
-                <p class="text-green-400 text-sm mt-1">
-                  <i class="fas fa-arrow-up mr-1"></i>12% from last month
-                </p>
-              </div>
-              <div
-                class="icon w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center"
-              >
-                <i class="fas fa-users text-blue-400 text-xl"></i>
-              </div>
+            <div class="stats-card rounded-xl p-6 card-entrance ">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Total Users</p>
+                        <p class="text-3xl font-bold text-white mt-2">{{ number_format($stats['total_users']) }}</p>
+                    </div>
+                    <div class="icon w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-users text-blue-400 text-xl"></i>
+                    </div>
+                </div>
             </div>
-          </div>
 
-          <div class="stats-card rounded-xl p-6 card-entrance delay-100">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-400 text-sm font-medium">Active Users</p>
-                <p class="text-3xl font-bold text-white mt-2">982</p>
-                <p class="text-green-400 text-sm mt-1">
-                  <i class="fas fa-arrow-up mr-1"></i>8% from last month
-                </p>
-              </div>
-              <div
-                class="icon w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center"
-              >
-                <i class="fas fa-user-check text-green-400 text-xl"></i>
-              </div>
+            <div class="stats-card rounded-xl p-6 card-entrance ">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Active Users</p>
+                        <p class="text-3xl font-bold text-white mt-2">{{ number_format($stats['active_users']) }}</p>
+                    </div>
+                    <div class="icon w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-check text-green-400 text-xl"></i>
+                    </div>
+                </div>
             </div>
-          </div>
 
-          <div class="stats-card rounded-xl p-6 card-entrance delay-200">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-400 text-sm font-medium">New This Month</p>
-                <p class="text-3xl font-bold text-white mt-2">156</p>
-                <p class="text-yellow-400 text-sm mt-1">
-                  <i class="fas fa-arrow-up mr-1"></i>24% from last month
-                </p>
-              </div>
-              <div
-                class="icon w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center"
-              >
-                <i class="fas fa-user-plus text-yellow-400 text-xl"></i>
-              </div>
+            <div class="stats-card rounded-xl p-6 card-entrance ">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">New This Month</p>
+                        <p class="text-3xl font-bold text-white mt-2">{{ number_format($stats['new_users_this_month']) }}
+                        </p>
+                    </div>
+                    <div class="icon w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-plus text-yellow-400 text-xl"></i>
+                    </div>
+                </div>
             </div>
-          </div>
 
-          <div class="stats-card rounded-xl p-6 card-entrance delay-300">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-400 text-sm font-medium">Admin Users</p>
-                <p class="text-3xl font-bold text-white mt-2">12</p>
-                <p class="text-purple-400 text-sm mt-1">
-                  <i class="fas fa-minus mr-1"></i>No change
-                </p>
-              </div>
-              <div
-                class="icon w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center"
-              >
-                <i class="fas fa-user-shield text-purple-400 text-xl"></i>
-              </div>
+            <div class="stats-card rounded-xl p-6 card-entrance ">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium">Admin Users</p>
+                        <p class="text-3xl font-bold text-white mt-2">{{ number_format($stats['admin_users']) }}</p>
+                    </div>
+                    <div class="icon w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-shield text-purple-400 text-xl"></i>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
         <!-- Main Content Card -->
-        <div class="admin-card rounded-xl p-6 slide-up delay-400">
-          <!-- Header with Search and Add Button -->
-          <div
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0"
-          >
-            <div>
-              <h2 class="text-2xl font-bold text-white mb-2">
-                User Management
-              </h2>
-              <p class="text-gray-400">Manage user accounts and permissions</p>
-            </div>
-          </div>
-
-          <!-- Users Table -->
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <!-- Users Table -->
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full">
-              <thead>
-                <tr class="border-b border-gray-700">
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    #
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    User
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    Email
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    Status
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    Roles
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    Joined
-                  </th>
-                  <th class="text-left py-4 px-4 font-medium text-gray-300">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="table-row border-b border-gray-700/50">
-                  <td class="py-4 px-4 text-gray-300">1</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="user-avatar hidden md:flex w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold"
-                      >
-                        JD
-                      </div>
-                      <div>
-                        <p class="text-white font-medium">John Doe</p>
-                        <p class="text-gray-400 text-sm">ID: #001</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">john@example.com</td>
-                  <td class="py-4 px-4">
-                    <span
-                      class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center w-fit"
-                    >
-                      <i class="fas fa-check-circle mr-1 text-xs"></i>
-                      Verified
-                    </span>
-                  </td>
-                  <td class="py-4 px-4">
-                    <div class="flex flex-wrap gap-1">
-                      <span
-                        class="role-badge px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs"
-                        >Admin</span
-                      >
-                      <span
-                        class="role-badge px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs"
-                        >User</span
-                      >
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">Jan 15, 2024</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-2">
-                      <button
-                        onclick="
-                          openEditModal(
-                            1,
-                            'John Doe',
-                            'john@example.com',
-                            [1, 2],
-                          )
-                        "
-                        class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
-                        title="Edit User"
-                      >
-                        <i class="fas fa-edit text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openRoleModal(1, [1, 2])"
-                        class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
-                        title="Change Roles"
-                      >
-                        <i class="fas fa-user-shield text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openDeleteModal(1, 'John Doe')"
-                        class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
-                        title="Delete User"
-                      >
-                        <i class="fas fa-trash text-sm"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="table-row border-b border-gray-700/50">
-                  <td class="py-4 px-4 text-gray-300">2</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="user-avatar hidden md:flex w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center text-white font-bold"
-                      >
-                        JS
-                      </div>
-                      <div>
-                        <p class="text-white font-medium">Jane Smith</p>
-                        <p class="text-gray-400 text-sm">ID: #002</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">jane@example.com</td>
-                  <td class="py-4 px-4">
-                    <span
-                      class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center w-fit"
-                    >
-                      <i class="fas fa-check-circle mr-1 text-xs"></i>
-                      Verified
-                    </span>
-                  </td>
-                  <td class="py-4 px-4">
-                    <div class="flex flex-wrap gap-1">
-                      <span
-                        class="role-badge px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs"
-                        >User</span
-                      >
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">Feb 3, 2024</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-2">
-                      <button
-                        onclick="
-                          openEditModal(
-                            2,
-                            'Jane Smith',
-                            'jane@example.com',
-                            [2],
-                          )
-                        "
-                        class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
-                        title="Edit User"
-                      >
-                        <i class="fas fa-edit text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openRoleModal(2, [2])"
-                        class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
-                        title="Change Roles"
-                      >
-                        <i class="fas fa-user-shield text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openDeleteModal(2, 'Jane Smith')"
-                        class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
-                        title="Delete User"
-                      >
-                        <i class="fas fa-trash text-sm"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="table-row border-b border-gray-700/50">
-                  <td class="py-4 px-4 text-gray-300">3</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="user-avatar hidden md:flex w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-white font-bold"
-                      >
-                        MW
-                      </div>
-                      <div>
-                        <p class="text-white font-medium">Mike Wilson</p>
-                        <p class="text-gray-400 text-sm">ID: #003</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">mike@example.com</td>
-                  <td class="py-4 px-4">
-                    <span
-                      class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium flex items-center w-fit"
-                    >
-                      <i class="fas fa-clock mr-1 text-xs"></i>
-                      Pending
-                    </span>
-                  </td>
-                  <td class="py-4 px-4">
-                    <div class="flex flex-wrap gap-1">
-                      <span
-                        class="role-badge px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs"
-                        >User</span
-                      >
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">Mar 12, 2024</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-2">
-                      <button
-                        onclick="
-                          openEditModal(
-                            3,
-                            'Mike Wilson',
-                            'mike@example.com',
-                            [2],
-                          )
-                        "
-                        class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
-                        title="Edit User"
-                      >
-                        <i class="fas fa-edit text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openRoleModal(3, [2])"
-                        class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
-                        title="Change Roles"
-                      >
-                        <i class="fas fa-user-shield text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openDeleteModal(3, 'Mike Wilson')"
-                        class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
-                        title="Delete User"
-                      >
-                        <i class="fas fa-trash text-sm"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="table-row border-b border-gray-700/50">
-                  <td class="py-4 px-4 text-gray-300">4</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="user-avatar hidden md:flex w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white font-bold"
-                      >
-                        SJ
-                      </div>
-                      <div>
-                        <p class="text-white font-medium">Sarah Johnson</p>
-                        <p class="text-gray-400 text-sm">ID: #004</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">sarah@example.com</td>
-                  <td class="py-4 px-4">
-                    <span
-                      class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center w-fit"
-                    >
-                      <i class="fas fa-check-circle mr-1 text-xs"></i>
-                      Verified
-                    </span>
-                  </td>
-                  <td class="py-4 px-4">
-                    <div class="flex flex-wrap gap-1">
-                      <span
-                        class="role-badge px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs"
-                        >Manager</span
-                      >
-                      <span
-                        class="role-badge px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs"
-                        >User</span
-                      >
-                    </div>
-                  </td>
-                  <td class="py-4 px-4 text-gray-300">Feb 28, 2024</td>
-                  <td class="py-4 px-4">
-                    <div class="flex items-center space-x-2">
-                      <button
-                        onclick="
-                          openEditModal(
-                            4,
-                            'Sarah Johnson',
-                            'sarah@example.com',
-                            [2, 3],
-                          )
-                        "
-                        class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
-                        title="Edit User"
-                      >
-                        <i class="fas fa-edit text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openRoleModal(4, [2, 3])"
-                        class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
-                        title="Change Roles"
-                      >
-                        <i class="fas fa-user-shield text-sm"></i>
-                      </button>
-                      <button
-                        onclick="openDeleteModal(4, 'Sarah Johnson')"
-                        class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
-                        title="Delete User"
-                      >
-                        <i class="fas fa-trash text-sm"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+                <thead>
+                    <tr class="border-b border-gray-700">
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            #
+                        </th>
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            User
+                        </th>
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            Email
+                        </th>
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            Status
+                        </th>
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            Roles
+                        </th>
+                        <th class="text-left py-4 px-4 font-medium text-gray-300">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($users as $user)
+                        <tr class="table-row border-b border-gray-700/50">
+                            <td class="py-4 px-4 text-gray-300">{{ $loop->iteration }}</td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-3">
+                                    @if ($user->avatar)
+                                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"
+                                            class="user-avatar hidden md:flex w-10 h-10 rounded-full object-cover">
+                                    @else
+                                        <div
+                                            class="user-avatar hidden md:flex w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center text-white font-bold">
+                                            {{ strtoupper(substr($user->name, 0, 2)) }}
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="text-white font-medium">{{ $user->name }}</p>
+                                        <p class="text-gray-400 text-sm">ID: #{{ $user->id }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-gray-300">{{ $user->email }}</td>
+                            <td class="py-4 px-4">
+                                @if ($user->is_active)
+                                    <span
+                                        class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center w-fit">
+                                        <i class="fas fa-check-circle mr-1 text-xs"></i>
+                                        Active
+                                    </span>
+                                @else
+                                    <span
+                                        class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm font-medium flex items-center w-fit">
+                                        <i class="fas fa-times mr-1 text-xs"></i>
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex flex-wrap gap-1">
+                                    @forelse ($user->roles as $role)
+                                        <span
+                                            class="random-color-class role-badge px-2 py-1 rounded text-xs">{{ $role->name }}</span>
+                                    @empty
+                                        <span class="text-gray-500 text-sm">No roles assigned</span>
+                                    @endforelse
+                                </div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-2">
+                                    @can(\App\Enums\PermissionEnum::EDIT_USERS->value)
+                                        <button
+                                            onclick="openEditModal({{ $user->id }},'{{ $user->name }}','{{ $user->email }}','{{ $user->phone }}','{{ $user->is_active ? '1' : '0' }}')"
+                                            class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
+                                            title="Edit User">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                    @endcan
+                                    @can(\App\Enums\PermissionEnum::ASSIGN_ROLES->value)
+                                        <button onclick="openRoleModal(1, [1, 2])"
+                                            class="p-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-all hover:scale-110"
+                                            title="Change Roles">
+                                            <i class="fas fa-user-shield text-sm"></i>
+                                        </button>
+                                    @endcan
+                                    @can(\App\Enums\PermissionEnum::DELETE_USERS->value)
+                                        <button onclick="openDeleteModal(1, 'John Doe')"
+                                            class="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all hover:scale-110"
+                                            title="Delete User">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="py-4 px-4 text-center text-gray-500">
+                                No users found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
             </table>
-          </div>
-
-          <!-- Pagination -->
-          <div
-            class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0"
-          >
-            <div class="text-gray-400 text-sm">
-              Showing 1 to 4 of 1,234 users
-            </div>
-            <nav class="flex items-center space-x-2">
-              <button
-                class="pagination-item px-3 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all"
-              >
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button
-                class="pagination-item px-3 py-2 bg-blue-600 text-white rounded-lg font-medium"
-              >
-                1
-              </button>
-              <button
-                class="pagination-item px-3 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all"
-              >
-                2
-              </button>
-              <button
-                class="pagination-item px-3 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all"
-              >
-                3
-              </button>
-              <span class="px-3 py-2 text-gray-400">...</span>
-              <button
-                class="pagination-item px-3 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all"
-              >
-                309
-              </button>
-              <button
-                class="pagination-item px-3 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white rounded-lg transition-all"
-              >
-                <i class="fas fa-chevron-right"></i>
-              </button>
-            </nav>
-          </div>
         </div>
-      </div>
+
+        <!-- Pagination -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
+            {{ $users->links() }}
+        </div>
+    </div>
+
+
+    <!-- _____________ MODALS _____________ -->
+    @can(\App\Enums\PermissionEnum::CREATE_USERS->value)
+        <!-- Add User Modal -->
+        <div id="addUserModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-lg mx-4 animate-bounce-in transition-all duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">
+                        <i class="fas fa-user-plus mr-2 text-blue-500"></i>
+                        Add New User
+                    </h3>
+                    <button onclick="closeModal('addUserModal')"
+                        class="text-gray-400 hover:text-white text-xl transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form action="{{ route('admin.users.store') }}" method="POST" id="addUserForm" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Full Name
+                            <span class="text-red-400 ml-1">*</span>
+                        </label>
+                        <input type="text" id="user_name" autofocus value="{{ old('name') }}" name="name" required
+                            class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                            placeholder="Enter full name" />
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                Email Address
+                                <span class="text-red-400 ml-1">*</span>
+                            </label>
+                            <input type="email" id="user_email" value="{{ old('email') }}" name="email" required
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter email address" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                Phone Number
+                            </label>
+                            <input type="tel" id="user_phone" value="{{ old('phone') }}" name="phone"
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter phone number" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                Password
+                                <span class="text-gray-600 ml-1">Default: 12345678</span>
+                            </label>
+                            <input type="password" id="user_password" name="password"
+                                title="Password must be at least 8 digits"
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter password" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                                Initial Role
+                            </label>
+                            <select id="user_role" name="role"
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white focus:border-blue-500 focus:outline-none">
+                                <option value="">Select Initial Role</option>
+                                @foreach ($roles as $role)
+                                    <option {{ old('role') == $role->name ? 'selected' : '' }} value="{{ $role->name }}">
+                                        {{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('addUserModal')"
+                            class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endcan
+
+    @can(\App\Enums\PermissionEnum::EDIT_USERS->value)
+        <!-- Edit User Modal -->
+        <div id="editUserModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-lg mx-4 animate-bounce-in transition-all duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">
+                        <i class="fas fa-user-edit mr-2 text-yellow-500"></i>
+                        Edit User
+                    </h3>
+                    <button onclick="closeModal('editUserModal')"
+                        class="text-gray-400 hover:text-white text-xl transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form method="POST" id="editUserForm" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                            <input type="text" id="edit_user_name" name="name" required
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter full name" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                            <input type="email" id="edit_user_email" name="email" required
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter email address" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+                            <input type="tel" id="edit_user_phone" name="phone"
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                                placeholder="Enter phone number" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                            <select id="edit_user_status" name="is_active"
+                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white focus:border-blue-500 focus:outline-none">
+                                <option selected value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            New Password
+                            <span class="text-gray-600 ml-1">(leave empty to keep current)</span>
+                        </label>
+                        <input type="password" id="edit_user_password" name="password"
+                            class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                            placeholder="Enter new password" />
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('editUserModal')"
+                            class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-warning px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>
+                            Update User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endcan
+
+    <!-- Role Management Modal -->
+    <div id="roleModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+        <div
+            class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white">
+                    <i class="fas fa-user-shield mr-2 text-purple-500"></i>
+                    Change User Roles
+                </h3>
+                <button onclick="closeModal('roleModal')"
+                    class="text-gray-400 hover:text-white text-xl transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="roleForm" class="space-y-4">
+                <input type="hidden" id="roleUserId" name="user_id" />
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-3">Assign Roles</label>
+                    <div class="space-y-3">
+                        <label
+                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
+                            <input type="checkbox" id="role1" name="roles[]" value="1"
+                                class="w-4 h-4 text-red-600 bg-gray-800 border-gray-600 rounded focus:ring-red-500" />
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-crown text-red-500"></i>
+                                <span class="text-white font-medium">Admin</span>
+                            </div>
+                            <span class="ml-auto text-xs text-gray-400">Full system access</span>
+                        </label>
+
+                        <label
+                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
+                            <input type="checkbox" id="role2" name="roles[]" value="2"
+                                class="w-4 h-4 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500" />
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-user text-blue-500"></i>
+                                <span class="text-white font-medium">User</span>
+                            </div>
+                            <span class="ml-auto text-xs text-gray-400">Basic user access</span>
+                        </label>
+
+                        <label
+                            class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors">
+                            <input type="checkbox" id="role3" name="roles[]" value="3"
+                                class="w-4 h-4 text-yellow-600 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500" />
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-user-tie text-yellow-500"></i>
+                                <span class="text-white font-medium">Manager</span>
+                            </div>
+                            <span class="ml-auto text-xs text-gray-400">Management access</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mt-0.5"></i>
+                        <div class="text-sm text-yellow-200">
+                            <p class="font-medium">Important:</p>
+                            <p>
+                                Changing roles will immediately affect user permissions. Make
+                                sure the user should have access to the selected roles.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('roleModal')"
+                        class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
+                        <i class="fas fa-save mr-2"></i>
+                        Update Roles
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+        <div
+            class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Delete User</h3>
+                <p class="text-gray-300 mb-6" id="deleteMessage">
+                    Are you sure you want to delete this user? This action cannot be
+                    undone.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="closeModal('deleteModal')"
+                        class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="confirmDelete()" class="btn-danger px-6 py-2 rounded-lg text-white font-medium"
+                        id="confirmDeleteBtn">
+                        <i class="fas fa-trash mr-2"></i>
+                        Delete User
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // Open Edit Modal
+        function openEditModal(userId, userName, userEmail, userPhone, userStatus) {
+            document.getElementById("edit_user_name").value = userName;
+            document.getElementById("edit_user_email").value = userEmail;
+            document.getElementById("edit_user_phone").value = userPhone;
+            document.getElementById("edit_user_status").value = userStatus;
+            console.log(userStatus);
+
+
+            document.getElementById("editUserForm").action = `/admin/users/${userId}`;
+
+            openModal("editUserModal");
+        }
+
+        // Open Role Modal
+        function openRoleModal(userId, userRoles) {
+            document.getElementById("roleUserId").value = userId;
+
+            // Clear all checkboxes
+            document
+                .querySelectorAll('input[name="roles[]"]')
+                .forEach((checkbox) => {
+                    checkbox.checked = false;
+                });
+
+            // Check user's current roles
+            userRoles.forEach((roleId) => {
+                const checkbox = document.getElementById("role" + roleId);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+
+            openModal("roleModal");
+        }
+
+        // Open Delete Modal
+        function openDeleteModal(userId, userName) {
+            userToDelete = {
+                id: userId,
+                name: userName
+            };
+            document.getElementById("deleteMessage").textContent =
+                `Are you sure you want to delete "${userName}"? This action cannot be undone.`;
+            openModal("deleteModal");
+        }
+    </script>
+@endpush
