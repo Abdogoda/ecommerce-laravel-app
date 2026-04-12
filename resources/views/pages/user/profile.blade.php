@@ -377,17 +377,14 @@
                                             class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
                                             Status
                                         </th>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            Actions
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-600/50">
                                     <tr class="hover:bg-gray-600/30 transition-all duration-300">
                                         <td class="py-4 px-6 text-gray-300">1</td>
                                         <td class="py-4 px-6">
-                                            <span class="font-bold text-white">#ORD-001</span>
+                                            <a href="#"
+                                                class="font-bold text-blue-400 hover:text-blue-300 transition-colors">#ORD-001</a>
                                         </td>
                                         <td class="py-4 px-6 text-gray-300">
                                             Dec 15, 2024 2:30 PM
@@ -402,18 +399,12 @@
                                                 Completed
                                             </span>
                                         </td>
-                                        <td class="py-4 px-6">
-                                            <a href="../user/order.html"
-                                                class="inline-flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
-                                                <i class="fas fa-eye mr-2"></i>
-                                                View Details
-                                            </a>
-                                        </td>
                                     </tr>
                                     <tr class="hover:bg-gray-600/30 transition-all duration-300">
                                         <td class="py-4 px-6 text-gray-300">2</td>
                                         <td class="py-4 px-6">
-                                            <span class="font-bold text-white">#ORD-002</span>
+                                            <a href="#"
+                                                class="font-bold text-blue-400 hover:text-blue-300 transition-colors">#ORD-002</a>
                                         </td>
                                         <td class="py-4 px-6 text-gray-300">
                                             Dec 12, 2024 1:15 PM
@@ -427,13 +418,6 @@
                                                 <i class="fas fa-clock mr-1"></i>
                                                 Processing
                                             </span>
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <a href="../user/order.html"
-                                                class="inline-flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
-                                                <i class="fas fa-eye mr-2"></i>
-                                                View Details
-                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -485,11 +469,18 @@
                 Are you sure you want to logout from other devices?
             </p>
 
-            <form action="#" method="POST">
+            <form action="{{ route('logout.other-devices') }}" method="POST">
+                @csrf
                 <div class="mb-6">
                     <label for="logout_password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
                     <input type="password" id="logout_password" name="password" required
                         class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300" />
+                    @error('password')
+                        <div class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
 
                 <div class="flex justify-end gap-3">
@@ -519,11 +510,18 @@
                 Enter your password to confirm deletion. This action cannot be undone.
             </p>
 
-            <form action="#" method="POST">
+            <form action="{{ route('account.delete') }}" method="POST">
+                @csrf
                 <div class="mb-6">
                     <label for="delete_password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
                     <input type="password" id="delete_password" name="password" required
                         class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300" />
+                    @error('password')
+                        <div class="text-red-300 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
 
                 <div class="flex justify-end gap-3">
@@ -543,7 +541,7 @@
 
     <!-- Add Image Modal -->
     <div id="addImageModal"
-        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        class="modal-overlay hidden fixed inset-0 bg-black/80 backdrop-blur-sm items-center justify-center z-50">
         <div
             class="modal-content bg-gray-800/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-96 border border-gray-700/50 animate-bounce-in transition-all duration-300">
             <div class="flex justify-between items-center mb-6">

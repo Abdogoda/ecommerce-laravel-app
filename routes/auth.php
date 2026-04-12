@@ -28,11 +28,13 @@ Route::middleware('guest')->group(function(){
 
 // AUTHENTICATED USER ROUTES
 Route::middleware('auth')->group(function(){
-    Route::put('profile', UpdateProfileController::class)->name('profile.update');
+    Route::put('profile', [UpdateProfileController::class, 'update'])->name('profile.update');
     Route::post('change-password', ChangePasswordController::class)->name('password.change');
     Route::post('/verify-email-request', VerifyAccountRequestController::class)->name('email.request');
 
-    Route::post('logout', LogoutController::class)->name('logout');
+    Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::post('logout-other-devices', [LogoutController::class, 'logoutOtherDevices'])->name('logout.other-devices');
+    Route::post('delete-account', [UpdateProfileController::class, 'destroy'])->name('account.delete');
 });
 
 // EMAIL VERIFICATION ROUTES
