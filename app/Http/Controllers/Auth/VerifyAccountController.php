@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\VerifyAccountRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyAccountController extends Controller{
 
@@ -18,6 +19,7 @@ class VerifyAccountController extends Controller{
         $user->email_verified_at = now();
         $user->save();
 
-        return redirect()->route("login")->with('success', 'Email verified successfully, you can login now');
+        $route = Auth::check() ? 'profile' : 'login';
+        return redirect()->route($route)->with('success', 'Email verified successfully, you can login now');
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\ProfileAvatarController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\UpdateProfileController;
@@ -29,6 +30,9 @@ Route::middleware('guest')->group(function(){
 // AUTHENTICATED USER ROUTES
 Route::middleware('auth')->group(function(){
     Route::put('profile', [UpdateProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile/avatar', [ProfileAvatarController::class, 'update'])->name('profile.avatar.update');
+    Route::delete('profile/avatar', [ProfileAvatarController::class, 'destroy'])->name('profile.avatar.delete');
+    
     Route::post('change-password', ChangePasswordController::class)->name('password.change');
     Route::post('/verify-email-request', VerifyAccountRequestController::class)->name('email.request');
 

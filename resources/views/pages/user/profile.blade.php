@@ -44,13 +44,10 @@
                                     <i class="fas fa-check-circle mr-1"></i>Verified
                                 </span>
                             @else
-                                <form action="{{ route('email.request', Auth::user()->email) }}" method="post">
-                                    @csrf
-                                    <button type="submit"
-                                        class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
-                                        <i class="fas fa-xmark-circle mr-1"></i>Unverified
-                                    </button>
-                                </form>
+                                <button onclick="openModal('verifyAccountModal')"
+                                    class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-xmark-circle mr-1"></i>Unverified
+                                </button>
                             @endif
                             <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">
                                 <i class="fas fa-crown mr-1"></i>Premium
@@ -441,7 +438,8 @@
             <p class="text-gray-300 mb-6">
                 We will send you an OTP to your email in order to verify your account!
             </p>
-            <form action="#" method="POST">
+            <form action="{{ route('email.request') }}" method="POST">
+                @csrf
                 <div class="flex justify-end space-x-3">
                     <button type="button" onclick="closeModal('verifyAccountModal')"
                         class="bg-gray-600/80 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105">
@@ -555,7 +553,9 @@
                 </button>
             </div>
 
-            <form class="space-y-4">
+            <form class="space-y-4" action="{{ route('profile.avatar.update') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
                 <!-- Image Upload Area -->
                 <div id="dropZone"
                     class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
@@ -564,7 +564,7 @@
                             <i class="fas fa-cloud-upload-alt text-4xl mb-4"></i>
                             <p class="text-sm">Click to browse</p>
                         </div>
-                        <input type="file" id="imageInput" accept="image/*" class="hidden"
+                        <input type="file" id="imageInput" accept="image/*" class="hidden" name="avatar"
                             onchange="handleImageUpload(this)" />
                         <button type="button" onclick="document.getElementById('imageInput').click()"
                             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors">
@@ -582,13 +582,13 @@
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="flex justify-end space-x-3 pt-4">
+                <div class="flex space-x-3 pt-4">
                     <button type="button" onclick="closeModal('addImageModal')"
-                        class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
+                        class="block px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
                         Cancel
                     </button>
                     <button type="submit"
-                        class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-600/25"
+                        class="block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-600/25"
                         id="addImageBtn" disabled>
                         <i class="fas fa-plus mr-2"></i>
                         Save Image
