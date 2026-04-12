@@ -7,10 +7,15 @@
             <!-- Profile Image -->
             <div class="relative">
                 <div class="profile-image-container w-32 h-32 p-1">
-                    <div
-                        class="w-full h-full rounded-full bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white font-bold text-4xl">
-                        Admin User
-                    </div>
+                    @if (Auth::user()->avatar)
+                        <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}" alt="Avatar"
+                            class="w-full h-full rounded-full object-cover">
+                    @else
+                        <div
+                            class="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                        </div>
+                    @endif
                 </div>
                 <button onclick="openModal('addImageModal')"
                     class="absolute -bottom-0 -right-0 bg-blue-500 hover:bg-blue-600 p-2 rounded-full text-white transition-colors">
@@ -20,37 +25,23 @@
 
             <!-- Profile Info -->
             <div class="flex-1 text-center lg:text-left">
-                <h1 class="text-3xl font-bold text-white mb-2">Admin User</h1>
-                <p class="text-gray-400 mb-4">System Administrator</p>
+                <h1 class="text-3xl font-bold text-white mb-2">{{ Auth::user()->name }}</h1>
+                <p class="text-gray-400 mb-4">{{ Auth::user()->email }}</p>
                 <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
                     <div class="glass px-4 py-2 rounded-xl">
-                        <i class="fas fa-envelope text-blue-400 mr-2"></i>
-                        <span class="text-sm">admin@ecommerce.com</span>
-                    </div>
-                    <div class="glass px-4 py-2 rounded-xl">
                         <i class="fas fa-calendar text-green-400 mr-2"></i>
-                        <span class="text-sm">Joined Dec 2023</span>
+                        <span class="text-sm">Joined {{ Auth::user()->created_at->format('M Y') }}</span>
                     </div>
-                    <div class="glass px-4 py-2 rounded-xl">
-                        <i class="fas fa-shield-alt text-purple-400 mr-2"></i>
-                        <span class="text-sm">Super Admin</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Stats -->
-            <div class="grid grid-cols-3 gap-4 text-center">
-                <div class="glass p-4 rounded-xl">
-                    <p class="text-2xl font-bold text-blue-400">245</p>
-                    <p class="text-xs text-gray-400">Orders</p>
-                </div>
-                <div class="glass p-4 rounded-xl">
-                    <p class="text-2xl font-bold text-green-400">89</p>
-                    <p class="text-xs text-gray-400">Products</p>
-                </div>
-                <div class="glass p-4 rounded-xl">
-                    <p class="text-2xl font-bold text-purple-400">156</p>
-                    <p class="text-xs text-gray-400">Users</p>
+                    @forelse (Auth::user()->roles as $role)
+                        <div class="glass px-4 py-2 rounded-xl">
+                            <i class="fas fa-shield-alt text-purple-400 mr-2"></i>
+                            <span class="text-sm">{{ $role->name }}</span>
+                        </div>
+                    @empty
+                        <div class="glass px-4 py-2 rounded-xl">
+                            <span class="text-sm">User</span>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -82,47 +73,107 @@
             <div id="personalTab" class="tab-content">
                 <h3 class="text-xl font-bold text-white mb-6">Personal Information</h3>
                 <form onsubmit="updateProfile(event)" class="space-y-6">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- First Name -->
+                    <div class="space-y-6">
+                        <!-- Name -->
                         <div class="form-group">
-                            <input type="text" id="firstName"
+                            <label for="name" class="text-gray-400 mb-1 block">Your Name</label>
+                            <input type="text" id="name" name="name"
                                 class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="First Name" value="Admin User" />
-                            <label for="firstName" class="floating-label">First Name</label>
+                                placeholder="Your Name" value="{{ Auth::user()->name }}" />
+                            @error('name')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Last Name -->
-                        <div class="form-group">
-                            <input type="text" id="lastName"
-                                class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Last Name" value="User" />
-                            <label for="lastName" class="floating-label">Last Name</label>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="text-gray-400 mb-1 block">Email Address</label>
+                                <input type="email" id="email" name="email"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Email Address" value="{{ Auth::user()->email }}" />
+                                @error('email')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="form-group">
+                                <label for="phone" class="text-gray-400 mb-1 block">Phone Number</label>
+                                <input type="tel" id="phone" name="phone"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Phone Number" value="{{ Auth::user()->phone }}" />
+                                @error('phone')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
-                        <!-- Email -->
-                        <div class="form-group">
-                            <input type="email" id="email"
-                                class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Email Address" value="admin@ecommerce.com" />
-                            <label for="email" class="floating-label">Email Address</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                            <!-- Country -->
+                            <div class="form-group">
+                                <label for="country" class="text-gray-400 mb-1 block">Country</label>
+                                <input type="text" id="country" name="country"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Country" value="{{ Auth::user()->country }}" />
+                                @error('country')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- State -->
+                            <div class="form-group">
+                                <label for="state" class="text-gray-400 mb-1 block">State</label>
+                                <input type="text" id="state" name="state"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="State" value="{{ Auth::user()->state }}" />
+                                @error('state')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- City -->
+                            <div class="form-group">
+                                <label for="city" class="text-gray-400 mb-1 block">City</label>
+                                <input type="text" id="city" name="city"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="City" value="{{ Auth::user()->city }}" />
+                                @error('city')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Zip Code -->
+                            <div class="form-group">
+                                <label for="zip" class="text-gray-400 mb-1 block">Zip Code</label>
+                                <input type="text" id="zip" name="zip_code"
+                                    class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Zip Code" value="{{ Auth::user()->zip_code }}" />
+                                @error('zip_code')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
-                        <!-- Phone -->
+                        <!-- Address -->
                         <div class="form-group">
-                            <input type="tel" id="phone"
+                            <label for="address" class="text-gray-400 mb-1 block">Address</label>
+                            <textarea id="address" name="address"
                                 class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Phone Number" value="+1 (555) 123-4567" />
-                            <label for="phone" class="floating-label">Phone Number</label>
+                                placeholder="Address">{{ Auth::user()->address }}</textarea>
+                            @error('address')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </div>
 
-                    <!-- Submit Button -->
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
-                            <i class="fas fa-save mr-2"></i>
-                            Update Profile
-                        </button>
+                        <!-- Submit Button -->
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-save mr-2"></i>
+                                Update Profile
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -139,7 +190,7 @@
                             <input type="password" id="currentPassword"
                                 class="form-input w-full px-4 py-3 pr-12 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Current Password" />
-                            <label for="currentPassword" class="floating-label">Current Password</label>
+                            <label for="currentPassword" class="text-gray-400 mb-1 block">Current Password</label>
                             <button type="button" onclick="togglePassword('currentPassword')"
                                 class="absolute right-3 top-3 text-gray-400 hover:text-white">
                                 <i class="fas fa-eye"></i>
@@ -151,7 +202,7 @@
                             <input type="password" id="newPassword"
                                 class="form-input w-full px-4 py-3 pr-12 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="New Password" />
-                            <label for="newPassword" class="floating-label">New Password</label>
+                            <label for="newPassword" class="text-gray-400 mb-1 block">New Password</label>
                             <button type="button" onclick="togglePassword('newPassword')"
                                 class="absolute right-3 top-3 text-gray-400 hover:text-white">
                                 <i class="fas fa-eye"></i>
@@ -163,7 +214,7 @@
                             <input type="password" id="confirmPassword"
                                 class="form-input w-full px-4 py-3 pr-12 glass rounded-xl text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Confirm New Password" />
-                            <label for="confirmPassword" class="floating-label">Confirm New Password</label>
+                            <label for="confirmPassword" class="text-gray-400 mb-1 block">Confirm New Password</label>
                             <button type="button" onclick="togglePassword('confirmPassword')"
                                 class="absolute right-3 top-3 text-gray-400 hover:text-white">
                                 <i class="fas fa-eye"></i>
@@ -262,42 +313,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Modals will be included here -->
-
-
-    <script>
-        function switchTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
-
-            tabs.forEach(tab => tab.classList.add('hidden'));
-            buttons.forEach(btn => {
-                btn.classList.remove('text-blue-400');
-                btn.classList.add('text-gray-400');
-            });
-
-            document.getElementById(tabName).classList.remove('hidden');
-            event.target.closest('.tab-button').classList.add('text-blue-400');
-            event.target.closest('.tab-button').classList.remove('text-gray-400');
-        }
-
-        function changePassword(event) {
-            event.preventDefault();
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (newPassword !== confirmPassword) {
-                toastr.error('Passwords do not match!');
-                return;
-            }
-
-            if (newPassword.length < 8) {
-                toastr.error('Password must be at least 8 characters long!');
-                return;
-            }
-
-            event.target.submit();
-        }
-    </script>
 @endsection

@@ -222,10 +222,15 @@
                     <!-- User Profile -->
                     <a href="{{ route('admin.profile') }}" title="Profile"
                         class="flex items-center space-x-2 glass px-3 py-2 rounded-xl">
-                        <div
-                            class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-                        </div>
+                        @if (Auth::user()->avatar)
+                            <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}" alt="Avatar"
+                                class="w-8 h-8 rounded-full object-cover">
+                        @else
+                            <div
+                                class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                            </div>
+                        @endif
                         <div class="hidden sm:block">
                             <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
                             <p class="text-xs text-gray-400">Administrator</p>
