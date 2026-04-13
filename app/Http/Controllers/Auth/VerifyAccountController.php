@@ -19,7 +19,8 @@ class VerifyAccountController extends Controller{
         $user->email_verified_at = now();
         $user->save();
 
-        $route = Auth::check() ? 'profile' : 'login';
+
+        $route = Auth::check() ? Auth::user()->getProfileRoute() : 'login';
         return redirect()->route($route)->with('success', 'Email verified successfully, you can login now');
     }
 }

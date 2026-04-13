@@ -223,7 +223,7 @@
                     <a href="{{ route('admin.profile') }}" title="Profile"
                         class="flex items-center space-x-2 glass px-3 py-2 rounded-xl">
                         @if (Auth::user()->avatar)
-                            <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}" alt="Avatar"
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar"
                                 class="w-8 h-8 rounded-full object-cover">
                         @else
                             <div

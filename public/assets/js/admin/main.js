@@ -31,6 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const colorClass = getRandomColorClass();
     element.classList.add(...colorClass.split(" "));
   });
+
+  
+  // Initialize tab switching based on localStorage
+  if (document.querySelector(".tab-content")) {
+    const activeTab = localStorage.getItem("activeAdminTab") || document.querySelector(".tab-content").id;
+    switchTab(activeTab);
+  }
 });
 
 // Modal functions
@@ -356,6 +363,8 @@ function switchTab(tabName) {
   const activeTab = document.getElementById(tabName + "Btn");
   activeTab.classList.add("active", "text-blue-400");
   activeTab.classList.remove("text-gray-400");
+
+  localStorage.setItem("activeAdminTab", tabName);
 }
 
 // Password visibility toggle
@@ -394,4 +403,26 @@ function getRandomColorClass() {
     "bg-gray-500/20 text-gray-400",
   ];
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+
+function handleImageUpload(input) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const uploadArea = document.getElementById("imageUploadArea");
+      const preview = document.getElementById("imagePreview");
+      const previewImg = document.getElementById("previewImg");
+      const fileName = document.getElementById("fileName");
+      const addBtn = document.getElementById("addImageBtn");
+
+      uploadArea.classList.add("hidden");
+      preview.classList.remove("hidden");
+      previewImg.src = e.target.result;
+      fileName.textContent = file.name;
+      addBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\PermissionEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +35,17 @@ class User extends Authenticatable
         ];
     }
 
-      // ─── Relationships ────────────────────────────────────────────────────────
+    // ─── Helpers ────────────────────────────────────────────────────────
+    public function getProfileRoute(): string
+    {
+        if ($this->hasPermissionTo(PermissionEnum::VIEW_DASHBOARD->value)) {
+            return 'admin.profile';
+        } else {
+            return 'profile';
+        }
+    }
+
+    // ─── Relationships ────────────────────────────────────────────────────────
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

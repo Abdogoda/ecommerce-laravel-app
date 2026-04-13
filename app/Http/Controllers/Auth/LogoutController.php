@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PasswordRequiredRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LogoutController extends Controller{
     
@@ -13,16 +15,12 @@ class LogoutController extends Controller{
         return redirect()->to('/')->with('success', 'You are out');
     }
 
-    public function logoutOtherDevices(Request $request){
-        $request->validate([
-            'password' => 'required|string',
-        ]);
-
-        if (!Auth::validate(['email' => Auth::user()->email, 'password' => $request->password])) {
-            return back()->withErrors(['password' => 'The provided password does not match our records.']);
-        }
+    public function logoutOtherDevices(PasswordRequiredRequest $request){
+        DB::table('sessions')
+            ->where('user_id', $request->user()->id)
+            ->where('id', '!=', session()->getId())
+            ->delete();
         
-        Auth::logoutOtherDevices($request->password);
         return back()->with('success', 'You are out from other devices');
     }
 }
