@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Enums\PermissionEnum;
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -26,6 +27,12 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::put('/{role}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::put('/{role}/permissions', 'updatePermissions')->name('updatePermissions')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::delete('/{role}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ROLES->value]);
+    });
+
+    // Activity log route
+    Route::controller(ActivityController::class)->middleware(['can:'.PermissionEnum::VIEW_ACTIVITIES->value])->prefix('activities')->name('activities.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'clear')->name('clear')->middleware(['can:'.PermissionEnum::CLEAR_ACTIVITIES->value]);
     });
 
     Route::view('products', 'pages.admin.products')->name('products.index');

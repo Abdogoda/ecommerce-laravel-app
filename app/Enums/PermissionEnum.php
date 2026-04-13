@@ -39,6 +39,10 @@ enum PermissionEnum: string
     case REPLY_MESSAGES = 'reply messages';
     case DELETE_MESSAGES = 'delete messages';
 
+    CASE VIEW_ACTIVITIES = 'view activities';
+    CASE SEARCH_ACTIVITIES = 'search activities';
+    CASE CLEAR_ACTIVITIES = 'clear activities';
+
     // User Permissions
     case VIEW_PROFILE = 'view profile';
     case EDIT_PROFILE = 'edit profile';

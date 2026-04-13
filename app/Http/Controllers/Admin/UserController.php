@@ -85,6 +85,7 @@ class UserController extends Controller
         }
         
         $user->syncRoles($validated['roles']);
+        activity()->causedBy(auth()->user())->performedOn($user)->event('RolesAssigned')->log('Roles assigned: '. implode(', ', $validated['roles']) ?? 'None');
         
         return redirect()->route('admin.users.index')->with('success', 'User roles updated successfully.');
     }

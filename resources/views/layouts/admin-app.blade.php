@@ -49,7 +49,7 @@
         <nav class="flex-1 overflow-y-auto px-6 pb-6">
             <div class="space-y-2">
                 <!-- Main Navigation -->
-                <div class="mb-6">
+                <div class="mb-8">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Main
                     </p>
@@ -87,7 +87,7 @@
                 </div>
 
                 <!-- Catalog Management -->
-                <div class="mb-6">
+                <div class="mb-8">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Catalog
                     </p>
@@ -115,7 +115,7 @@
                 </div>
 
                 <!-- Sales & Communication -->
-                <div class="mb-6">
+                <div class="mb-8">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Sales
                     </p>
@@ -129,6 +129,15 @@
                                 <span class="font-medium">Orders</span>
                             </a>
                         </li>
+                    </ul>
+                </div>
+
+                <!-- Reports -->
+                <div class="mb-8">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Reports
+                    </p>
+                    <ul class="space-y-1">
 
                         <!-- Messages -->
                         <li>
@@ -138,6 +147,16 @@
                                     class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Messages</span>
                                 <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                            </a>
+                        </li>
+
+                        <!-- Activities -->
+                        <li>
+                            <a href="{{ route('admin.activities.index') }}"
+                                class="sidebar-item {{ request()->routeIs('admin.activities.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                <i
+                                    class="fas fa-history text-pink-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="font-medium">Activities</span>
                             </a>
                         </li>
                     </ul>
