@@ -34,7 +34,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Total Products</p>
-                        <p class="text-2xl font-bold text-white">1,234</p>
+                        <p class="text-2xl font-bold text-white">{{ $stats['total'] }}</p>
                     </div>
                     <div class="icon w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
                         <i class="fas fa-box text-blue-400 text-xl"></i>
@@ -46,7 +46,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">In Stock</p>
-                        <p class="text-2xl font-bold text-white">987</p>
+                        <p class="text-2xl font-bold text-white">{{ $stats['in_stock'] }}</p>
                     </div>
                     <div class="icon w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
                         <i class="fas fa-check-circle text-green-400 text-xl"></i>
@@ -58,7 +58,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Low Stock</p>
-                        <p class="text-2xl font-bold text-white">43</p>
+                        <p class="text-2xl font-bold text-white">{{ $stats['low_stock'] }}</p>
                     </div>
                     <div class="icon w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
                         <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
@@ -70,7 +70,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-400 text-sm">Out of Stock</p>
-                        <p class="text-2xl font-bold text-white">12</p>
+                        <p class="text-2xl font-bold text-white">{{ $stats['out_of_stock'] }}</p>
                     </div>
                     <div class="icon w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
                         <i class="fas fa-times-circle text-red-400 text-xl"></i>
@@ -103,166 +103,61 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700">
-                        <!-- Product rows -->
-                        <tr class="table-row">
-                            <td class="px-6 py-4">
-                                <a href="./show.html"
-                                    class="flex items-center text-white hover:text-blue-300 transition-colors">
-                                    <img class="w-12 h-12 rounded-lg object-cover mr-4 transition-transform duration-300 hover:scale-110"
-                                        src="https://picsum.photos/48/48?random=1" alt="Product" />
-                                    <div>
-                                        <div class="text-sm font-medium">
-                                            Premium Wireless Headphones
+                        @forelse ($products as $product)
+                            <tr class="table-row">
+                                <td class="px-6 py-4">
+                                    <a href="./show.html"
+                                        class="flex items-center text-white hover:text-blue-300 transition-colors">
+                                        <img class="w-12 h-12 rounded-lg object-cover mr-4 transition-transform duration-300 hover:scale-110"
+                                            src="https://picsum.photos/48/48?random=1" alt="Product" />
+                                        <div>
+                                            <div class="text-sm font-medium">
+                                                {{ $product->name }}
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">Electronics</span>
-                            </td>
-                            <td class="px-6 py-4 text-white">$299.99</td>
-                            <td class="px-6 py-4">
-                                <span class="text-green-400">45 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Active</span>
-                            </td>
-                        </tr>
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">{{ $product->category->name }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-white">${{ number_format($product->price, 2) }}</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-{{ $product->stock > 5 ? 'green' : ($product->stock > 0 ? 'yellow' : 'red') }}-400">{{ $product->stock }}
+                                        units</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if ($product->is_active)
+                                        <span
+                                            class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Active</span>
+                                    @else
+                                        <span
+                                            class="px-2 py-1 bg-red-500/20 text-red-400 rounded-full text-xs">Inactive</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-400">
+                                    No products found.
+                                </td>
+                            </tr>
+                        @endforelse
 
-                        <tr class="table-row">
-                            <td class="px-6 py-4">
-                                <a href="./show.html"
-                                    class="flex items-center text-white hover:text-blue-300 transition-colors">
-                                    <img class="w-12 h-12 rounded-lg object-cover mr-4 transition-transform duration-300 hover:scale-110"
-                                        src="https://picsum.photos/48/48?random=2" alt="Product" />
-                                    <div>
-                                        <div class="text-sm font-medium">Smartphone Case</div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">Electronics</span>
-                            </td>
-                            <td class="px-6 py-4 text-white">$24.99</td>
-                            <td class="px-6 py-4">
-                                <span class="text-yellow-400">8 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Active</span>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="px-6 py-4">
-                                <a href="./show.html"
-                                    class="flex items-center text-white hover:text-blue-300 transition-colors">
-                                    <img class="w-12 h-12 rounded-lg object-cover mr-4 transition-transform duration-300 hover:scale-110"
-                                        src="https://picsum.photos/48/48?random=3" alt="Product" />
-                                    <div>
-                                        <div class="text-sm font-medium">Cotton T-Shirt</div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span
-                                    class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">Clothing</span>
-                            </td>
-                            <td class="px-6 py-4 text-white">$19.99</td>
-                            <td class="px-6 py-4">
-                                <span class="text-red-400">0 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded-full text-xs">Out of Stock</span>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="px-6 py-4">
-                                <a href="./show.html"
-                                    class="flex items-center text-white hover:text-blue-300 transition-colors">
-                                    <img class="w-12 h-12 rounded-lg object-cover mr-4"
-                                        src="https://picsum.photos/48/48?random=4" alt="Product" />
-                                    <div>
-                                        <div class="text-sm font-medium">Programming Book</div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Books</span>
-                            </td>
-                            <td class="px-6 py-4 text-white">$49.99</td>
-                            <td class="px-6 py-4">
-                                <span class="text-green-400">23 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Active</span>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="px-6 py-4">
-                                <a href="./show.html"
-                                    class="flex items-center text-white hover:text-blue-300 transition-colors">
-                                    <img class="w-12 h-12 rounded-lg object-cover mr-4"
-                                        src="https://picsum.photos/48/48?random=5" alt="Product" />
-                                    <div>
-                                        <div class="text-sm font-medium">Garden Tools Set</div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-full text-xs">Home &
-                                    Garden</span>
-                            </td>
-                            <td class="px-6 py-4 text-white">$89.99</td>
-                            <td class="px-6 py-4">
-                                <span class="text-green-400">15 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded-full text-xs">Draft</span>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Table Footer with Pagination -->
-            <div class="bg-gray-800/30 px-6 py-4 border-t border-gray-700">
-                <div class="flex items-center justify-between">
-                    <div class="text-sm text-gray-400">
-                        Showing <span class="font-medium text-white">1</span> to
-                        <span class="font-medium text-white">5</span> of
-                        <span class="font-medium text-white">1,234</span> results
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button
-                            class="pagination-btn px-3 py-2 bg-gray-700 text-gray-400 rounded-lg hover:bg-gray-600 hover:text-white transition-all duration-300 disabled:opacity-50"
-                            disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="pagination-btn active px-3 py-2 text-white rounded-lg">
-                            1
-                        </button>
-                        <button
-                            class="pagination-btn px-3 py-2 bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white rounded-lg transition-all duration-300">
-                            2
-                        </button>
-                        <button
-                            class="pagination-btn px-3 py-2 bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white rounded-lg transition-all duration-300">
-                            3
-                        </button>
-                        <span class="px-3 py-2 text-gray-400">...</span>
-                        <button
-                            class="pagination-btn px-3 py-2 bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white rounded-lg transition-all duration-300">
-                            247
-                        </button>
-                        <button
-                            class="pagination-btn px-3 py-2 bg-gray-700 text-gray-400 rounded-lg hover:bg-gray-600 hover:text-white transition-all duration-300">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
+            <!-- Pagination -->
+            <div class="px-6 pt-4 bg-gray-800/50 flex items-center justify-end">
+                {{ $products->links() }}
             </div>
         </div>
     </div>
+
+
+    @can(\App\Enums\PermissionEnum::CREATE_PRODUCTS->value)
+        @include('pages.admin.products.modals.create')
+    @endcan
 @endsection

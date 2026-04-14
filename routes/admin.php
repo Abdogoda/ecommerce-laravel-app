@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Enums\PermissionEnum;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -46,8 +47,15 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::delete('/{category}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_CATEGORIES->value]);
     });
 
-    Route::view('products', 'pages.admin.products')->name('products.index');
-    Route::view('products/create', 'pages.admin.create_product')->name('products.create');
+    // Product Routes
+    Route::controller(ProductController::class)->middleware(['can:'.PermissionEnum::VIEW_PRODUCTS->value])->prefix('products')->name('products.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store')->middleware(['can:'.PermissionEnum::CREATE_PRODUCTS->value]);
+        Route::get('/{product}/edit', 'edit')->name('edit')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
+        Route::put('/{product}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
+        Route::delete('/{product}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_PRODUCTS->value]);
+    });
+
     Route::view('products/{id}/edit', 'pages.admin.edit_product')->name('products.edit');
     Route::view('orders', 'pages.admin.orders')->name('orders.index');
     Route::view('orders/{id}', 'pages.admin.order_details')->name('orders.show');
