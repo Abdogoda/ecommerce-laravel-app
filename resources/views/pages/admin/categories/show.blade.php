@@ -6,60 +6,71 @@
         <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8">
             <!-- Category Icon -->
             <div class="relative">
-                <div
-                    class="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center category-icon">
-                    <i class="fas fa-laptop text-white text-6xl"></i>
-                </div>
-                <div class="absolute -bottom-2 -right-2 bg-green-500 p-2 rounded-full">
-                    <i class="fas fa-check text-white text-sm"></i>
-                </div>
+                @if ($category->isIconImage())
+                    <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }} Icon"
+                        class="w-32 h-32 object-cover rounded-2xl category-icon" />
+                @else
+                    <div
+                        class="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center category-icon">
+                        <i class="{{ $category->icon }} text-white text-6xl"></i>
+                    </div>
+                @endif
+                @can(\App\Enums\PermissionEnum::EDIT_CATEGORIES->value)
+                    <button onclick="openModal('categoryIconModal')"
+                        class="absolute -bottom-2 -right-2 bg-green-500 p-2 rounded-full">
+                        <i class="fas fa-edit text-white text-sm"></i>
+                    </button>
+                @endcan
             </div>
 
             <!-- Category Info -->
             <div class="flex-1 text-center lg:text-left">
                 <div class="flex gap-0 flex-col md:flex-row md:gap-5 items-center mb-2">
-                    <h1 class="text-3xl font-bold text-white mb-2">Electronics</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2">{{ $category->name }}</h1>
                     <div class="flex items-center space-x-4">
                         <div id="breadcrumb" class="text-sm text-gray-400">
                             <a href="{{ route('admin.dashboard') }}" class="text-gray-400 hover:underline">Admin</a>
                             <i class="fas fa-chevron-right mx-2"></i>
-                            <a href="./index.html" class="text-gray-400 hover:underline">Categories</a>
+                            <a href="{{ route('admin.categories.index') }}"
+                                class="text-gray-400 hover:underline">Categories</a>
                             <i class="fas fa-chevron-right mx-2"></i>
-                            <span class="text-white">Electronics</span>
+                            <span class="text-white">{{ $category->name }}</span>
                         </div>
                     </div>
                 </div>
-                <p class="text-gray-400 text-lg mb-6">
-                    Latest gadgets, smartphones, laptops, and electronic devices for
-                    modern living
-                </p>
+                <p class="text-gray-400 text-lg mb-6">{{ $category->description }}</p>
 
                 <div class="flex flex-wrap gap-4 justify-center lg:justify-start mb-6">
                     <div class="glass px-4 py-2 rounded-xl">
                         <i class="fas fa-box text-blue-400 mr-2"></i>
-                        <span class="text-sm">342 Products</span>
+                        <span class="text-sm">{{ $category->products->count() }} Products</span>
                     </div>
                     <div class="glass px-4 py-2 rounded-xl">
                         <i class="fas fa-calendar text-green-400 mr-2"></i>
-                        <span class="text-sm">Created Dec 15, 2023</span>
+                        <span class="text-sm">Created {{ $category->created_at->format('M j, Y') }}</span>
                     </div>
                     <div class="glass px-4 py-2 rounded-xl">
-                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
-                        <span class="text-sm">Active Status</span>
+                        <i
+                            class="fas fa-{{ $category->is_active ? 'check-circle' : 'times-circle' }} text-{{ $category->is_active ? 'green' : 'red' }}-400 mr-2"></i>
+                        <span class="text-sm">{{ $category->is_active ? 'Active' : 'Inactive' }} Status</span>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-                    <button onclick="openModal('editCategoryModal')"
-                        class="btn-warning px-6 py-3 rounded-xl text-white font-bold">
-                        <i class="fas fa-edit mr-2"></i>
-                        Edit Category
-                    </button>
-                    <button onclick="openModal('deleteCategoryModal')"
-                        class="btn-danger px-6 py-3 rounded-xl text-white font-bold">
-                        <i class="fas fa-trash mr-2"></i>
-                        Delete Category
-                    </button>
+                    @can(\App\Enums\PermissionEnum::EDIT_CATEGORIES->value)
+                        <button onclick="openModal('editCategoryModal')"
+                            class="btn-warning px-6 py-3 rounded-xl text-white font-bold">
+                            <i class="fas fa-edit mr-2"></i>
+                            Edit Category
+                        </button>
+                    @endcan
+                    @can(\App\Enums\PermissionEnum::DELETE_CATEGORIES->value)
+                        <button onclick="openModal('deleteCategoryModal')"
+                            class="btn-danger px-6 py-3 rounded-xl text-white font-bold">
+                            <i class="fas fa-trash mr-2"></i>
+                            Delete Category
+                        </button>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -78,96 +89,271 @@
         <!-- Products Grid -->
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Product Card 1 -->
-                <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
-                    <div class="relative mb-4">
-                        <img src="https://picsum.photos/200/150?random=8" alt="iPhone 15"
-                            class="w-full h-36 object-cover rounded-lg" />
-                        <div class="absolute top-2 right-2 bg-green-500 px-2 py-1 rounded-full text-xs text-white">
-                            In Stock
+                @forelse ($category->products as $product)
+                    <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
+                        <div class="relative mb-4">
+                            <img src="https://picsum.photos/200/150?random=8" alt="iPhone 15"
+                                class="w-full h-36 object-cover rounded-lg" />
+                            <div class="absolute top-2 right-2 bg-green-500 px-2 py-1 rounded-full text-xs text-white">
+                                In Stock
+                            </div>
                         </div>
-                    </div>
-                    <h3 class="text-white font-semibold mb-2">iPhone 15 Pro Max</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        Latest flagship smartphone with advanced features
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-400 font-bold text-lg">$1,199</span>
-                        <div class="flex items-center text-yellow-400">
-                            <i class="fas fa-star mr-1"></i>
-                            <span class="text-sm">4.9</span>
+                        <h3 class="text-white font-semibold mb-2">iPhone 15 Pro Max</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Latest flagship smartphone with advanced features
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-400 font-bold text-lg">$1,199</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star mr-1"></i>
+                                <span class="text-sm">4.9</span>
+                            </div>
                         </div>
-                    </div>
-                </a>
-
-                <!-- Product Card 2 -->
-                <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
-                    <div class="relative mb-4">
-                        <img src="https://picsum.photos/200/150?random=9" alt="MacBook Pro"
-                            class="w-full h-36 object-cover rounded-lg" />
-                        <div class="absolute top-2 right-2 bg-green-500 px-2 py-1 rounded-full text-xs text-white">
-                            In Stock
-                        </div>
-                    </div>
-                    <h3 class="text-white font-semibold mb-2">MacBook Pro M3</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        Professional laptop with M3 chip
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-400 font-bold text-lg">$2,499</span>
-                        <div class="flex items-center text-yellow-400">
-                            <i class="fas fa-star mr-1"></i>
-                            <span class="text-sm">4.7</span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Product Card 3 -->
-                <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
-                    <div class="relative mb-4">
-                        <img src="https://picsum.photos/200/150?random=10" alt="AirPods Pro"
-                            class="w-full h-36 object-cover rounded-lg" />
-                        <div class="absolute top-2 right-2 bg-yellow-500 px-2 py-1 rounded-full text-xs text-white">
-                            Low Stock
-                        </div>
-                    </div>
-                    <h3 class="text-white font-semibold mb-2">
-                        AirPods Pro 2nd Gen
-                    </h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        Wireless earbuds with noise cancellation
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-400 font-bold text-lg">$249</span>
-                        <div class="flex items-center text-yellow-400">
-                            <i class="fas fa-star mr-1"></i>
-                            <span class="text-sm">4.6</span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Product Card 4 -->
-                <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
-                    <div class="relative mb-4">
-                        <img src="https://picsum.photos/200/150?random=11" alt="iPad Air"
-                            class="w-full h-36 object-cover rounded-lg" />
-                        <div class="absolute top-2 right-2 bg-red-500 px-2 py-1 rounded-full text-xs text-white">
-                            Out of Stock
-                        </div>
-                    </div>
-                    <h3 class="text-white font-semibold mb-2">iPad Air 5th Gen</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        Powerful tablet for creativity and Productivity
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-400 font-bold text-lg">$599</span>
-                        <div class="flex items-center text-yellow-400">
-                            <i class="fas fa-star mr-1"></i>
-                            <span class="text-sm">4.8</span>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                @empty
+                    <p class="text-gray-400 text-sm col-span-full">No products found in this category.</p>
+                @endforelse
             </div>
         </div>
     </div>
+
+    @can(\App\Enums\PermissionEnum::EDIT_CATEGORIES->value)
+        <!-- Category Icon Modal -->
+        <div id="categoryIconModal" class="hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-3">
+                            <i class="fas fa-edit text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Edit Category Icon</h3>
+                    </div>
+                    <button onclick="closeModal('categoryIconModal')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category) }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Icon Type</label>
+                        <div class="flex gap-4 mb-4">
+                            <label class="flex items-center text-gray-400">
+                                <input type="radio" name="icon_type" value="class"
+                                    {{ !$category->isIconImage() ? 'checked' : '' }} onchange="toggleIconInput()"
+                                    class="mr-2">
+                                <span>Icon Class</span>
+                            </label>
+                            <label class="flex items-center text-gray-400">
+                                <input type="radio" name="icon_type" value="image"
+                                    {{ $category->isIconImage() ? 'checked' : '' }} onchange="toggleIconInput()"
+                                    class="mr-2">
+                                <span>Upload Image</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="iconClassDiv" class="{{ $category->isIconImage() ? 'hidden' : '' }}">
+                        <label for="iconClassInput"
+                            class="text-sm font-medium text-gray-400 mb-2 flex gap-2 flex-wrap items-center">
+                            Fontawesome Icon
+                            <p class="text-gray-500 text-xs">Ex: <code>fas fa-laptop</code></p>
+                        </label>
+                        <input type="text" name="icon" id="iconClassInput"
+                            value="{{ $category->isIconImage() ? '' : $category->icon }}"
+                            placeholder="Enter your fontawesome icon class"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('icon')
+                            <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div id="iconImageDiv" class="{{ $category->isIconImage() ? '' : 'hidden' }}">
+                        <div class="flex items-center space-x-4">
+                            <label for="categoryImageInput"
+                                class="cursor-pointer w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center relative group">
+                                <input type="file" id="categoryImageInput" accept="image/*" name="icon_file"
+                                    class="hidden" onchange="previewCategoryImage(event)" />
+                                @if ($category->isIconImage())
+                                    <img id="categoryImagePreview" src="{{ asset('storage/' . $category->icon) }}"
+                                        alt="Category Image" class="w-16 h-16 object-cover rounded-full absolute inset-0" />
+                                @else
+                                    <img id="categoryImagePreview" alt="Category Image"
+                                        class="w-16 h-16 object-cover rounded-full absolute inset-0 hidden" />
+                                    <i id="categoryImageIcon"
+                                        class="fas fa-camera text-white text-2xl group-hover:opacity-80"></i>
+                                @endif
+                            </label>
+                            <div>
+                                <p class="text-gray-400 text-sm">Category Image</p>
+                                <p class="text-xs text-gray-500">Click to change image</p>
+                            </div>
+                        </div>
+                        @error('icon_file')
+                            <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+
+                    <div class="flex items-center space-x-4">
+                        <button type="button" onclick="closeModal('categoryIconModal')"
+                            class="flex-1 glass px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-green-500 to-green-600 px-6 py-3 rounded-xl text-white font-bold hover:scale-105 transition-transform">
+                            Update Icon
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Edit Category Modal -->
+        <div id="editCategoryModal"
+            class="hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm items-center justify-center">
+            <div
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center mr-3">
+                            <i class="fas fa-edit text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Edit Category</h3>
+                    </div>
+                    <button onclick="closeModal('editCategoryModal')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-name">Category Name</label>
+                        <input type="text" id="category-name" name="name" value="{{ $category->name }}"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-status">Category
+                            Status</label>
+                        <select id="category-status" name="is_active"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="1" {{ $category->is_active ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ !$category->is_active ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="category-description">Description</label>
+                        <textarea rows="3" id="category-description" name="description"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ $category->description }}</textarea>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <button type="button" onclick="closeModal('editCategoryModal')"
+                            class="flex-1 glass px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-yellow-500 to-orange-600 px-6 py-3 rounded-xl text-white font-bold hover:scale-105 transition-transform">
+                            Update Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endcan
+
+    @can(\App\Enums\PermissionEnum::DELETE_CATEGORIES->value)
+        <!-- Delete Category Modal -->
+        <div id="deleteCategoryModal"
+            class="hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm items-center justify-center">
+            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
+                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+                @csrf
+                @method('DELETE')
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center mr-3">
+                            <i class="fas fa-trash text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Delete Category</h3>
+                    </div>
+                    <button type="button" onclick="closeModal('deleteCategoryModal')"
+                        class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-white mb-2">Are you sure?</h4>
+                        <p class="text-gray-400 text-sm">
+                            This action will permanently delete the "{{ $category->name }}" category and
+                            all associated data. This cannot be undone.
+                        </p>
+                    </div>
+
+                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                        <h5 class="text-red-400 font-medium mb-2">This will also:</h5>
+                        <ul class="text-sm text-gray-300 space-y-1">
+                            <li>• Remove {{ $category->products->count() }} Products from this category</li>
+                            <li>• Update affected Category listings</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <button type="button" onclick="closeModal('deleteCategoryModal')"
+                            class="flex-1 glass px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-red-500 to-red-600 px-6 py-3 rounded-xl text-white font-bold hover:scale-105 transition-transform">
+                            Delete Category
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    @endcan
 @endsection
+
+@push('scripts')
+    <script>
+        function toggleIconInput() {
+            document.getElementById('iconClassDiv').classList.toggle('hidden');
+            document.getElementById('iconImageDiv').classList.toggle('hidden');
+        }
+
+        function previewCategoryImage(event) {
+            const input = event.target;
+            const preview = document.getElementById("categoryImagePreview");
+            const icon = document.getElementById("categoryImageIcon");
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove("hidden");
+                    icon.classList.add("hidden");
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+@endpush

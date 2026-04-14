@@ -58,6 +58,8 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
+
+    // ─── Activity Log ────────────────────────────────────────────────────────
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

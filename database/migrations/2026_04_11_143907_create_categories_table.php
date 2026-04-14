@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
 
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->index();
             $table->string('icon')->nullable();   // icon class or media path
             $table->boolean('is_active')->default(true);
 

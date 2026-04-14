@@ -56,137 +56,167 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/10">
-                    <tr class="table-row">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div
-                                    class="hidden md:flex w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg items-center justify-center mr-3">
-                                    <i class="fas fa-laptop text-white"></i>
+                    @forelse ($categories as $category)
+                        <tr class="table-row">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    @if ($category->icon)
+                                        @if ($category->isIconImage())
+                                            <img src="{{ asset('storage/' . $category->icon) }}"
+                                                alt="{{ $category->name }} Icon"
+                                                class="hidden md:block w-10 h-10 rounded-lg mr-3 object-contain">
+                                        @else
+                                            <div
+                                                class="hidden md:flex w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg items-center justify-center mr-3">
+                                                <i class="{{ $category->icon }}" class="text-white"></i>
+                                            </div>
+                                        @endif
+                                    @endif
+                                    <div>
+                                        <a href="{{ route('admin.categories.show', $category) }}"
+                                            class="text-white hover:text-blue-400 transition-colors font-medium">{{ $category->name }}</a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href="./show.html"
-                                        class="text-white hover:text-blue-400 transition-colors font-medium">Electronics</a>
-                                    <p class="text-gray-400 text-sm">Gadgets and devices</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-white">342 products</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                                Active
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-400">Dec 15, 2023</td>
-                    </tr>
-
-                    <tr class="table-row">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div
-                                    class="hidden md:flex w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg items-center justify-center mr-3">
-                                    <i class="fas fa-tshirt text-white"></i>
-                                </div>
-                                <div>
-                                    <a href="./show.html"
-                                        class="text-white hover:text-blue-400 transition-colors font-medium">Fashion</a>
-                                    <p class="text-gray-400 text-sm">
-                                        Clothing and accessories
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-white">158 products</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                                Active
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-400">Dec 10, 2023</td>
-                    </tr>
-
-                    <tr class="table-row">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div
-                                    class="hidden md:flex w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg items-center justify-center mr-3">
-                                    <i class="fas fa-home text-white"></i>
-                                </div>
-                                <div>
-                                    <a href="./show.html"
-                                        class="text-white hover:text-blue-400 transition-colors font-medium">Home &
-                                        Garden</a>
-                                    <p class="text-gray-400 text-sm">
-                                        Home improvement items
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-white">89 products</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                                Active
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-400">Dec 8, 2023</td>
-                    </tr>
-
-                    <tr class="table-row">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div
-                                    class="hidden md:flex w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg items-center justify-center mr-3">
-                                    <i class="fas fa-dumbbell text-white"></i>
-                                </div>
-                                <div>
-                                    <a href="./show.html"
-                                        class="text-white hover:text-blue-400 transition-colors font-medium">Sports &
-                                        Fitness</a>
-                                    <p class="text-gray-400 text-sm">Exercise equipment</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-white">67 products</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
-                                Inactive
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-400">Dec 5, 2023</td>
-                    </tr>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-white">{{ $category->products_count }} products</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if ($category->is_active)
+                                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                                        Active
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-medium">
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">{{ $category->created_at->format('M j, Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-400">
+                                No categories found.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
-        <div class="p-6 border-t border-white/10 flex items-center justify-between">
-            <div class="text-gray-400 text-sm">
-                Showing 1 to 4 of 28 entries
+        {{ $categories->links() }}
+    </div>
+
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
+        <div
+            class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-3">
+                        <i class="fas fa-plus text-xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Add Category</h3>
+                </div>
+                <button onclick="closeModal('addCategoryModal')" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="flex items-center">
-                <button class="glass px-3 py-2 rounded-lg text-gray-400 hover:text-white transition-colors">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="bg-blue-500 px-3 py-2 rounded-lg text-white">
-                    1
-                </button>
-                <button class="glass px-3 py-2 rounded-lg text-gray-400 hover:text-white transition-colors">
-                    2
-                </button>
-                <button class="glass px-3 py-2 rounded-lg text-gray-400 hover:text-white transition-colors">
-                    3
-                </button>
-                <button class="glass px-3 py-2 rounded-lg text-gray-400 hover:text-white transition-colors">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+
+            <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data"
+                class="space-y-6">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Category Name</label>
+                    <input type="text" placeholder="Enter category name" name="name"
+                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required />
+                    @error('name')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
+                    <textarea placeholder="Enter category description" rows="3" name="description"
+                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    @error('description')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Icon Type</label>
+                    <div class="flex gap-4 mb-4">
+                        <label class="flex items-center text-gray-400">
+                            <input type="radio" name="icon_type" value="class" checked onchange="toggleIconInput()"
+                                class="mr-2">
+                            <span>Icon Class</span>
+                        </label>
+                        <label class="flex items-center text-gray-400">
+                            <input type="radio" name="icon_type" value="image" onchange="toggleIconInput()"
+                                class="mr-2">
+                            <span>Upload Image</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="iconClassDiv">
+                    <label for="iconClassInput"
+                        class="text-sm font-medium text-gray-400 mb-2 flex gap-2 flex-wrap items-center">
+                        Fontawesome Icon
+                        <p class="text-gray-500 text-xs">Ex: <code>fas fa-laptop</code></p>
+                    </label>
+                    <input type="text" name="icon" id="iconClassInput" placeholder="Enter your fontawesome icon class"
+                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @error('icon')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div id="iconImageDiv" class="hidden">
+                    <label for="iconImage"
+                        class="text-sm font-medium text-gray-400 mb-2 flex gap-2 flex-wrap items-center">
+                        Icon Image
+                        <p class="text-gray-500 text-xs">Formats: JPG, PNG, GIF</p>
+                    </label>
+                    <input type="file" name="icon_file" id="iconImage" accept="image/*"
+                        class="w-full glass px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    @error('icon_file')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Status</label>
+                    <select name="is_active"
+                        class="w-full glass px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-3 pt-4 border-t border-white/10">
+                    <button type="button" onclick="closeModal('addCategoryModal')"
+                        class="flex-1 btn-gray px-6 py-3 rounded-xl text-white font-bold">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 btn-primary px-6 py-3 rounded-xl text-white font-bold">
+                        Add Category
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+
+    <script>
+        function toggleIconInput() {
+            document.getElementById('iconClassDiv').classList.toggle('hidden');
+            document.getElementById('iconImageDiv').classList.toggle('hidden');
+        }
+    </script>
 @endsection
