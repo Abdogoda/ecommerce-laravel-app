@@ -51,6 +51,12 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
     Route::controller(ProductController::class)->middleware(['can:'.PermissionEnum::VIEW_PRODUCTS->value])->prefix('products')->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store')->middleware(['can:'.PermissionEnum::CREATE_PRODUCTS->value]);
+        
+        Route::post('/{product}/images', 'storeImage')->name('images.store')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
+        Route::put('/{product}/images/{media}', 'updateImage')->name('images.update')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
+        Route::delete('/{product}/images/{media}', 'destroyImage')->name('images.destroy')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
+        
+        Route::get('/{product}', 'show')->name('show');
         Route::get('/{product}/edit', 'edit')->name('edit')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::put('/{product}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::delete('/{product}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_PRODUCTS->value]);

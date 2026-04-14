@@ -4,7 +4,7 @@
     <div class="p-6">
         <!-- Page Header -->
         <div class="mb-8 fade-in-up">
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center flex-wrap gap-3">
                 <div>
                     <div class="flex gap-0 items-start flex-col sm:flex-row sm:gap-5 sm:items-center mb-2">
                         <h1 class="text-3xl font-bold text-white mb-2">
@@ -106,10 +106,10 @@
                         @forelse ($products as $product)
                             <tr class="table-row">
                                 <td class="px-6 py-4">
-                                    <a href="./show.html"
+                                    <a href="{{ route('admin.products.show', $product) }}"
                                         class="flex items-center text-white hover:text-blue-300 transition-colors">
                                         <img class="w-12 h-12 rounded-lg object-cover mr-4 transition-transform duration-300 hover:scale-110"
-                                            src="https://picsum.photos/48/48?random=1" alt="Product" />
+                                            src="{{ $product->getPrimaryImageUrl() }}" alt="Product" />
                                         <div>
                                             <div class="text-sm font-medium">
                                                 {{ $product->name }}
