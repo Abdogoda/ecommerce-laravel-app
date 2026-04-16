@@ -357,12 +357,23 @@ function switchTab(tabName) {
   // Show selected tab content
   if (document.getElementById(tabName)) {
     document.getElementById(tabName).classList.remove("hidden");
+  }else{
+    if (tabContents.length > 0) {
+      tabContents[0].classList.remove("hidden");
+    }
   }
 
   // Add active class to selected tab button
   const activeTab = document.getElementById(tabName + "Btn");
-  activeTab.classList.add("active", "text-blue-400");
-  activeTab.classList.remove("text-gray-400");
+  if (activeTab) {
+    activeTab.classList.add("active", "text-blue-400");
+    activeTab.classList.remove("text-gray-400");
+  }else{
+    if (tabButtons.length > 0) {
+      tabButtons[0].classList.add("active", "text-blue-400");
+      tabButtons[0].classList.remove("text-gray-400");
+    }
+  }
 
   localStorage.setItem("activeAdminTab", tabName);
 }

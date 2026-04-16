@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrapFive();
+        Paginator::useTailwind();
+
+        View::composer('*', function ($view) {
+            $view->with('generalSettings', app(\App\Settings\GeneralSettings::class));
+            $view->with('socialSettings', app(\App\Settings\SocialSettings::class));
+        });
     }
 }

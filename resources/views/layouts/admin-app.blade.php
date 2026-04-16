@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title', 'E-Commerce Admin')</title>
+    <link rel="shortcut icon" href="{{ asset('assets/icon.png') }}" type="image/png" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -167,6 +168,14 @@
                 <!-- Account -->
                 <div class="border-t border-white/10 pt-4">
                     <ul class="space-y-1">
+                        <li>
+                            <a href="{{ route('admin.settings.index') }}"
+                                class="sidebar-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                <i
+                                    class="fas fa-cogs text-emerald-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="font-medium">Settings</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('admin.profile') }}"
                                 class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">

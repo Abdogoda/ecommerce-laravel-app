@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
@@ -60,6 +61,15 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::get('/{product}/edit', 'edit')->name('edit')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::put('/{product}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::delete('/{product}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_PRODUCTS->value]);
+    });
+
+    // Settings Routes
+    Route::controller(SettingController::class)->prefix('settings')->name('settings.')->middleware(['can:'.PermissionEnum::VIEW_SETTINGS->value])->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/general', 'updateGeneral')->name('updateGeneral')->middleware(['can:'.PermissionEnum::EDIT_GENERAL_SETTINGS->value]);
+        Route::post('/order', 'updateOrder')->name('updateOrder')->middleware(['can:'.PermissionEnum::EDIT_ORDER_SETTINGS->value]);
+        Route::post('/social', 'updateSocial')->name('updateSocial')->middleware(['can:'.PermissionEnum::EDIT_SOCIAL_SETTINGS->value]);
+        Route::post('/notifications', 'updateNotifications')->name('updateNotifications')->middleware(['can:'.PermissionEnum::EDIT_NOTIFICATION_SETTINGS->value]);
     });
 
     Route::view('products/{id}/edit', 'pages.admin.edit_product')->name('products.edit');

@@ -43,6 +43,12 @@ enum PermissionEnum: string
     CASE SEARCH_ACTIVITIES = 'search activities';
     CASE CLEAR_ACTIVITIES = 'clear activities';
 
+    case VIEW_SETTINGS = 'view settings';
+    case EDIT_GENERAL_SETTINGS = 'edit general settings';
+    case EDIT_ORDER_SETTINGS = 'edit order settings';
+    case EDIT_NOTIFICATION_SETTINGS = 'edit notification settings';
+    case EDIT_SOCIAL_SETTINGS = 'edit social settings';
+
     // User Permissions
     case VIEW_PROFILE = 'view profile';
     case EDIT_PROFILE = 'edit profile';
