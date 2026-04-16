@@ -199,8 +199,8 @@
         </div>
 
         <!-- Pagination -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
-            {{ $users->links() }}
+        <div class="px-6 py-4 border-t border-white/10">
+            {{ $users->links('pagination::tailwind') }}
         </div>
     </div>
 

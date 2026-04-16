@@ -173,8 +173,8 @@
             </div>
 
             <!-- Pagination -->
-            <div class="px-6 pt-4 bg-gray-800/50 flex items-center justify-end">
-                {{ $products->links() }}
+            <div class="px-6 py-4 border-t border-white/10">
+                {{ $products->links('pagination::tailwind') }}
             </div>
         </div>
     </div>

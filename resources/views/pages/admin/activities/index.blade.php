@@ -274,7 +274,9 @@
         </div>
 
         <!-- Pagination -->
-        {{ $activities->withQueryString()->links() }}
+        <div class="px-6 py-4 border-t border-white/10">
+            {{ $activities->withQueryString()->links('pagination::tailwind') }}
+        </div>
     </div>
     </div>
 
