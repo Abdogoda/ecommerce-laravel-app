@@ -234,13 +234,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Desktop Search Form -->
-                    <form
-                        class="hidden md:flex md:flex-1 md:max-w-md items-center bg-white/5 rounded-xl px-4 py-2 border border-white/10 focus-within:border-blue-500 transition-colors">
-                        <i class="fas fa-search text-gray-400 text-sm mr-3"></i>
-                        <input id="search" name="search" type="search" placeholder="Search products..."
-                            class="bg-transparent text-white placeholder-gray-500 outline-none w-full text-sm" />
-                    </form>
+                    <!-- Global Search Component -->
+                    @include('components.admin.global-search')
                 </div>
 
                 <!-- Header Actions -->
@@ -285,21 +280,6 @@
                         </div>
                     </a>
                 </div>
-            </div>
-
-            <!-- Mobile Expandable Search Form -->
-            <div id="mobileSearchForm"
-                class="hidden md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-white/5 border-b border-white/10"
-                style="max-height: 0px">
-                <form class="p-3">
-                    <div
-                        class="flex items-center bg-white/5 rounded-lg px-3 py-2 border border-white/10 focus-within:border-blue-500 transition-colors">
-                        <i class="fas fa-search text-gray-400 text-sm mr-3"></i>
-                        <input id="search" name="search" type="search" placeholder="Search products..."
-                            id="mobileSearchInput"
-                            class="bg-transparent text-white placeholder-gray-500 outline-none w-full text-sm" />
-                    </div>
-                </form>
             </div>
         </header>
 

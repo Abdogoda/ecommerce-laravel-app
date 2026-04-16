@@ -187,7 +187,10 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <p class="text-white font-medium">{{ $user->name }}</p>
+                                        <a href="{{ route('admin.users.show', $user) }}"
+                                            class="text-white font-medium hover:text-blue-400 transition-colors">
+                                            {{ $user->name }}
+                                        </a>
                                         <p class="text-gray-400 text-sm">ID: #{{ $user->id }}</p>
                                     </div>
                                 </div>
@@ -220,14 +223,6 @@
                             </td>
                             <td class="py-4 px-4">
                                 <div class="flex items-center space-x-2">
-                                    @can(\App\Enums\PermissionEnum::EDIT_USERS->value)
-                                        <button
-                                            onclick="openEditModal({{ $user->id }},'{{ $user->name }}','{{ $user->email }}','{{ $user->phone }}','{{ $user->is_active ? '1' : '0' }}')"
-                                            class="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-all hover:scale-110"
-                                            title="Edit User">
-                                            <i class="fas fa-edit text-sm"></i>
-                                        </button>
-                                    @endcan
                                     @can(\App\Enums\PermissionEnum::ASSIGN_ROLES->value)
                                         <button
                                             onclick="openRoleModal({{ $user->id }}, {{ $user->roles->pluck('id')->toJson() }})"
@@ -344,82 +339,6 @@
                         <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">
                             <i class="fas fa-plus mr-2"></i>
                             Add User
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endcan
-
-    @can(\App\Enums\PermissionEnum::EDIT_USERS->value)
-        <!-- Edit User Modal -->
-        <div id="editUserModal" class="hidden fixed inset-0 z-50 backdrop-blur-sm items-center justify-center">
-            <div
-                class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-lg mx-4 animate-bounce-in transition-all duration-300">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-white">
-                        <i class="fas fa-user-edit mr-2 text-yellow-500"></i>
-                        Edit User
-                    </h3>
-                    <button onclick="closeModal('editUserModal')"
-                        class="text-gray-400 hover:text-white text-xl transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <form method="POST" id="editUserForm" class="space-y-4">
-                    @csrf
-                    @method('PUT')
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                            <input type="text" id="edit_user_name" name="name" required
-                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-                                placeholder="Enter full name" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                            <input type="email" id="edit_user_email" name="email" required
-                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-                                placeholder="Enter email address" />
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
-                            <input type="tel" id="edit_user_phone" name="phone"
-                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-                                placeholder="Enter phone number" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
-                            <select id="edit_user_status" name="is_active"
-                                class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white focus:border-blue-500 focus:outline-none">
-                                <option selected value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            New Password
-                            <span class="text-gray-600 ml-1">(leave empty to keep current)</span>
-                        </label>
-                        <input type="password" id="edit_user_password" name="password"
-                            class="form-input w-full px-4 py-2 rounded-lg border border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-                            placeholder="Enter new password" />
-                    </div>
-
-                    <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" onclick="closeModal('editUserModal')"
-                            class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn-warning px-6 py-2 rounded-lg text-white font-medium">
-                            <i class="fas fa-save mr-2"></i>
-                            Update User
                         </button>
                     </div>
                 </form>
@@ -563,21 +482,6 @@
 
 @push('scripts')
     <script>
-        // Open Edit Modal
-        function openEditModal(userId, userName, userEmail, userPhone, userStatus) {
-            document.getElementById("edit_user_name").value = userName;
-            document.getElementById("edit_user_email").value = userEmail;
-            document.getElementById("edit_user_phone").value = userPhone;
-            document.getElementById("edit_user_status").value = userStatus;
-            console.log(userStatus);
-
-
-            document.getElementById("editUserForm").action = `/admin/users/${userId}`;
-
-            openModal("editUserModal");
-            document.getElementById("edit_user_name").focus();
-        }
-
         // Open Role Modal
         function openRoleModal(userId, userRoles) {
             document.getElementById("roleForm").action = `/admin/users/${userId}/roles`;
@@ -604,7 +508,6 @@
             document.getElementById("deleteMessage").textContent =
                 `Are you sure you want to delete "${userName}"? This action cannot be undone.`;
             openModal("deleteModal");
-            document.querySelector("#deleteModal input[name='password']").focus();
         }
     </script>
 @endpush

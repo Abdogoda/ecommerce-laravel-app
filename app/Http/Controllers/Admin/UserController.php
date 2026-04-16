@@ -51,6 +51,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $user->load('roles');
         return view('pages.admin.users.show', compact('user'));
     }
 
@@ -66,11 +67,6 @@ class UserController extends Controller
         }
         
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-    }
-
-    public function edit(User $user)
-    {
-        return view('pages.admin.users.edit', compact('user'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -90,7 +86,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.show', $user)->with('success', 'User updated successfully.');
     }
 
     public function destroy(PasswordRequiredRequest $request, User $user)

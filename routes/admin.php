@@ -9,10 +9,14 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\SearchController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
     Route::view('/', 'pages.admin.dashboard')->name('dashboard');
+    
     Route::view('profile', 'pages.admin.profile')->name('profile');
+    
+    Route::get('search', SearchController::class)->name('search')->middleware('throttle:60,1');
 
     // User management routes
     Route::controller(UserController::class)->middleware(['can:'.PermissionEnum::VIEW_USERS->value])->prefix('users')->name('users.')->group(function () {
