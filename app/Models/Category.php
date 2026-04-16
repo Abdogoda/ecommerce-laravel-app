@@ -11,12 +11,15 @@ use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Tags\HasTags;
+use Spatie\Translatable\HasTranslations;
 
 #[Fillable(['name', 'description', 'slug', 'icon', 'is_active'])]
 class Category extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory, HasActivity, HasSlug, HasTags;
+    use HasFactory, HasActivity, HasSlug, HasTags, HasTranslations;
+
+    public array $translatable = ['name', 'description'];
 
     public function casts(): array
     {

@@ -15,7 +15,8 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categories = Category::with('tags')->withCount('products')->latest()->paginate(20);
-        return view('pages.admin.categories.index', compact('categories'));
+        $locales = config('app.locales', [config('app.locale')]);
+        return view('pages.admin.categories.index', compact('categories', 'locales'));
     }
 
     public function store(StoreCategoryRequest $request)
@@ -27,7 +28,39 @@ class CategoryController extends Controller
             $validated['icon'] = $iconPath;
         }
 
+        // Handle translations
+        $locales = config('app.locales', [config('app.locale')]);
+        $currentLocale = app()->getLocale();
+        $names = [];
+        $descriptions = [];
+        
+        foreach ($locales as $locale) {
+            $name = trim($request->input("name_{$locale}", ''));
+            $description = trim($request->input("description_{$locale}", ''));
+            
+            if ($name) {
+                $names[$locale] = $name;
+                $descriptions[$locale] = $description ?: null;
+            }
+        }
+
+        // Set the current locale's name as the primary name for creation
+        // Generate slug only from English name
+        if (!empty($names)) {
+            $validated['name'] = $names[$currentLocale] ?? reset($names);
+            $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
+            $englishName = $names['en'] ?? reset($names);
+            $validated['slug'] = \Illuminate\Support\Str::slug($englishName);
+        }
+
         $category = Category::create($validated);
+
+        // Update with all translations
+        if (!empty($names)) {
+            $category->setTranslations('name', $names);
+            $category->setTranslations('description', $descriptions);
+            $category->save();
+        }
 
         // Check if tags were submitted (even if empty array, which means delete all tags)
         if ($request->has('_tags_submitted') || $request->has('tags')) {
@@ -43,7 +76,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $category->load('products', 'tags');
-        return view('pages.admin.categories.show', compact('category'));
+        $locales = config('app.locales', [config('app.locale')]);
+        return view('pages.admin.categories.show', compact('category', 'locales'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
@@ -59,7 +93,39 @@ class CategoryController extends Controller
             $validated['icon'] = $iconPath;
         }
 
+        // Handle translations
+        $locales = config('app.locales', [config('app.locale')]);
+        $currentLocale = app()->getLocale();
+        $names = [];
+        $descriptions = [];
+        
+        foreach ($locales as $locale) {
+            $name = trim($request->input("name_{$locale}", ''));
+            $description = trim($request->input("description_{$locale}", ''));
+            
+            if ($name) {
+                $names[$locale] = $name;
+                $descriptions[$locale] = $description ?: null;
+            }
+        }
+
+        // Set the current locale's name as the primary name for updates
+        // Generate slug only from English name
+        if (!empty($names)) {
+            $validated['name'] = $names[$currentLocale] ?? reset($names);
+            $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
+            $englishName = $names['en'] ?? reset($names);
+            $validated['slug'] = \Illuminate\Support\Str::slug($englishName);
+        }
+
         $category->update($validated);
+
+        // Update with all translations
+        if (!empty($names)) {
+            $category->setTranslations('name', $names);
+            $category->setTranslations('description', $descriptions);
+            $category->save();
+        }
 
         // Check if tags were submitted (even if empty array, which means delete all tags)
         if ($request->has('_tags_submitted') || $request->has('tags')) {
@@ -68,7 +134,7 @@ class CategoryController extends Controller
         }
 
         return redirect()
-            ->route('admin.categories.show', $category)
+            ->route('admin.categories.show', $category->slug)
             ->with('success', 'Category updated successfully!');
     }
 

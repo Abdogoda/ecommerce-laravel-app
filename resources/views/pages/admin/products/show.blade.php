@@ -134,9 +134,9 @@
                                             Out of Stock
                                         </span>
                                     @endif
-                                    <a href="{{ route('admin.categories.show', $product->category) }}"
+                                    <a href="{{ route('admin.categories.show', $product->category->slug) }}"
                                         class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium">
-                                        {{ $product->category->name }}
+                                        {{ $product->category->getTranslation('name', app()->getLocale()) }}
                                     </a>
                                     @if ($product->is_featured)
                                         <span

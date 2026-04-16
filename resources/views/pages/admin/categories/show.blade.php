@@ -7,7 +7,8 @@
             <!-- Category Icon -->
             <div class="relative">
                 @if ($category->isIconImage())
-                    <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }} Icon"
+                    <img src="{{ asset('storage/' . $category->icon) }}"
+                        alt="{{ $category->getTranslation('name', app()->getLocale()) }} Icon"
                         class="w-32 h-32 object-cover rounded-2xl category-icon" />
                 @else
                     <div
@@ -26,7 +27,8 @@
             <!-- Category Info -->
             <div class="flex-1 text-center lg:text-left">
                 <div class="flex gap-0 flex-col md:flex-row md:gap-5 items-center mb-2">
-                    <h1 class="text-3xl font-bold text-white mb-2">{{ $category->name }}</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2">
+                        {{ $category->getTranslation('name', app()->getLocale()) }}</h1>
                     <div class="flex items-center space-x-4">
                         <div id="breadcrumb" class="text-sm text-gray-400">
                             <a href="{{ route('admin.dashboard') }}" class="text-gray-400 hover:underline">Admin</a>
@@ -34,11 +36,11 @@
                             <a href="{{ route('admin.categories.index') }}"
                                 class="text-gray-400 hover:underline">Categories</a>
                             <i class="fas fa-chevron-right mx-2"></i>
-                            <span class="text-white">{{ $category->name }}</span>
+                            <span class="text-white">{{ $category->getTranslation('name', app()->getLocale()) }}</span>
                         </div>
                     </div>
                 </div>
-                <p class="text-gray-400 text-lg mb-6">{{ $category->description }}</p>
+                <p class="text-gray-400 text-lg mb-6">{{ $category->getTranslation('description', app()->getLocale()) }}</p>
 
                 <div class="flex flex-wrap gap-4 justify-center lg:justify-start mb-6">
                     <div class="glass px-4 py-2 rounded-xl">
@@ -109,7 +111,8 @@
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @forelse ($category->products as $product)
-                    <a href="../products/show.html" class="Product-card admin-card p-4 rounded-xl">
+                    <a href="{{ route('admin.products.show', $product->slug) }}"
+                        class="Product-card admin-card p-4 rounded-xl">
                         <div class="relative mb-4">
                             <img src="https://picsum.photos/200/150?random=8" alt="iPhone 15"
                                 class="w-full h-36 object-cover rounded-lg" />
@@ -154,7 +157,7 @@
                     </button>
                 </div>
 
-                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category) }}"
+                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category->slug) }}"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -252,36 +255,66 @@
                     </button>
                 </div>
 
-                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category) }}">
+                <form class="space-y-6" method="POST" action="{{ route('admin.categories.update', $category->slug) }}">
                     @csrf
                     @method('PUT')
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-name">Category Name</label>
-                        <input type="text" id="category-name" name="name" value="{{ $category->name }}"
-                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required />
-                    </div>
+                    <!-- Language Tabs -->
+                    @if (count($locales) > 1)
+                        <div class="flex gap-2 border-b border-white/10">
+                            @foreach ($locales as $locale)
+                                <button type="button" onclick="switchLanguageTab('edit', '{{ $locale }}')"
+                                    class="lang-tab-edit px-4 py-2 text-sm font-medium {{ $loop->first ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white' }} transition-colors"
+                                    data-locale="{{ $locale }}">
+                                    {{ strtoupper($locale) }}
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- Language Content -->
+                    @foreach ($locales as $locale)
+                        <div class="lang-content-edit space-y-4 {{ !$loop->first ? 'hidden' : '' }}"
+                            data-locale="{{ $locale }}">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400 mb-2"
+                                    for="category-name-{{ $locale }}">{{ __('Category Name') }}</label>
+                                <input type="text" id="category-name-{{ $locale }}"
+                                    name="name_{{ $locale }}"
+                                    value="{{ $category->getTranslation('name', $locale, false) }}"
+                                    class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required />
+                                @error("name_$locale")
+                                    <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400 mb-2"
+                                    for="category-description-{{ $locale }}">{{ __('Description') }}</label>
+                                <textarea rows="3" id="category-description-{{ $locale }}" name="description_{{ $locale }}"
+                                    class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ $category->getTranslation('description', $locale, false) }}</textarea>
+                                @error("description_$locale")
+                                    <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    @endforeach
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-status">Category
-                            Status</label>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="category-status">{{ __('Category Status') }}</label>
                         <select id="category-status" name="is_active"
                             class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="1" {{ $category->is_active ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ !$category->is_active ? 'selected' : '' }}>Inactive</option>
+                            <option value="1" {{ $category->is_active ? 'selected' : '' }}>{{ __('Active') }}</option>
+                            <option value="0" {{ !$category->is_active ? 'selected' : '' }}>{{ __('Inactive') }}
+                            </option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-2"
-                            for="category-description">Description</label>
-                        <textarea rows="3" id="category-description" name="description"
-                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ $category->description }}</textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-tags">Tags</label>
+                            for="category-tags">{{ __('Tags') }}</label>
                         <div class="relative">
                             <input type="text" id="editCategoryTagsInput" placeholder="Search or create tags..."
                                 class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -309,11 +342,11 @@
                     <div class="flex items-center space-x-4">
                         <button type="button" onclick="closeModal('editCategoryModal')"
                             class="flex-1 glass px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">
-                            Cancel
+                            {{ __('Cancel') }}
                         </button>
                         <button type="submit"
                             class="flex-1 bg-gradient-to-r from-yellow-500 to-orange-600 px-6 py-3 rounded-xl text-white font-bold hover:scale-105 transition-transform">
-                            Update Category
+                            {{ __('Update Category') }}
                         </button>
                     </div>
                 </form>
@@ -321,6 +354,27 @@
         </div>
 
         <script>
+            function switchLanguageTab(context, locale) {
+                // Hide all content
+                document.querySelectorAll(`.lang-content-${context}`).forEach(el => {
+                    el.classList.add('hidden');
+                });
+
+                // Remove active styling from all tabs
+                document.querySelectorAll(`.lang-tab-${context}`).forEach(el => {
+                    el.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+                    el.classList.add('text-gray-400');
+                });
+
+                // Show selected content
+                document.querySelector(`.lang-content-${context}[data-locale="${locale}"]`).classList.remove('hidden');
+
+                // Add active styling to selected tab
+                document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.remove('text-gray-400');
+                document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.add('text-blue-400',
+                    'border-b-2', 'border-blue-400');
+            }
+
             // Initialize Tag Manager for Edit Category Modal
             document.addEventListener('DOMContentLoaded', () => {
                 const existingTags = {
@@ -348,7 +402,7 @@
         <!-- Delete Category Modal -->
         <div id="deleteCategoryModal"
             class="hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm items-center justify-center">
-            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
+            <form action="{{ route('admin.categories.destroy', $category->slug) }}" method="POST"
                 class="modal-content bg-black/90 rounded-xl p-6 w-full max-w-md mx-4 animate-bounce-in transition-all duration-300">
                 @csrf
                 @method('DELETE')
@@ -373,7 +427,8 @@
                         </div>
                         <h4 class="text-lg font-semibold text-white mb-2">Are you sure?</h4>
                         <p class="text-gray-400 text-sm">
-                            This action will permanently delete the "{{ $category->name }}" category and
+                            This action will permanently delete the
+                            \"{{ $category->getTranslation('name', app()->getLocale()) }}\" category and
                             all associated data. This cannot be undone.
                         </p>
                     </div>

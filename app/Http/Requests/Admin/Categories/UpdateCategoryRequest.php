@@ -13,15 +13,22 @@ class UpdateCategoryRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'name' => 'sometimes|string|max:255|unique:categories,name,' . $this->category->id,
-            'description' => 'nullable|string|max:1000',
+        $locales = config('app.locales', [config('app.locale')]);
+        $rules = [
             'icon' => 'nullable|string|max:255',
             'icon_file' => 'nullable|image|mimes:jpeg,png,gif,webp|max:2048',
             'is_active' => 'sometimes|boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'nullable|string|max:50',
         ];
+
+        // Add translation rules for each locale
+        foreach ($locales as $locale) {
+            $rules["name_{$locale}"] = 'sometimes|string|max:255';
+            $rules["description_{$locale}"] = 'nullable|string|max:1000';
+        }
+
+        return $rules;
     }
 
     public function prepareForValidation(): void

@@ -82,6 +82,12 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
+    /**
+     * Supported locales for translations
+     * Add all locales your application will support here
+     */
+    'locales' => explode(',', env('APP_LOCALES', 'en')),
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

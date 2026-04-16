@@ -66,7 +66,7 @@
                                     @if ($category->icon)
                                         @if ($category->isIconImage())
                                             <img src="{{ asset('storage/' . $category->icon) }}"
-                                                alt="{{ $category->name }} Icon"
+                                                alt="{{ $category->getTranslation('name', app()->getLocale()) }} Icon"
                                                 class="hidden md:block w-10 h-10 rounded-lg mr-3 object-contain">
                                         @else
                                             <div
@@ -76,8 +76,8 @@
                                         @endif
                                     @endif
                                     <div>
-                                        <a href="{{ route('admin.categories.show', $category) }}"
-                                            class="text-white hover:text-blue-400 transition-colors font-medium">{{ $category->name }}</a>
+                                        <a href="{{ route('admin.categories.show', $category->slug) }}"
+                                            class="text-white hover:text-blue-400 transition-colors font-medium">{{ $category->getTranslation('name', app()->getLocale()) }}</a>
                                     </div>
                                 </div>
                             </td>
@@ -151,24 +151,44 @@
             <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data"
                 class="space-y-6">
                 @csrf
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-2">Category Name</label>
-                    <input type="text" placeholder="Enter category name" name="name"
-                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required />
-                    @error('name')
-                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
-                    <textarea placeholder="Enter category description" rows="3" name="description"
-                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    @error('description')
-                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <!-- Language Tabs -->
+                @if (count($locales) > 1)
+                    <div class="flex gap-2 border-b border-white/10">
+                        @foreach ($locales as $locale)
+                            <button type="button" onclick="switchLanguageTab('add', '{{ $locale }}')"
+                                class="lang-tab-add px-4 py-2 text-sm font-medium {{ $loop->first ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white' }} transition-colors"
+                                data-locale="{{ $locale }}">
+                                {{ strtoupper($locale) }}
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- Language Content -->
+                @foreach ($locales as $locale)
+                    <div class="lang-content-add space-y-4 {{ !$loop->first ? 'hidden' : '' }}"
+                        data-locale="{{ $locale }}">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">{{ __('Category Name') }}</label>
+                            <input type="text" placeholder="Enter category name" name="name_{{ $locale }}"
+                                class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required />
+                            @error("name_$locale")
+                                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">{{ __('Description') }}</label>
+                            <textarea placeholder="Enter category description" rows="3" name="description_{{ $locale }}"
+                                class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            @error("description_$locale")
+                                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                @endforeach
 
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-2">Icon Type</label>
@@ -250,6 +270,27 @@
     </div>
 
     <script>
+        function switchLanguageTab(context, locale) {
+            // Hide all content
+            document.querySelectorAll(`.lang-content-${context}`).forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Remove active styling from all tabs
+            document.querySelectorAll(`.lang-tab-${context}`).forEach(el => {
+                el.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+                el.classList.add('text-gray-400');
+            });
+
+            // Show selected content
+            document.querySelector(`.lang-content-${context}[data-locale="${locale}"]`).classList.remove('hidden');
+
+            // Add active styling to selected tab
+            document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.remove('text-gray-400');
+            document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.add('text-blue-400',
+                'border-b-2', 'border-blue-400');
+        }
+
         function toggleIconInput() {
             document.getElementById('iconClassDiv').classList.toggle('hidden');
             document.getElementById('iconImageDiv').classList.toggle('hidden');
