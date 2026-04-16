@@ -4,64 +4,80 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
-use App\Http\Requests\StoreMessageRequest;
 use App\Http\Requests\UpdateMessageRequest;
+use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $messages = Message::with('user')
+            ->latest()
+            ->paginate(20);
+
+        $stats = [
+            'total_messages' => Message::count(),
+            'unread_messages' => Message::where('is_read', false)->count(),
+            'messages_today' => Message::whereDate('created_at', today())->count(),
+            'messages_this_month' => Message::whereDate('created_at', '>=', now()->startOfMonth())->count(),
+        ];
+
+        return view('pages.admin.messages.index', compact('messages', 'stats'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreMessageRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Message $message)
     {
-        //
+        // Mark as read when viewing
+        if (!$message->is_read) {
+            $message->update(['is_read' => true]);
+        }
+
+        return view('pages.admin.messages.show', compact('message'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Message $message)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateMessageRequest $request, Message $message)
     {
-        //
+        $validated = $request->validated();
+
+        if (isset($validated['is_read'])) {
+            $message->update(['is_read' => $validated['is_read']]);
+        }
+
+        return redirect()
+            ->route('admin.messages.show', $message)
+            ->with('success', 'Message updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Message $message)
     {
-        //
+        $message->delete();
+
+        return redirect()
+            ->route('admin.messages.index')
+            ->with('success', 'Message deleted successfully.');
+    }
+
+    public function markAllAsRead()
+    {
+        Message::where('is_read', false)->update(['is_read' => true]);
+
+        return redirect()
+            ->route('admin.messages.index')
+            ->with('success', 'All messages marked as read.');
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:messages,id',
+        ]);
+
+        Message::whereIn('id', $request->ids)->delete();
+
+        return redirect()
+            ->route('admin.messages.index')
+            ->with('success', 'Selected messages deleted successfully.');
     }
 }

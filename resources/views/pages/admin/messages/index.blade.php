@@ -5,7 +5,7 @@
     <div class="admin-card p-8 rounded-2xl mb-8 animate-bounce-in">
         <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
             <!-- Header Info -->
-            <div class="text-center lg:text-left">
+            <div class="text-center lg:text-left flex-1">
                 <div class="flex gap-0 items-start flex-col sm:flex-row sm:gap-5 sm:items-center mb-2">
                     <h1 class="text-3xl font-bold text-white mb-2">
                         Message Management
@@ -26,27 +26,37 @@
                 <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
                     <div class="glass px-4 py-2 rounded-xl">
                         <i class="fas fa-envelope text-blue-400 mr-2"></i>
-                        <span class="text-sm">5 New Messages</span>
+                        <span class="text-sm">{{ $stats['total_messages'] }} Total</span>
                     </div>
                     <div class="glass px-4 py-2 rounded-xl">
-                        <i class="fas fa-clock text-yellow-400 mr-2"></i>
-                        <span class="text-sm">3 Pending</span>
+                        <i class="fas fa-envelope-open-text text-yellow-400 mr-2"></i>
+                        <span class="text-sm">{{ $stats['unread_messages'] }} Unread</span>
                     </div>
                     <div class="glass px-4 py-2 rounded-xl">
-                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
-                        <span class="text-sm">15 Resolved Today</span>
+                        <i class="fas fa-calendar-day text-purple-400 mr-2"></i>
+                        <span class="text-sm">{{ $stats['messages_today'] }} Today</span>
+                    </div>
+                    <div class="glass px-4 py-2 rounded-xl">
+                        <i class="fas fa-calendar-alt text-green-400 mr-2"></i>
+                        <span class="text-sm">{{ $stats['messages_this_month'] }} This Month</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-3 justify-center lg:justify-end">
-                <button onclick="openModal('markAllReadModal')"
-                    class="btn-success px-6 py-3 rounded-xl text-white font-bold">
-                    <i class="fas fa-check-double mr-2"></i>
-                    Mark All Read
-                </button>
-            </div>
+            @if ($stats['unread_messages'] > 0)
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 justify-center lg:justify-end">
+                    <form action="{{ route('admin.messages.markAllAsRead') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit"
+                            class="btn-success px-6 py-3 rounded-xl text-white font-bold hover:scale-105 transition-transform"
+                            {{ $stats['unread_messages'] == 0 ? 'disabled' : '' }}>
+                            <i class="fas fa-check-double mr-2"></i>
+                            Mark All Read
+                        </button>
+                    </form>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -54,321 +64,103 @@
     <div class="admin-card rounded-2xl animate-slide-in">
         <div class="p-6 border-b border-white/10">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <h2 class="text-xl font-bold text-white">Customer Messages</h2>
+                <h2 class="text-xl font-bold text-white">All Messages</h2>
             </div>
         </div>
 
         <!-- Messages List Container -->
         <div class="p-6">
-            <div class="space-y-4" id="messagesList">
-                <!-- Message Card 1 - Unread -->
-                <div class="message-card unread admin-card p-6 rounded-xl cursor-pointer"
-                    onclick="
-                  openMessageActionModal(
-                    1,
-                    'John Doe',
-                    'Hello, I am interested in your iPhone 14 Pro. Can you please provide more details about the warranty and return policy? I would also like to know if you have any current promotions or discounts available. Thank you for your time and I look forward to hearing from you soon.',
-                    'john.doe@example.com',
-                    '2 hours ago',
-                    false,
-                    'high',
-                  )
-                ">
+            @forelse ($messages as $message)
+                <div class="message-card {{ !$message->is_read ? 'unread' : '' }} admin-card p-6 rounded-xl cursor-pointer hover:shadow-xl hover:shadow-blue-500/20 transition-all mb-4 last:mb-0"
+                    onclick="location.href='{{ route('admin.messages.show', $message) }}'">
                     <div class="flex items-start space-x-4">
                         <!-- Avatar -->
                         <div class="flex-shrink-0">
                             <div
                                 class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
-                                J
+                                {{ substr($message->name, 0, 1) }}
                             </div>
                         </div>
 
                         <!-- Message Content -->
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-lg font-semibold text-white">John Doe</h3>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-400">2 hours ago</span>
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                                        New
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-blue-400 text-sm mb-3">
-                                john.doe@example.com
-                            </p>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                Hello, I am interested in your iPhone 14 Pro. Can you
-                                please provide more details about the warranty and return
-                                policy?...
-                            </p>
-                            <div class="flex items-center mt-4 space-x-4">
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-tag mr-1"></i>
-                                    <span>Product Inquiry</span>
-                                </div>
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-mobile-alt mr-1"></i>
-                                    <span>iPhone 14 Pro</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Message Card 2 - Unread -->
-                <div class="message-card unread admin-card p-6 rounded-xl cursor-pointer"
-                    onclick="
-                  openMessageActionModal(
-                    2,
-                    'Jane Smith',
-                    'I recently ordered a MacBook Pro from your store and I am having some issues with the delivery. The tracking shows it was delivered but I never received it. Can you help me resolve this issue? This is quite urgent as I need it for work. Please get back to me as soon as possible.',
-                    'jane.smith@example.com',
-                    '5 hours ago',
-                    false,
-                    'urgent',
-                  )
-                ">
-                    <div class="flex items-start space-x-4">
-                        <!-- Avatar -->
-                        <div class="flex-shrink-0">
-                            <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-bold text-lg">
-                                J
-                            </div>
-                        </div>
-
-                        <!-- Message Content -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-lg font-semibold text-white">
-                                    Jane Smith
+                                <h3 class="text-lg font-semibold {{ $message->is_read ? 'text-gray-300' : 'text-white' }}">
+                                    {{ $message->name }}
                                 </h3>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-400">5 hours ago</span>
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                                        New
-                                    </span>
+                                    <span class="text-sm text-gray-400">{{ $message->created_at->diffForHumans() }}</span>
+                                    @if (!$message->is_read)
+                                        <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+                                            <i class="fas fa-envelope mr-1"></i>New
+                                        </span>
+                                    @else
+                                        <span class="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full">
+                                            <i class="fas fa-check mr-1"></i>Read
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <p class="text-blue-400 text-sm mb-3">
-                                jane.smith@example.com
+                                {{ $message->email }}
                             </p>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                I recently ordered a MacBook Pro from your store and I am
-                                having some issues with the delivery. The tracking shows
-                                it was delivered...
+                            <p
+                                class="text-gray-300 text-sm leading-relaxed {{ $message->is_read ? 'text-gray-400' : '' }} line-clamp-2">
+                                @if ($message->subject)
+                                    <strong>{{ $message->subject }}</strong><br>
+                                @endif
+                                {{ Str::limit($message->body, 150) }}
                             </p>
-                            <div class="flex items-center mt-4 space-x-4">
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-shipping-fast mr-1"></i>
-                                    <span>Delivery Issue</span>
-                                </div>
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-laptop mr-1"></i>
-                                    <span>MacBook Pro</span>
-                                </div>
+                            <div class="flex items-center mt-4 space-x-4 flex-wrap gap-2">
+                                @if ($message->user_id)
+                                    <div class="flex items-center text-gray-400 text-sm bg-gray-800/50 px-2 py-1 rounded">
+                                        <i class="fas fa-user-circle mr-1"></i>
+                                        <span>Registered User</span>
+                                    </div>
+                                @else
+                                    <div class="flex items-center text-gray-400 text-sm bg-gray-800/50 px-2 py-1 rounded">
+                                        <i class="fas fa-user mr-1"></i>
+                                        <span>Guest</span>
+                                    </div>
+                                @endif
                             </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex-shrink-0 flex flex-col gap-2" onclick="event.stopPropagation();">
+                            <a href="{{ route('admin.messages.show', $message) }}"
+                                class="px-3 py-1 bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg text-xs font-semibold transition-all"
+                                title="View Message">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </a>
+                            <form action="{{ route('admin.messages.destroy', $message) }}" method="POST"
+                                style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="w-full px-3 py-1 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg text-xs font-semibold transition-all"
+                                    title="Delete Message">
+                                    <i class="fas fa-trash mr-1"></i>Delete
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
-
-                <!-- Message Card 3 - Read -->
-                <div class="message-card admin-card p-6 rounded-xl cursor-pointer opacity-75"
-                    onclick="
-                  openMessageActionModal(
-                    3,
-                    'Mike Johnson',
-                    'Thank you for the excellent service! The AirPods Pro I ordered arrived quickly and in perfect condition. I really appreciate your fast shipping and great customer service. Keep up the good work! I will definitely recommend your store to my friends and family.',
-                    'mike.johnson@example.com',
-                    '1 day ago',
-                    true,
-                    'low',
-                  )
-                ">
-                    <div class="flex items-start space-x-4">
-                        <!-- Avatar -->
-                        <div class="flex-shrink-0">
-                            <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                                M
-                            </div>
-                        </div>
-
-                        <!-- Message Content -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-lg font-semibold text-gray-300">
-                                    Mike Johnson
-                                </h3>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-400">1 day ago</span>
-                                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                                        <i class="fas fa-check mr-1"></i>Read
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-blue-400 text-sm mb-3">
-                                mike.johnson@example.com
-                            </p>
-                            <p class="text-gray-400 text-sm leading-relaxed">
-                                Thank you for the excellent service! The AirPods Pro I
-                                ordered arrived quickly and in perfect condition...
-                            </p>
-                            <div class="flex items-center mt-4 space-x-4">
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-heart mr-1"></i>
-                                    <span>Feedback</span>
-                                </div>
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-headphones mr-1"></i>
-                                    <span>AirPods Pro</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            @empty
+                <div class="text-center py-12">
+                    <i class="fas fa-inbox text-gray-600 text-5xl mb-4"></i>
+                    <p class="text-gray-400 text-lg">No messages yet. Check back later!</p>
                 </div>
-
-                <!-- Message Card 4 - Unread -->
-                <div class="message-card unread admin-card p-6 rounded-xl cursor-pointer"
-                    onclick="
-                  openMessageActionModal(
-                    4,
-                    'Sarah Wilson',
-                    'I would like to return the Designer Leather Jacket I purchased last week. It does not fit properly and I would like to exchange it for a different size. What is your return policy and how can I proceed with this exchange? Please provide me with the necessary steps.',
-                    'sarah.wilson@example.com',
-                    '2 days ago',
-                    false,
-                  )
-                ">
-                    <div class="flex items-start space-x-4">
-                        <!-- Avatar -->
-                        <div class="flex-shrink-0">
-                            <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg">
-                                S
-                            </div>
-                        </div>
-
-                        <!-- Message Content -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-lg font-semibold text-white">
-                                    Sarah Wilson
-                                </h3>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-400">2 days ago</span>
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                                        New
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-blue-400 text-sm mb-3">
-                                sarah.wilson@example.com
-                            </p>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                I would like to return the Designer Leather Jacket I
-                                purchased last week. It does not fit properly and I would
-                                like to exchange...
-                            </p>
-                            <div class="flex items-center mt-4 space-x-4">
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-undo mr-1"></i>
-                                    <span>Return Request</span>
-                                </div>
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-tshirt mr-1"></i>
-                                    <span>Leather Jacket</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Message Card 5 - Read -->
-                <div class="message-card admin-card p-6 rounded-xl cursor-pointer opacity-75"
-                    onclick="
-                  openMessageActionModal(
-                    5,
-                    'David Brown',
-                    'I am interested in bulk purchasing running shoes for my sports club. Do you offer any discounts for bulk orders? We would need about 20 pairs in various sizes. Please let me know your best pricing and if you can accommodate this order. Thank you for your assistance.',
-                    'david.brown@example.com',
-                    '3 days ago',
-                    true,
-                    'low',
-                  )
-                ">
-                    <div class="flex items-start space-x-4">
-                        <!-- Avatar -->
-                        <div class="flex-shrink-0">
-                            <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
-                                D
-                            </div>
-                        </div>
-
-                        <!-- Message Content -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-lg font-semibold text-gray-300">
-                                    David Brown
-                                </h3>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-400">3 days ago</span>
-                                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                                        <i class="fas fa-check mr-1"></i>Read
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-blue-400 text-sm mb-3">
-                                david.brown@example.com
-                            </p>
-                            <p class="text-gray-400 text-sm leading-relaxed">
-                                I am interested in bulk purchasing running shoes for my
-                                sports club. Do you offer any discounts for bulk
-                                orders?...
-                            </p>
-                            <div class="flex items-center mt-4 space-x-4">
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-shopping-cart mr-1"></i>
-                                    <span>Bulk Order</span>
-                                </div>
-                                <div class="flex items-center text-gray-400 text-sm">
-                                    <i class="fas fa-running mr-1"></i>
-                                    <span>Running Shoes</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
 
         <!-- Pagination -->
-        <div class="p-6 border-t border-white/10">
-            <div class="flex justify-center">
-                <nav class="flex space-x-2">
-                    <button
-                        class="glass px-4 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                        <i class="fas fa-chevron-left mr-2"></i>Previous
-                    </button>
-                    <button class="bg-blue-500 px-4 py-2 rounded-xl text-white font-medium">
-                        1
-                    </button>
-                    <button
-                        class="glass px-4 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                        2
-                    </button>
-                    <button
-                        class="glass px-4 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                        3
-                    </button>
-                    <button
-                        class="glass px-4 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                        Next<i class="fas fa-chevron-right ml-2"></i>
-                    </button>
-                </nav>
+        @if ($messages->hasPages())
+            <div class="p-6 border-t border-white/10">
+                <div class="flex justify-center">
+                    {{ $messages->links() }}
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 @endsection

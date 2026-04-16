@@ -161,7 +161,10 @@
                                 <i
                                     class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                 <span class="font-medium">Messages</span>
-                                <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                                @if ($unreadMessageCount > 0)
+                                    <span
+                                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">{{ $unreadMessageCount }}</span>
+                                @endif
                             </a>
                         </li>
 
@@ -254,12 +257,15 @@
                         <i class="fas fa-search"></i>
                     </button>
                     <!-- Notifications -->
-                    <button
-                        class="glass p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
+                    <a href="{{ route('admin.messages.index') }}"
+                        class="glass p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative"
+                        title="Unread Messages">
                         <i class="fas fa-bell"></i>
-                        <span
-                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
-                    </button>
+                        @if ($unreadMessageCount > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">{{ $unreadMessageCount }}</span>
+                        @endif
+                    </a>
 
                     <!-- User Profile -->
                     <a href="{{ route('admin.profile') }}" title="Profile"

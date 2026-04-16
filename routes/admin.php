@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\MessageController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
     Route::view('/', 'pages.admin.dashboard')->name('dashboard');
@@ -72,8 +73,17 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::post('/notifications', 'updateNotifications')->name('updateNotifications')->middleware(['can:'.PermissionEnum::EDIT_NOTIFICATION_SETTINGS->value]);
     });
 
+    // Message Routes
+    Route::controller(MessageController::class)->prefix('messages')->name('messages.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{message}', 'show')->name('show');
+        Route::put('/{message}', 'update')->name('update');
+        Route::delete('/{message}', 'destroy')->name('destroy');
+        Route::post('/mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
+        Route::post('/delete-multiple', 'deleteMultiple')->name('deleteMultiple');
+    });
+
     Route::view('products/{id}/edit', 'pages.admin.edit_product')->name('products.edit');
     Route::view('orders', 'pages.admin.orders')->name('orders.index');
     Route::view('orders/{id}', 'pages.admin.order_details')->name('orders.show');
-    Route::view('messages', 'pages.admin.messages')->name('messages.index');
 });

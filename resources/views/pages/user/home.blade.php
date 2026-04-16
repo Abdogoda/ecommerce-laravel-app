@@ -443,7 +443,7 @@
     </section>
 
     <!-- Contact Us Section -->
-    <section class="py-16 px-6 bg-gray-900">
+    <section id="get-in-touch" class="py-16 px-6 bg-gray-900">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-bold text-center mb-12 text-white animate-fade-in-up">
                 <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
@@ -496,27 +496,59 @@
 
                 <!-- Contact Form -->
                 <div class="animate-fade-in-right">
-                    <form class="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl space-y-6">
+
+                    <form action="{{ route('contact.store') }}" method="POST"
+                        class="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl space-y-6">
+                        @csrf
+
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2" for="name">Full Name</label>
-                            <input
-                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                                type="text" id="name" name="name" placeholder="Your name" />
+                            <label class="block text-sm font-medium text-gray-300 mb-2" for="name">Full Name <span
+                                    class="text-red-400">*</span></label>
+                            <input type="text" id="name" name="name"
+                                value="{{ old('name', auth()->user()?->name) }}" placeholder="Your name"
+                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border {{ $errors->has('name') ? 'border-red-500' : 'border-gray-600' }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                required />
+                            @error('name')
+                                <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2" for="email">Email
-                                Address</label>
-                            <input
-                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                                type="email" id="email" name="email" placeholder="your@email.com" />
+                            <label class="block text-sm font-medium text-gray-300 mb-2" for="email">Email Address <span
+                                    class="text-red-400">*</span></label>
+                            <input type="email" id="email" name="email"
+                                value="{{ old('email', auth()->user()?->email) }}" placeholder="your@email.com"
+                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-600' }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                required />
+                            @error('email')
+                                <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2" for="message">Message</label>
-                            <textarea
-                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
-                                id="message" name="message" rows="5" placeholder="Tell us how we can help you..."></textarea>
+                            <label class="block text-sm font-medium text-gray-300 mb-2" for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" value="{{ old('subject') }}"
+                                placeholder="How can we help?"
+                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border {{ $errors->has('subject') ? 'border-red-500' : 'border-gray-600' }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                            @error('subject')
+                                <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2" for="body">Message <span
+                                    class="text-red-400">*</span></label>
+                            <textarea id="body" name="body" rows="5" placeholder="Tell us how we can help you..."
+                                class="w-full p-4 rounded-xl bg-gray-700/50 text-gray-100 border {{ $errors->has('body') ? 'border-red-500' : 'border-gray-600' }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
+                                required>{{ old('body') }}</textarea>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-gray-500 text-sm">
+                                    <span class="character-count">{{ strlen(old('body', '')) }}</span>/5000 characters
+                                </p>
+                            </div>
+                            @error('body')
+                                <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <button type="submit"
@@ -528,4 +560,28 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        <script>
+            // Character counter for message body
+            const textarea = document.getElementById('body');
+            const counter = document.querySelector('.character-count');
+
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    counter.textContent = this.value.length;
+
+                    if (textarea.value.length > 5000) {
+                        textarea.value = textarea.value.substring(0, 5000);
+                        counter.textContent = 5000;
+                        showToast('error', 'Message cannot exceed 5000 characters.');
+                    }
+                });
+
+
+                // Initialize counter with existing value
+                counter.textContent = textarea.value.length;
+            }
+        </script>
+    @endpush
 @endsection
