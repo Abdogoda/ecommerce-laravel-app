@@ -34,7 +34,7 @@
         <form method="GET" action="{{ route('admin.categories.index') }}" class="space-y-4">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-white">Search & Filter</h3>
-                @if(request()->hasAny(['search', 'status', 'min_products', 'max_products']))
+                @if (request()->hasAny(['search', 'status', 'min_products', 'max_products']))
                     <a href="{{ route('admin.categories.index') }}" class="text-sm text-blue-400 hover:text-blue-300">
                         <i class="fas fa-times mr-1"></i>Clear Filters
                     </a>
@@ -45,7 +45,7 @@
                 <!-- Search Input -->
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Search Categories</label>
-                    <input type="text" name="search" placeholder="Category name or description..." 
+                    <input type="text" name="search" placeholder="Category name or description..."
                         value="{{ request('search') }}"
                         class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
@@ -53,7 +53,8 @@
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
-                    <select name="status" class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                    <select name="status"
+                        class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
                         <option value="">All Status</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -79,7 +80,8 @@
 
             <!-- Search Button -->
             <div class="flex gap-3">
-                <button type="submit" class="btn-primary px-6 py-2 rounded-xl text-white font-medium hover:scale-105 transition-transform">
+                <button type="submit"
+                    class="btn-primary px-6 py-2 rounded-xl text-white font-medium hover:scale-105 transition-transform">
                     <i class="fas fa-search mr-2"></i>Search
                 </button>
             </div>
