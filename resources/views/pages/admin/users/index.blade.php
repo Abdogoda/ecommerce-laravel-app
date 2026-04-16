@@ -86,6 +86,65 @@
             </div>
         </div>
 
+        <!-- Search & Filter Section -->
+        <div class="admin-card rounded-xl p-6 mb-8 card-entrance">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="space-y-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-white">Search & Filter</h3>
+                    @if (request()->hasAny(['search', 'status', 'role_id']))
+                        <a href="{{ route('admin.users.index') }}" class="text-sm text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-times mr-1"></i>Clear Filters
+                        </a>
+                    @endif
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Search Input -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Search Users</label>
+                        <input type="text" name="search" placeholder="User name or email..."
+                            value="{{ request('search') }}"
+                            class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                        <select name="status"
+                            class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Role Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Role</label>
+                        <select name="role_id"
+                            class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                            <option value="">All Roles</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->id }}"
+                                    {{ request('role_id') == $role->id ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="flex gap-3">
+                    <button type="submit"
+                        class="btn-primary px-6 py-2 rounded-xl text-white font-medium flex items-center">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- Main Content Card -->
         <!-- Users Table -->
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
