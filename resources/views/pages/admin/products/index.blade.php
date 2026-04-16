@@ -79,6 +79,77 @@
             </div>
         </div>
 
+        <!-- Search & Filter Section -->
+        <div class="admin-card rounded-xl p-6 mb-8 fade-in-up delay-100">
+            <form method="GET" action="{{ route('admin.products.index') }}" class="space-y-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-white">Search & Filter</h3>
+                    @if(request()->hasAny(['search', 'category_id', 'min_price', 'max_price', 'status']))
+                        <a href="{{ route('admin.products.index') }}" class="text-sm text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-times mr-1"></i>Clear Filters
+                        </a>
+                    @endif
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Search Input -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Search Products</label>
+                        <input type="text" name="search" placeholder="Product name or description..." 
+                            value="{{ request('search') }}"
+                            class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                        <select name="category_id" class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                            <option value="">All Categories</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Min Price Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Min Price</label>
+                        <input type="number" name="min_price" placeholder="0.00" step="0.01" min="0"
+                            value="{{ request('min_price') }}"
+                            class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <!-- Max Price Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Max Price</label>
+                        <input type="number" name="max_price" placeholder="No limit" step="0.01" min="0"
+                            value="{{ request('max_price') }}"
+                            class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Stock Status</label>
+                        <select name="status" class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                            <option value="">All Status</option>
+                            <option value="in_stock" {{ request('status') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
+                            <option value="low_stock" {{ request('status') == 'low_stock' ? 'selected' : '' }}>Low Stock</option>
+                            <option value="out_of_stock" {{ request('status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="flex gap-3">
+                    <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- Products Table -->
         <div class="admin-card rounded-xl overflow-hidden fade-in-right">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
