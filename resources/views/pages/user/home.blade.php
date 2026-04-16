@@ -105,7 +105,7 @@
                     </span>
                     <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mt-4 rounded-full"></div>
                 </h2>
-                <a href="../user/categories.html"
+                <a href="{{ route('categories.index') }}"
                     class="hidden md:inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 animate-fade-in-up">
                     <span>View All Categories</span>
                     <i class="fas fa-arrow-right ml-2"></i>
@@ -115,131 +115,38 @@
             <!-- Swiper Categories -->
             <div class="swiper categoriesSwiper">
                 <div class="swiper-wrapper">
-                    <!-- Category 1 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-100">
-                            <a href="category.html?category=electronics"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-laptop text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors duration-300">
-                                    Electronics
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Latest tech gadgets
-                                </p>
-                            </a>
+                    @forelse($categories ?? [] as $category)
+                        <div class="swiper-slide">
+                            <div class="group animate-fade-in-up">
+                                <a href="{{ route('categories.show', $category->slug) }}"
+                                    class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 transform h-full">
+                                    <div
+                                        class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
+                                        @if ($category->isIconImage())
+                                            <img src="{{ asset('storage/' . $category->icon) }}" alt="{{ $category->name }}"
+                                                class="w-full h-full object-cover rounded-2xl">
+                                        @else
+                                            <i class="{{ $category->icon ?? 'fas fa-box' }} text-2xl text-white"></i>
+                                        @endif
+                                    </div>
+                                    <h5
+                                        class="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors duration-300">
+                                        {{ $category->name }}
+                                    </h5>
+                                    <p
+                                        class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
+                                        {{ $category->products_count }} products
+                                    </p>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Category 2 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-200">
-                            <a href="category.html?category=clothing"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-tshirt text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors duration-300">
-                                    Clothing
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Fashion & style
-                                </p>
-                            </a>
+                    @empty
+                        <div class="swiper-slide">
+                            <div class="text-center text-gray-400 py-8">
+                                No categories available
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Category 3 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-300">
-                            <a href="category.html?category=books"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-book text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-green-400 transition-colors duration-300">
-                                    Books
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Knowledge & stories
-                                </p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 4 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-400">
-                            <a href="category.html?category=home"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-home text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-orange-400 transition-colors duration-300">
-                                    Home & Garden
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Comfort & beauty
-                                </p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 5 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-500">
-                            <a href="category.html?category=sports"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-red-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-dumbbell text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-red-400 transition-colors duration-300">
-                                    Sports & Fitness
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Active lifestyle
-                                </p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 6 -->
-                    <div class="swiper-slide">
-                        <div class="group animate-fade-in-up delay-600">
-                            <a href="category.html?category=beauty"
-                                class="block bg-gray-700/50 backdrop-blur-sm p-8 rounded-2xl text-center transition-all duration-300 hover:bg-gray-600/50 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/25 transform h-full">
-                                <div
-                                    class="w-20 h-20 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-300">
-                                    <i class="fas fa-heart text-2xl text-white"></i>
-                                </div>
-                                <h5
-                                    class="text-xl font-semibold text-white group-hover:text-pink-400 transition-colors duration-300">
-                                    Beauty & Health
-                                </h5>
-                                <p
-                                    class="text-gray-400 text-sm mt-2 group-hover:text-gray-300 transition-colors duration-300">
-                                    Wellness products
-                                </p>
-                            </a>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
 
                 <!-- Pagination -->

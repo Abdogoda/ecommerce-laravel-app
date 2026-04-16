@@ -62,18 +62,26 @@
                     class="flex flex-col md:flex-row w-full md:w-auto md:space-x-6 md:items-center space-y-3 md:space-y-0">
                     <li class="animate-fade-in-up delay-100">
                         <a href="{{ route('home') }}"
-                            class="hover:text-blue-400 transition-all duration-300 relative group block py-2 md:py-0">
+                            class="hover:text-blue-400 {{ request()->routeIs('home') ? 'text-blue-400' : '' }} transition-all duration-300 relative group block py-2 md:py-0">
                             <span>Home</span>
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full {{ request()->routeIs('home') ? 'w-full' : '' }}"></span>
+                        </a>
+                    </li>
+                    <li class="animate-fade-in-up delay-200">
+                        <a href="{{ route('categories.index') }}"
+                            class="hover:text-blue-400 {{ request()->routeIs('categories.index') ? 'text-blue-400' : '' }} transition-all duration-300 relative group block py-2 md:py-0">
+                            <span>Categories</span>
+                            <span
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full {{ request()->routeIs('categories.index') ? 'w-full' : '' }}"></span>
                         </a>
                     </li>
                     <li class="animate-fade-in-up delay-200">
                         <a href="{{ route('products.index') }}"
-                            class="hover:text-blue-400 transition-all duration-300 relative group block py-2 md:py-0">
-                            <span>Shop</span>
+                            class="hover:text-blue-400 {{ request()->routeIs('products.index') ? 'text-blue-400' : '' }} transition-all duration-300 relative group block py-2 md:py-0">
+                            <span>Products</span>
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full {{ request()->routeIs('products.index') ? 'w-full' : '' }}"></span>
                         </a>
                     </li>
                     <li class="relative animate-fade-in-up delay-300">
