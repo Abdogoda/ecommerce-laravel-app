@@ -45,22 +45,12 @@ class CategoryController extends Controller
         }
 
         // Set the current locale's name as the primary name for creation
-        // Generate slug only from English name
         if (!empty($names)) {
             $validated['name'] = $names[$currentLocale] ?? reset($names);
             $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
-            $englishName = $names['en'] ?? reset($names);
-            $validated['slug'] = \Illuminate\Support\Str::slug($englishName);
         }
 
         $category = Category::create($validated);
-
-        // Update with all translations
-        if (!empty($names)) {
-            $category->setTranslations('name', $names);
-            $category->setTranslations('description', $descriptions);
-            $category->save();
-        }
 
         // Check if tags were submitted (even if empty array, which means delete all tags)
         if ($request->has('_tags_submitted') || $request->has('tags')) {
@@ -110,22 +100,12 @@ class CategoryController extends Controller
         }
 
         // Set the current locale's name as the primary name for updates
-        // Generate slug only from English name
         if (!empty($names)) {
             $validated['name'] = $names[$currentLocale] ?? reset($names);
             $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
-            $englishName = $names['en'] ?? reset($names);
-            $validated['slug'] = \Illuminate\Support\Str::slug($englishName);
         }
 
         $category->update($validated);
-
-        // Update with all translations
-        if (!empty($names)) {
-            $category->setTranslations('name', $names);
-            $category->setTranslations('description', $descriptions);
-            $category->save();
-        }
 
         // Check if tags were submitted (even if empty array, which means delete all tags)
         if ($request->has('_tags_submitted') || $request->has('tags')) {

@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\Products\StoreProductRequest;
 use App\Http\Requests\Admin\Products\UpdateProductRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\ImageRequest;
 
@@ -25,6 +26,7 @@ class ProductController extends Controller
         ];
 
         $categories = Category::orderBy('name')->get();
+        $locales = config('app.locales', [config('app.locale')]);
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', "%{$search}%")
@@ -56,15 +58,39 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(20)->withQueryString();
-        return view('pages.admin.products.index', compact('products', 'categories', 'stats'));
+        return view('pages.admin.products.index', compact('products', 'categories', 'stats', 'locales'));
     }
 
 
     public function store(StoreProductRequest $request)
     {
         $validated = $request->validated();
-        $product = Product::create($validated);
         
+        // Handle translations
+        $locales = config('app.locales', [config('app.locale')]);
+        $currentLocale = app()->getLocale();
+        $names = [];
+        $descriptions = [];
+        
+        foreach ($locales as $locale) {
+            $name = trim($request->input("name_{$locale}", ''));
+            $description = trim($request->input("description_{$locale}", ''));
+            
+            if ($name) {
+                $names[$locale] = $name;
+                $descriptions[$locale] = $description ?: null;
+            }
+        }
+
+        // Set the current locale's name as the primary name for creation
+        // Generate slug only from English name
+        if (!empty($names)) {
+            $validated['name'] = $names[$currentLocale] ?? reset($names);
+            $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
+        }
+
+        $product = Product::create($validated);
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $product->addMedia($image)->toMediaCollection('gallery');
@@ -91,13 +117,38 @@ class ProductController extends Controller
             ->get();
 
         $categories = Category::orderBy('name')->get();
+        $locales = config('app.locales', [config('app.locale')]);
 
-        return view('pages.admin.products.show', compact('product', 'similarProducts', 'categories'));
+        return view('pages.admin.products.show', compact('product', 'similarProducts', 'categories', 'locales'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
     {
         $validated = $request->validated();
+
+        // Handle translations
+        $locales = config('app.locales', [config('app.locale')]);
+        $currentLocale = app()->getLocale();
+        $names = [];
+        $descriptions = [];
+        
+        foreach ($locales as $locale) {
+            $name = trim($request->input("name_{$locale}", ''));
+            $description = trim($request->input("description_{$locale}", ''));
+            
+            if ($name) {
+                $names[$locale] = $name;
+                $descriptions[$locale] = $description ?: null;
+            }
+        }
+
+        // Set the current locale's name as the primary name for updates
+        // Generate slug only from English name
+        if (!empty($names)) {
+            $validated['name'] = $names[$currentLocale] ?? reset($names);
+            $validated['description'] = $descriptions[$currentLocale] ?? reset($descriptions) ?? '';
+        }
+
         $product->update($validated);
 
         // Check if tags were submitted (even if empty array, which means delete all tags)

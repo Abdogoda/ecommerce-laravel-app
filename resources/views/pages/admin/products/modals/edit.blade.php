@@ -15,11 +15,46 @@
         <form action="{{ route('admin.products.update', $product) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Product Name</label>
-                <input type="text" value="{{ $product->name }}" name="name" id="name"
-                    class="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors" />
-            </div>
+
+            <!-- Language Tabs -->
+            @if (count($locales) > 1)
+                <div class="flex gap-2 border-b border-white/10">
+                    @foreach ($locales as $locale)
+                        <button type="button" onclick="switchLanguageTab('edit', '{{ $locale }}')"
+                            class="lang-tab-edit px-4 py-2 text-sm font-medium {{ $loop->first ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white' }} transition-colors"
+                            data-locale="{{ $locale }}">
+                            {{ strtoupper($locale) }}
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Language Content -->
+            @foreach ($locales as $locale)
+                <div class="lang-content-edit space-y-4 {{ !$loop->first ? 'hidden' : '' }}"
+                    data-locale="{{ $locale }}">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="product-name-{{ $locale }}">Product Name</label>
+                        <input type="text" id="product-name-{{ $locale }}" name="name_{{ $locale }}"
+                            value="{{ $product->getTranslation('name', $locale, false) }}"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        @error("name_$locale")
+                            <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="product-description-{{ $locale }}">Description</label>
+                        <textarea rows="3" id="product-description-{{ $locale }}" name="description_{{ $locale }}"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ $product->getTranslation('description', $locale, false) }}</textarea>
+                        @error("description_$locale")
+                            <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            @endforeach
 
             <div>
                 <label for="category_id" class="block text-sm font-medium text-gray-300 mb-2">Category</label>
@@ -28,7 +63,7 @@
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}"
                             {{ $product->category_id == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
+                            {{ $category->getTranslation('name', app()->getLocale()) }}
                         </option>
                     @endforeach
                 </select>
@@ -81,14 +116,6 @@
             </div>
 
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                <textarea name="description" id="description" rows="3"
-                    class="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors">
-                    {{ $product->description }}
-                    </textarea>
-            </div>
-
-            <div>
                 <label for="product_tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
                 <div class="relative">
                     <input type="text" id="editProductTagsInput" placeholder="Search or create tags..."
@@ -129,6 +156,27 @@
 </div>
 
 <script>
+    function switchLanguageTab(context, locale) {
+        // Hide all content
+        document.querySelectorAll(`.lang-content-${context}`).forEach(el => {
+            el.classList.add('hidden');
+        });
+
+        // Remove active styling from all tabs
+        document.querySelectorAll(`.lang-tab-${context}`).forEach(el => {
+            el.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+            el.classList.add('text-gray-400');
+        });
+
+        // Show selected content
+        document.querySelector(`.lang-content-${context}[data-locale="${locale}"]`).classList.remove('hidden');
+
+        // Add active styling to selected tab
+        document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.remove('text-gray-400');
+        document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.add('text-blue-400',
+            'border-b-2', 'border-blue-400');
+    }
+
     // Initialize Tag Manager for Edit Product Modal
     document.addEventListener('DOMContentLoaded', () => {
         const existingTags = {

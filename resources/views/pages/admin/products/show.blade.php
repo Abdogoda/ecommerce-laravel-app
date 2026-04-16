@@ -97,7 +97,7 @@
                     <div>
                         <div class="flex gap-0 items-start flex-col mb-4">
                             <h1 class="text-3xl font-bold text-white mb-4">
-                                {{ $product->name }}
+                                {{ $product->getTranslation('name', app()->getLocale()) }}</h1>
                             </h1>
                             <div class="flex items-center space-x-4">
                                 <div id="breadcrumb" class="text-sm text-gray-400">
@@ -107,7 +107,8 @@
                                     <a href="{{ route('admin.products.index') }}"
                                         class="text-gray-400 hover:underline">Products</a>
                                     <i class="fas fa-chevron-right mx-2"></i>
-                                    <span class="text-white">{{ $product->name }}</span>
+                                    <span
+                                        class="text-white">{{ $product->getTranslation('name', app()->getLocale()) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +173,7 @@
                             <div>
                                 <h3 class="text-lg font-semibold mb-2">Description</h3>
                                 <p class="text-gray-300 leading-relaxed mb-4">
-                                    {{ Str::limit($product->description, 100) }}
+                                    {{ Str::limit($product->getTranslation('description', app()->getLocale()), 100) }}
                                 </p>
                             </div>
 
@@ -336,5 +337,47 @@
             input.value = "";
             addBtn.disabled = true;
         }
+
+        function switchLanguageTab(context, locale) {
+            // Hide all content
+            document.querySelectorAll(`.lang-content-${context}`).forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Remove active styling from all tabs
+            document.querySelectorAll(`.lang-tab-${context}`).forEach(el => {
+                el.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+                el.classList.add('text-gray-400');
+            });
+
+            // Show selected content
+            document.querySelector(`.lang-content-${context}[data-locale="${locale}"]`).classList.remove('hidden');
+
+            // Add active styling to selected tab
+            document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.remove('text-gray-400');
+            document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.add('text-blue-400',
+                'border-b-2', 'border-blue-400');
+        }
+
+        // Initialize Tag Manager for Edit Product Modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingTags = {
+                @foreach ($product->tags as $tag)
+                    '{{ $tag->id }}': '{{ $tag->name }}',
+                @endforeach
+            };
+
+            const editProductTagManager = initializeTagManager({
+                inputId: 'editProductTagsInput',
+                dropdownId: 'editProductTagsDropdown',
+                selectedTagsId: 'editProductSelectedTags',
+                hiddenInputId: 'editProductTagsHidden',
+                searchUrl: '{{ route('tags.search') }}',
+                createUrl: '{{ route('tags.store') }}',
+                existingTags: existingTags,
+            });
+
+            editProductTagManager.submitForm('#editModal form');
+        });
     </script>
 @endpush

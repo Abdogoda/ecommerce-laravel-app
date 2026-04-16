@@ -18,26 +18,48 @@
         <form action="{{ route('admin.products.store') }}" method="POST" class="space-y-6"
             enctype="multipart/form-data">
             @csrf
-            <div>
-                <label class="block text-sm font-medium text-gray-400 mb-2">Product Name</label>
-                <input type="text" name="name" placeholder="Enter product name"
-                    class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required value="{{ old('name') }}" />
-                @error('name')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
-                <textarea name="description" rows="3" placeholder="Enter product description"
-                    class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    {{ old('description') }}
-                </textarea>
-                @error('description')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+            <!-- Language Tabs -->
+            @if (count($locales) > 1)
+                <div class="flex gap-2 border-b border-white/10">
+                    @foreach ($locales as $locale)
+                        <button type="button" onclick="switchLanguageTab('create', '{{ $locale }}')"
+                            class="lang-tab-create px-4 py-2 text-sm font-medium {{ $loop->first ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white' }} transition-colors"
+                            data-locale="{{ $locale }}">
+                            {{ strtoupper($locale) }}
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Language Content -->
+            @foreach ($locales as $locale)
+                <div class="lang-content-create space-y-4 {{ !$loop->first ? 'hidden' : '' }}"
+                    data-locale="{{ $locale }}">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="product-name-{{ $locale }}">Product Name</label>
+                        <input type="text" id="product-name-{{ $locale }}" name="name_{{ $locale }}"
+                            placeholder="Enter product name"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required value="{{ old("name_$locale") }}" />
+                        @error("name_$locale")
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2"
+                            for="product-description-{{ $locale }}">Description</label>
+                        <textarea rows="3" id="product-description-{{ $locale }}" name="description_{{ $locale }}"
+                            placeholder="Enter product description"
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old("description_$locale") }}</textarea>
+                        @error("description_$locale")
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            @endforeach
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
@@ -48,7 +70,8 @@
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
                             <option {{ old('category_id') == $category->id ? 'selected' : '' }}
-                                value="{{ $category->id }}">{{ $category->name }}</option>
+                                value="{{ $category->id }}">
+                                {{ $category->getTranslation('name', app()->getLocale()) }}</option>
                         @endforeach
                     </select>
                     @error('category')
@@ -126,6 +149,27 @@
 </div>
 
 <script>
+    function switchLanguageTab(context, locale) {
+        // Hide all content
+        document.querySelectorAll(`.lang-content-${context}`).forEach(el => {
+            el.classList.add('hidden');
+        });
+
+        // Remove active styling from all tabs
+        document.querySelectorAll(`.lang-tab-${context}`).forEach(el => {
+            el.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+            el.classList.add('text-gray-400');
+        });
+
+        // Show selected content
+        document.querySelector(`.lang-content-${context}[data-locale="${locale}"]`).classList.remove('hidden');
+
+        // Add active styling to selected tab
+        document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.remove('text-gray-400');
+        document.querySelector(`.lang-tab-${context}[data-locale="${locale}"]`).classList.add('text-blue-400',
+            'border-b-2', 'border-blue-400');
+    }
+
     // Initialize Tag Manager for Add Product Modal
     document.addEventListener('DOMContentLoaded', () => {
         const productTagManager = initializeTagManager({

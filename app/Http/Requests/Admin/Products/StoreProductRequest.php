@@ -13,9 +13,8 @@ class StoreProductRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'name' => 'required|string|max:255|unique:products',
-            'description' => 'nullable|string|max:1000',
+        $locales = config('app.locales', [config('app.locale')]);
+        $rules = [
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -25,6 +24,14 @@ class StoreProductRequest extends FormRequest
             'tags' => 'nullable|array',
             'tags.*' => 'nullable|string|max:50',
         ];
+
+        // Add translation rules for each locale
+        foreach ($locales as $locale) {
+            $rules["name_{$locale}"] = 'required|string|max:255';
+            $rules["description_{$locale}"] = 'nullable|string|max:1000';
+        }
+
+        return $rules;
     }
 
     public function prepareForValidation(): void
