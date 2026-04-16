@@ -1,8 +1,10 @@
 @extends('layouts.user-app')
 
+@section('title', $product->name . ' - E-Commerce Store')
+
 @section('content')
     <main class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 px-6 py-16">
-        <div div class="max-w-7xl mx-auto">
+        <div class="max-w-7xl mx-auto">
             <!-- Product Details Section -->
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16">
                 <!-- Product Images -->
@@ -11,350 +13,249 @@
                         <div
                             class="relative overflow-hidden rounded-2xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
                             <img id="mainImage"
-                                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                                src="{{ $product->media->first()?->getUrl() ?? 'https://via.placeholder.com/600x400?text=' . urlencode($product->name) }}"
                                 class="w-full h-80 lg:h-96 object-cover transition-transform duration-500 hover:scale-105"
-                                alt="Wireless Bluetooth Headphones" />
+                                alt="{{ $product->name }}" />
                             <div class="absolute top-4 right-4">
                                 <span
                                     class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
-                                    Featured
+                                    @if ($product->is_featured)
+                                        Featured
+                                    @elseif($product->created_at->diffInDays() < 7)
+                                        New
+                                    @else
+                                        Available
+                                    @endif
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Thumbnail Images -->
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="group cursor-pointer">
-                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                                class="w-full h-32 object-cover rounded-xl border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 hover:scale-105"
-                                onclick="changeMainImage(this)" alt="Headphones View 1" />
+                    @if ($product->media->count() > 1)
+                        <div class="grid gap-4"
+                            style="grid-template-columns: repeat({{ min(6, $product->media->count()) }}, 1fr);">
+                            @foreach ($product->media as $media)
+                                <div class="group cursor-pointer">
+                                    <img src="{{ $media->getUrl() }}"
+                                        class="w-full h-20 object-cover rounded-xl border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 hover:scale-105"
+                                        onclick="document.getElementById('mainImage').src='{{ $media->getUrl() }}'"
+                                        alt="{{ $product->name }}" />
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="group cursor-pointer">
-                            <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                                class="w-full h-32 object-cover rounded-xl border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 hover:scale-105"
-                                onclick="changeMainImage(this)" alt="Headphones View 2" />
-                        </div>
-                        <div class="group cursor-pointer">
-                            <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                                class="w-full h-32 object-cover rounded-xl border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 hover:scale-105"
-                                onclick="changeMainImage(this)" alt="Headphones View 3" />
-                        </div>
-                    </div>
+                    @endif
                 </div>
 
                 <!-- Product Information -->
                 <div class="animate-fade-in-right lg:col-span-3">
                     <div class="glass rounded-2xl p-8 shadow-2xl">
                         <h1 class="text-4xl font-bold text-white mb-6">
-                            Wireless Bluetooth Headphones
+                            {{ $product->name }}
                         </h1>
 
                         <!-- Rating -->
                         <div class="flex items-center space-x-2 mb-6">
                             <div class="flex items-center space-x-1">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= floor($product->rating ?? 4))
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    @else
+                                        <i class="fas fa-star text-gray-400"></i>
+                                    @endif
+                                @endfor
                             </div>
-                            <span class="text-gray-400">(4.8)</span>
+                            <span class="text-gray-400">({{ $product->rating ?? 4 }})</span>
                             <span class="text-blue-400">|</span>
-                            <span class="text-gray-400">128 reviews</span>
+                            <span class="text-gray-400">{{ rand(10, 150) }} reviews</span>
                         </div>
 
-                        <!-- Price -->
+                        <!-- Price & Stock -->
                         <div class="mb-6">
-                            <p class="text-4xl font-bold text-blue-400 mb-2">$129.99</p>
-                            <p class="text-gray-400">
-                                Category:
-                                <a href="../user/category.html?category=electronics"
-                                    class="text-blue-300 hover:text-blue-400 transition-colors duration-300">
-                                    Electronics
-                                </a>
-                            </p>
+                            <p class="text-4xl font-bold text-blue-400 mb-2">${{ number_format($product->price, 2) }}</p>
+                            <div class="flex items-center space-x-4">
+                                <p class="text-gray-400">
+                                    Category:
+                                    <a href="{{ route('categories.show', $product->category->slug) }}"
+                                        class="text-blue-300 hover:text-blue-400 transition-colors duration-300">
+                                        {{ $product->category->name }}
+                                    </a>
+                                </p>
+                                <div class="flex items-center space-x-2">
+                                    @if ($product->stock > 0)
+                                        <span class="inline-block w-2 h-2 bg-green-400 rounded-full"></span>
+                                        <span class="text-green-400">In Stock ({{ $product->stock }})</span>
+                                    @else
+                                        <span class="inline-block w-2 h-2 bg-red-400 rounded-full"></span>
+                                        <span class="text-red-400">Out of Stock</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Features -->
-                        <div class="mb-8">
-                            <h3 class="text-xl font-semibold text-white mb-4">
-                                Key Features
-                            </h3>
-                            <ul class="space-y-2 text-gray-300">
-                                <li class="flex items-center">
-                                    <i class="fas fa-check text-green-400 mr-3"></i>
-                                    Active Noise Cancellation
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-check text-green-400 mr-3"></i>
-                                    30-hour Battery Life
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-check text-green-400 mr-3"></i>
-                                    Bluetooth 5.0 Connectivity
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-check text-green-400 mr-3"></i>
-                                    Fast Charging Technology
-                                </li>
-                            </ul>
-                        </div>
+                        <!-- Product Tags -->
+                        @if ($product->tags->count() > 0)
+                            <div class="flex flex-wrap gap-3 mb-6">
+                                @foreach ($product->tags as $tag)
+                                    <a href="{{ route('products.index', ['tags' => $tag->name]) }}"
+                                        class="inline-flex items-center px-3 py-2 bg-gradient-to-r text-sm from-blue-500/20 to-purple-500/20 hover:from-blue-500/40 hover:to-purple-500/40 border border-blue-500/50 rounded-full text-blue-300 hover:text-blue-200 transition-all duration-300 hover:scale-105 transform">
+                                        <i class="fas fa-tag mr-2 text-purple-400"></i>
+                                        {{ $tag->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <!-- Quantity Selector -->
+                        @if ($product->stock > 0)
+                            <div class="mb-8">
+                                <h4 class="font-semibold text-gray-200 mb-4">Quantity</h4>
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="decrementQuantity()" id="decrementBtn"
+                                        class="w-12 h-12 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg text-white flex items-center justify-center transition-all duration-300">
+                                        -
+                                    </button>
+                                    <input type="number" id="quantityInput" value="1" min="1"
+                                        max="{{ $product->stock }}"
+                                        class="w-20 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-center text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    <button onclick="incrementQuantity()" id="incrementBtn"
+                                        class="w-12 h-12 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg text-white flex items-center justify-center transition-all duration-300">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
 
                         <!-- Action Buttons -->
                         <div class="space-y-4">
-                            <!-- Add to Cart Button -->
-                            <button
-                                onclick="
-                    addToCart(
-                      1,
-                      'Wireless Bluetooth Headphones',
-                      129.99,
-                      getQuantity(),
-                      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-                    )
-                  "
-                                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl text-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
+                            @if ($product->stock > 0)
+                                <button
+                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, getQuantity(), '{{ $product->media->first()?->getUrl() ?? '' }}')"
+                                    class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl text-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
+                                    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                                </button>
+                            @else
+                                <button disabled
+                                    class="w-full bg-gray-600 text-gray-400 font-semibold py-4 rounded-xl text-lg cursor-not-allowed">
+                                    <i class="fas fa-times mr-2"></i>Out of Stock
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Product Description Section -->
-            <div class="animate-fade-in-up delay-200 mb-16">
-                <div class="glass rounded-2xl p-8 shadow-2xl">
-                    <h2 class="text-3xl font-bold text-white mb-6">
-                        <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                            Product Description
-                        </span>
-                    </h2>
-                    <p class="text-gray-300 leading-relaxed text-lg">
-                        Experience premium audio quality with our high-performance
-                        wireless Bluetooth headphones. Featuring advanced noise
-                        cancellation technology and an impressive 30-hour battery life,
-                        these headphones are perfect for music lovers and professionals
-                        who demand crystal clear audio quality in any environment.
-                    </p>
-                    <p class="text-gray-300 leading-relaxed text-lg mt-4">
-                        Designed with comfort in mind, these headphones feature soft
-                        memory foam ear cushions and an adjustable headband that provides
-                        a perfect fit for extended listening sessions. The sleek, modern
-                        design complements any style while delivering exceptional
-                        performance.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Similar Products -->
-            <div class="animate-fade-in-up delay-300">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-white mb-4">
-                        <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                            Similar Products
-                        </span>
-                    </h2>
-                    <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    <!-- Similar Product 1 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-100">
-                        <div class="relative overflow-hidden">
-                            <a href="../user/product.html">
-                                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                                    alt="Wireless Speaker"
-                                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">New</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
-                                Wireless Speaker
-                            </h3>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-gray-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.2)</span>
-                                </div>
-                                <p class="text-2xl font-bold text-blue-400">$89.99</p>
-                            </div>
-                            <button
-                                onclick="
-                    addToCart(
-                      2,
-                      'Wireless Speaker',
-                      89.99,
-                      1,
-                      'https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-                    )
-                  "
-                                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Similar Product 2 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-200">
-                        <div class="relative overflow-hidden">
-                            <a href="../user/product.html">
-                                <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                                    alt="Gaming Mouse"
-                                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Hot</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">
-                                Gaming Mouse
-                            </h3>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.7)</span>
-                                </div>
-                                <p class="text-2xl font-bold text-purple-400">$49.99</p>
-                            </div>
-                            <button
-                                onclick="
-                    addToCart(
-                      3,
-                      'Gaming Mouse',
-                      49.99,
-                      1,
-                      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-                    )
-                  "
-                                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Similar Product 3 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-green-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-300">
-                        <div class="relative overflow-hidden">
-                            <a href="../user/product.html">
-                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                                    alt="Smart Watch"
-                                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">Limited</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-green-400 transition-colors duration-300">
-                                Smart Watch
-                            </h3>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-gray-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.3)</span>
-                                </div>
-                                <p class="text-2xl font-bold text-green-400">$299.99</p>
-                            </div>
-                            <button
-                                onclick="
-                    addToCart(
-                      4,
-                      'Smart Watch',
-                      299.99,
-                      1,
-                      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-                    )
-                  "
-                                class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Similar Product 4 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-400">
-                        <div class="relative overflow-hidden">
-                            <a href="../user/product.html">
-                                <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                                    alt="Laptop"
-                                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Featured</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300">
-                                Gaming Laptop
-                            </h3>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-gray-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.5)</span>
-                                </div>
-                                <p class="text-2xl font-bold text-orange-400">$1299.99</p>
-                            </div>
-                            <button
-                                onclick="
-                    addToCart(
-                      5,
-                      'Gaming Laptop',
-                      1299.99,
-                      1,
-                      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-                    )
-                  "
-                                class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
+            @if ($product->description)
+                <div class="animate-fade-in-up delay-200 mb-16">
+                    <div class="glass rounded-2xl p-8 shadow-2xl">
+                        <h2 class="text-3xl font-bold text-white mb-6">
+                            <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                                Product Description
+                            </span>
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed text-lg">
+                            {{ $product->description }}
+                        </p>
                     </div>
                 </div>
-            </div>
+            @endif
+
+            <!-- Related Products -->
+            @if ($relatedProducts->count() > 0)
+                <div class="animate-fade-in-up delay-300">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-white mb-4">
+                            <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                                Related Products
+                            </span>
+                        </h2>
+                        <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        @foreach ($relatedProducts as $relatedProduct)
+                            <div class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up"
+                                style="animation-delay: {{ $loop->index * 100 }}ms">
+                                <div class="relative overflow-hidden">
+                                    <a href="{{ route('products.show', $relatedProduct->slug) }}">
+                                        @if ($relatedProduct->media->first())
+                                            <img src="{{ $relatedProduct->media->first()->getUrl() }}"
+                                                alt="{{ $relatedProduct->name }}"
+                                                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        @else
+                                            <div
+                                                class="w-full h-48 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                                                <i class="fas fa-image text-3xl text-gray-600"></i>
+                                            </div>
+                                        @endif
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        </div>
+                                    </a>
+                                    <div class="absolute top-4 right-4">
+                                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                            @if ($relatedProduct->is_featured)
+                                                Featured
+                                            @else
+                                                New
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3
+                                        class="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300 line-clamp-1">
+                                        {{ $relatedProduct->name }}
+                                    </h3>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center space-x-1">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($relatedProduct->rating ?? 4))
+                                                    <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                                @else
+                                                    <i class="fas fa-star text-gray-400 text-xs"></i>
+                                                @endif
+                                            @endfor
+                                            <span
+                                                class="text-gray-400 text-xs ml-1">({{ $relatedProduct->rating ?? 4 }})</span>
+                                        </div>
+                                        <p class="text-xl font-bold text-blue-400">
+                                            ${{ number_format($relatedProduct->price, 2) }}</p>
+                                    </div>
+                                    <button
+                                        onclick="addToCart({{ $relatedProduct->id }}, '{{ addslashes($relatedProduct->name) }}', {{ $relatedProduct->price }}, 1, '{{ $relatedProduct->media->first()?->getUrl() ?? '' }}')"
+                                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 text-sm rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
+                                        <i class="fas fa-cart-plus mr-2"></i>Add
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </main>
+
+    <script>
+        function getQuantity() {
+            const input = document.getElementById('quantityInput');
+            return input ? parseInt(input.value) || 1 : 1;
+        }
+
+        function incrementQuantity() {
+            const input = document.getElementById('quantityInput');
+            const max = input.max;
+            if (input.value < max) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decrementQuantity() {
+            const input = document.getElementById('quantityInput');
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+    </script>
 @endsection

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 // USER STATIC ROUTES
 Route::get('/', HomeController::class)->name('home');
@@ -12,8 +13,9 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
-Route::view('/products', 'pages.user.products')->name('products.index');
-Route::view('/products/{id}', 'pages.user.products')->name('products.show');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
 Route::view('/cart', 'pages.user.cart')->name('cart');
 
 Route::post('contact', ContactController::class)->name('contact.store');

@@ -1,7 +1,9 @@
 @extends('layouts.user-app')
 
+@section('title', 'Products - E-Commerce Store')
+
 @section('content')
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto px-6 py-16">
         <h1 class="text-5xl font-bold text-center mb-12 text-white animate-fade-in-up">
             <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Our Products
@@ -9,16 +11,46 @@
             <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mt-4 rounded-full"></div>
         </h1>
 
+        <!-- Mobile Filter Toggle Button -->
+        <div class="lg:hidden mb-6">
+            <button onclick="toggleFilters()"
+                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                <i class="fas fa-sliders-h"></i>Filters & Search
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Sidebar Filters -->
-            <aside class="lg:col-span-1 animate-fade-in-left">
+            <aside id="filterPanel"
+                class="hidden lg:block lg:col-span-1 animate-fade-in-left fixed lg:static inset-0 z-50 lg:z-auto">
+                <!-- Mobile Close Button -->
+                <button onclick="toggleFilters()"
+                    class="lg:hidden fixed top-4 right-4 z-50 bg-red-500 hover:bg-red-600 text-white p-3 rounded-full">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <!-- Mobile Overlay -->
+                <div onclick="toggleFilters()" class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+
                 <div
-                    class="bg-gray-800/50 backdrop-blur-sm p-4 rounded-2xl shadow-2xl border border-gray-700/50 sticky top-24">
-                    <form method="GET" action="/shop" id="filterForm">
+                    class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-gray-700/50 lg:bg-gray-800/50 relative lg:relative z-50 lg:z-auto max-h-[100vh] lg:max-h-none overflow-y-auto lg:overflow-visible">
+                    <form method="GET" action="{{ route('products.index') }}" id="filterForm">
                         <h3 class="text-2xl font-semibold text-center text-white mb-6">
                             <i class="fas fa-filter mr-2 text-blue-400"></i>Filters
                         </h3>
                         <div class="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mb-6"></div>
+
+                        <!-- Search -->
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-gray-200 mb-4 flex items-center">
+                                <i class="fas fa-search mr-2 text-blue-400"></i>Search
+                            </h4>
+                            <input type="text" name="search" placeholder="Search products..."
+                                value="{{ request('search') }}"
+                                class="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                        </div>
+
+                        <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent my-6"></div>
 
                         <!-- Category Filter -->
                         <div class="mb-8">
@@ -26,41 +58,15 @@
                                 <i class="fas fa-tags mr-2 text-purple-400"></i>Category
                             </h4>
                             <div class="space-y-3">
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="category_ids[]" id="category_1" value="1"
-                                        class="hidden" />
-                                    <label for="category_1" data-category-id="1"
-                                        class="category-label cursor-pointer px-4 py-3 border border-gray-600 rounded-xl text-gray-100 hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20 hover:border-blue-500 transition-all duration-300 hover:scale-105 transform w-full text-center">
-                                        <i class="fas fa-laptop mr-2"></i>Electronics
+                                @foreach ($categories as $category)
+                                    <label
+                                        class="flex items-center space-x-3 text-gray-300 cursor-pointer hover:text-white transition-colors duration-300">
+                                        <input type="checkbox" name="category_ids[]" value="{{ $category->id }}"
+                                            {{ in_array($category->id, (array) request('category_ids', [])) ? 'checked' : '' }}
+                                            class="w-5 h-5 text-blue-500 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-300" />
+                                        <span>{{ $category->name }}</span>
                                     </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="category_ids[]" id="category_2" value="2"
-                                        class="hidden" />
-                                    <label for="category_2" data-category-id="2"
-                                        class="category-label cursor-pointer px-4 py-3 border border-gray-600 rounded-xl text-gray-100 hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-pink-600/20 hover:border-purple-500 transition-all duration-300 hover:scale-105 transform w-full text-center">
-                                        <i class="fas fa-tshirt mr-2"></i>Clothing
-                                    </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="category_ids[]" id="category_3" value="3"
-                                        class="hidden" />
-                                    <label for="category_3" data-category-id="3"
-                                        class="category-label cursor-pointer px-4 py-3 border border-gray-600 rounded-xl text-gray-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-blue-600/20 hover:border-green-500 transition-all duration-300 hover:scale-105 transform w-full text-center">
-                                        <i class="fas fa-book mr-2"></i>Books
-                                    </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="category_ids[]" id="category_4" value="4"
-                                        class="hidden" />
-                                    <label for="category_4" data-category-id="4"
-                                        class="category-label cursor-pointer px-4 py-3 border border-gray-600 rounded-xl text-gray-100 hover:bg-gradient-to-r hover:from-orange-600/20 hover:to-red-600/20 hover:border-orange-500 transition-all duration-300 hover:scale-105 transform w-full text-center">
-                                        <i class="fas fa-home mr-2"></i>Home & Garden
-                                    </label>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
 
@@ -69,15 +75,36 @@
                         <!-- Price Filter -->
                         <div class="mb-8">
                             <h4 class="font-semibold text-gray-200 mb-4 flex items-center">
-                                <i class="fas fa-dollar-sign mr-2 text-green-400"></i>Price
-                                Range
+                                <i class="fas fa-dollar-sign mr-2 text-green-400"></i>Price Range
                             </h4>
                             <div class="space-y-3">
                                 <input type="number" name="min_price" min="0" placeholder="Min Price"
-                                    class="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                    value="{{ request('min_price') }}"
+                                    class="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                                 <input type="number" name="max_price" min="0" placeholder="Max Price"
-                                    class="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+                                    value="{{ request('max_price') }}"
+                                    class="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
                             </div>
+                        </div>
+
+                        <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent my-6"></div>
+
+                        <!-- Sort By -->
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-gray-200 mb-4 flex items-center">
+                                <i class="fas fa-sort mr-2 text-yellow-400"></i>Sort By
+                            </h4>
+                            <select name="sort_by"
+                                class="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-xl text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300">
+                                <option value="latest" {{ request('sort_by') === 'latest' ? 'selected' : '' }}>Latest
+                                </option>
+                                <option value="popular" {{ request('sort_by') === 'popular' ? 'selected' : '' }}>Most
+                                    Popular</option>
+                                <option value="price_low" {{ request('sort_by') === 'price_low' ? 'selected' : '' }}>Price:
+                                    Low to High</option>
+                                <option value="price_high" {{ request('sort_by') === 'price_high' ? 'selected' : '' }}>
+                                    Price: High to Low</option>
+                            </select>
                         </div>
 
                         <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent my-6"></div>
@@ -89,7 +116,8 @@
                             </h4>
                             <label
                                 class="flex items-center space-x-3 text-gray-300 cursor-pointer hover:text-white transition-colors duration-300">
-                                <input type="checkbox" name="featured"
+                                <input type="checkbox" name="featured" value="1"
+                                    {{ request('featured') ? 'checked' : '' }}
                                     class="w-5 h-5 text-blue-500 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-300" />
                                 <span>Show Featured Products</span>
                             </label>
@@ -100,9 +128,10 @@
                                 class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-blue-500/25">
                                 <i class="fas fa-search mr-2"></i>Apply
                             </button>
-                            <a href="/shop"
-                                class="flex-1 bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-center text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg"><i
-                                    class="fas fa-undo mr-2"></i>Clear</a>
+                            <a href="{{ route('products.index') }}"
+                                class="flex-1 bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-center text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg">
+                                <i class="fas fa-undo mr-2"></i>Clear
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -110,144 +139,99 @@
 
             <!-- Products Grid -->
             <div class="lg:col-span-3 animate-fade-in-right">
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8" id="productsGrid">
-                    <!-- Sample Product 1 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-100">
-                        <div class="relative overflow-hidden">
-                            <a href="./product.html">
-                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                                    alt="Sample Product 1"
-                                    class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                @if ($products->count() > 0)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+                        @forelse($products as $product)
+                            <div class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up"
+                                style="animation-delay: {{ $loop->index * 50 }}ms">
+                                <div class="relative overflow-hidden">
+                                    <a href="{{ route('products.show', $product->slug) }}">
+                                        @if ($product->media->first())
+                                            <img src="{{ $product->media->first()->getUrl() }}" alt="{{ $product->name }}"
+                                                class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        @else
+                                            <div
+                                                class="w-full h-64 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                                                <i class="fas fa-image text-4xl text-gray-600"></i>
+                                            </div>
+                                        @endif
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        </div>
+                                    </a>
+                                    <div class="absolute top-4 right-4">
+                                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                            @if ($product->is_featured)
+                                                Featured
+                                            @elseif($product->created_at->diffInDays() < 7)
+                                                New
+                                            @else
+                                                Available
+                                            @endif
+                                        </span>
+                                    </div>
                                 </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Featured</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
-                                Premium Headphones
-                            </h3>
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                                High-quality wireless headphones with noise cancellation
-                                technology.
-                            </p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.9)</span>
+                                <div class="p-6">
+                                    <h3
+                                        class="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300 line-clamp-1">
+                                        {{ $product->name }}
+                                    </h3>
+                                    <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                                        {{ $product->description }}
+                                    </p>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center space-x-1">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($product->rating ?? 4))
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                @else
+                                                    <i class="fas fa-star text-gray-400"></i>
+                                                @endif
+                                            @endfor
+                                            <span class="text-gray-400 text-sm ml-2">({{ $product->rating ?? 4 }})</span>
+                                        </div>
+                                        <p class="text-2xl font-bold text-blue-400">
+                                            ${{ number_format($product->price, 2) }}</p>
+                                    </div>
+                                    <button
+                                        onclick="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, 1, '{{ $product->media->first()?->getUrl() ?? '' }}')"
+                                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
+                                        <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                                    </button>
                                 </div>
-                                <p class="text-2xl font-bold text-blue-400">$99.99</p>
                             </div>
-                            <button
-                                onclick="
-                      addToCart(
-                        1,
-                        'Premium Headphones',
-                        99.99,
-                        1,
-                        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                      )
-                    "
-                                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
+                        @empty
+                        @endforelse
                     </div>
 
-                    <!-- Sample Product 2 -->
-                    <div
-                        class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-200">
-                        <div class="relative overflow-hidden">
-                            <a href="./product.html">
-                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                                    alt="Sample Product 2"
-                                    class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
-                            </a>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">New</span>
-                            </div>
+                    <!-- Pagination -->
+                    @if ($products->hasPages())
+                        <div class="mt-12 flex justify-center animate-fade-in-up">
+                            {{ $products->links('pagination::tailwind') }}
                         </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">
-                                Smart Watch Pro
-                            </h3>
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                                Advanced fitness tracking with heart rate monitoring and
-                                GPS.
-                            </p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-1">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-gray-400"></i>
-                                    <span class="text-gray-400 text-sm ml-2">(4.2)</span>
-                                </div>
-                                <p class="text-2xl font-bold text-purple-400">$149.99</p>
-                            </div>
-                            <button
-                                onclick="
-                      addToCart(
-                        2,
-                        'Smart Watch Pro',
-                        149.99,
-                        1,
-                        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                      )
-                    "
-                                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 transform hover:scale-105">
-                                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                            </button>
-                        </div>
+                    @endif
+                @else
+                    <div class="col-span-full text-center py-16">
+                        <i class="fas fa-box text-6xl text-gray-600 mb-4"></i>
+                        <p class="text-gray-400 text-xl">No products found. Try adjusting your filters.</p>
                     </div>
-
-                    <!-- No products message (hidden by default) -->
-                    <div id="noProducts" class="text-center text-gray-400 col-span-3 hidden">
-                        <p>No products found.</p>
-                    </div>
-                </div>
-                <!-- Pagination -->
-                <div class="mt-12 flex justify-center animate-fade-in-up delay-500">
-                    <nav class="flex items-center space-x-2">
-                        <button
-                            class="px-4 py-2 bg-gray-700/50 backdrop-blur-sm text-gray-300 rounded-xl hover:bg-gray-600/50 hover:text-white transition-all duration-300 hover:scale-105 transform disabled:opacity-50 disabled:cursor-not-allowed">
-                            <i class="fas fa-chevron-left mr-2"></i>Previous
-                        </button>
-                        <button
-                            class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg">
-                            1
-                        </button>
-                        <button
-                            class="px-4 py-2 bg-gray-700/50 backdrop-blur-sm text-gray-300 rounded-xl hover:bg-gray-600/50 hover:text-white transition-all duration-300 hover:scale-105 transform">
-                            2
-                        </button>
-                        <button
-                            class="px-4 py-2 bg-gray-700/50 backdrop-blur-sm text-gray-300 rounded-xl hover:bg-gray-600/50 hover:text-white transition-all duration-300 hover:scale-105 transform">
-                            3
-                        </button>
-                        <button
-                            class="px-4 py-2 bg-gray-700/50 backdrop-blur-sm text-gray-300 rounded-xl hover:bg-gray-600/50 hover:text-white transition-all duration-300 hover:scale-105 transform">
-                            Next<i class="fas fa-chevron-right ml-2"></i>
-                        </button>
-                    </nav>
-                </div>
+                @endif
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleFilters() {
+            const filterPanel = document.getElementById('filterPanel');
+            filterPanel.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        // Close filters when clicking apply button on mobile
+        document.getElementById('filterForm')?.addEventListener('submit', function() {
+            if (window.innerWidth < 1024) {
+                toggleFilters();
+            }
+        });
+    </script>
 @endsection

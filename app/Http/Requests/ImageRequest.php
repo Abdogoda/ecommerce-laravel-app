@@ -14,7 +14,7 @@ class ImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', 'image', 'mimes:png,jpg,gif'],
+            'image' => ['required', 'image', 'mimes:png,jpg,gif,webp'],
         ];
     }
 }
