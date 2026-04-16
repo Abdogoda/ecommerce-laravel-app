@@ -14,7 +14,30 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::with('tags')->withCount('products')->latest()->paginate(20);
+        $query = Category::with('tags')->withCount('products')->latest();
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        if ($status = $request->input('status')) {
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($minProducts = $request->input('min_products')) {
+            $query->having('products_count', '>=', $minProducts);
+        }
+
+        if ($maxProducts = $request->input('max_products')) {
+            $query->having('products_count', '<=', $maxProducts);
+        }
+
+        $categories = $query->paginate(20)->withQueryString();
         $locales = config('app.locales', [config('app.locale')]);
         return view('pages.admin.categories.index', compact('categories', 'locales'));
     }

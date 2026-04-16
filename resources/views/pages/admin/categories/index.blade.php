@@ -29,6 +29,63 @@
         </div>
     </div>
 
+    <!-- Search & Filter Section -->
+    <div class="admin-card rounded-2xl p-6 mb-8 animate-slide-in">
+        <form method="GET" action="{{ route('admin.categories.index') }}" class="space-y-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-white">Search & Filter</h3>
+                @if(request()->hasAny(['search', 'status', 'min_products', 'max_products']))
+                    <a href="{{ route('admin.categories.index') }}" class="text-sm text-blue-400 hover:text-blue-300">
+                        <i class="fas fa-times mr-1"></i>Clear Filters
+                    </a>
+                @endif
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Search Input -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Search Categories</label>
+                    <input type="text" name="search" placeholder="Category name or description..." 
+                        value="{{ request('search') }}"
+                        class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+
+                <!-- Status Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                    <select name="status" class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                        <option value="">All Status</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Min Products Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Min Products</label>
+                    <input type="number" name="min_products" placeholder="0" min="0"
+                        value="{{ request('min_products') }}"
+                        class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+
+                <!-- Max Products Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Max Products</label>
+                    <input type="number" name="max_products" placeholder="No limit" min="0"
+                        value="{{ request('max_products') }}"
+                        class="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-500 rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="flex gap-3">
+                <button type="submit" class="btn-primary px-6 py-2 rounded-xl text-white font-medium hover:scale-105 transition-transform">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- Categories Table -->
     <div class="admin-card rounded-2xl overflow-hidden animate-slide-in">
         <div class="p-6 border-b border-white/10">
