@@ -18,6 +18,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Electronics', 'ar' => 'الإلكترونيات'],
                 'description' => ['en' => 'Discover the latest gadgets and electronic devices', 'ar' => 'اكتشف أحدث الأجهزة والأدوات الإلكترونية'],
+                'icon' => "fa fa-solid fa-tv",
                 'products' => 20,
                 'productNames' => [
                     ['en' => 'Smartphone Pro Max', 'ar' => 'هاتف ذكي برو ماكس'],
@@ -35,6 +36,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Fashion & Apparel', 'ar' => 'الموضة والملابس'],
                 'description' => ['en' => 'Trendy clothing and accessories for every style', 'ar' => 'ملابس وإكسسوارات عصرية لكل أسلوب'],
+                'icon' => "fa fa-solid fa-tshirt",
                 'products' => 25,
                 'productNames' => [
                     ['en' => 'Designer T-Shirt', 'ar' => 'قميص مصمم'],
@@ -50,6 +52,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Home & Kitchen', 'ar' => 'المنزل والمطبخ'],
                 'description' => ['en' => 'Everything you need to make your home beautiful', 'ar' => 'كل ما تحتاجه لجعل منزلك جميل'],
+                'icon' => "fa fa-solid fa-home",
                 'products' => 22,
                 'productNames' => [
                     ['en' => 'Coffee Maker', 'ar' => 'آلة القهوة'],
@@ -64,6 +67,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Sports & Outdoors', 'ar' => 'الرياضة والأنشطة الخارجية'],
                 'description' => ['en' => 'High-quality sports equipment for active lifestyle', 'ar' => 'معدات رياضية عالية الجودة لنمط حياة نشط'],
+                'icon' => "fa fa-solid fa-futbol",
                 'products' => 20,
                 'productNames' => [
                     ['en' => 'Running Shoes', 'ar' => 'أحذية جري'],
@@ -78,6 +82,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Books & Media', 'ar' => 'الكتب والوسائط'],
                 'description' => ['en' => 'Expand your knowledge with our collection of books', 'ar' => 'وسع معرفتك من خلال مجموعة الكتب لدينا'],
+                'icon' => "fa fa-solid fa-book",
                 'products' => 18,
                 'productNames' => [
                     ['en' => 'Fiction Novel', 'ar' => 'رواية خيالية'],
@@ -90,6 +95,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Beauty & Personal Care', 'ar' => 'الجمال والعناية الشخصية'],
                 'description' => ['en' => 'Premium beauty products for self-care', 'ar' => 'منتجات جمال متميزة للعناية الذاتية'],
+                'icon' => "fa fa-solid fa-spa",
                 'products' => 24,
                 'productNames' => [
                     ['en' => 'Face Moisturizer', 'ar' => 'مرطب الوجه'],
@@ -103,6 +109,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Toys & Games', 'ar' => 'الألعاب والأنشطة'],
                 'description' => ['en' => 'Fun and educational toys for all ages', 'ar' => 'ألعاب ممتعة وتعليمية لجميع الأعمار'],
+                'icon' => "fa fa-solid fa-gamepad",
                 'products' => 20,
                 'productNames' => [
                     ['en' => 'Building Blocks', 'ar' => 'كتل البناء'],
@@ -115,6 +122,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Food & Beverages', 'ar' => 'الغذاء والمشروبات'],
                 'description' => ['en' => 'Quality snacks and beverages delivered to you', 'ar' => 'وجبات خفيفة ومشروبات عالية الجودة'],
+                'icon' => "fa fa-solid fa-utensils",
                 'products' => 22,
                 'productNames' => [
                     ['en' => 'Organic Coffee Beans', 'ar' => 'حبوب القهوة العضوية'],
@@ -128,6 +136,7 @@ class CategorySeeder extends Seeder
             [
                 'name' => ['en' => 'Furniture', 'ar' => 'الأثاث'],
                 'description' => ['en' => 'Modern furniture for contemporary homes', 'ar' => 'أثاث حديث للمنازل المعاصرة'],
+                'icon' => "fa fa-solid fa-couch",
                 'products' => 18,
                 'productNames' => [
                     ['en' => 'Office Chair', 'ar' => 'كرسي المكتب'],
@@ -145,6 +154,7 @@ class CategorySeeder extends Seeder
                 'description' => $catData['description'],
                 'slug' => Str::slug($catData['name']['en']) . '-' . Str::random(6),
                 'is_active' => true,
+                'icon' => $catData['icon'],
             ]);
 
             // Create products with real data
