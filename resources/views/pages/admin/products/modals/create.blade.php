@@ -97,6 +97,20 @@
                 @enderror
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">Tags</label>
+                <div class="relative">
+                    <input type="text" id="addProductTagsInput" placeholder="Search or create tags..."
+                        class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        autocomplete="off" />
+                    <div id="addProductTagsDropdown"
+                        class="hidden absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-40 overflow-y-auto">
+                    </div>
+                </div>
+                <div id="addProductSelectedTags" class="flex flex-wrap gap-2 mt-3"></div>
+                <input type="hidden" name="tags" id="addProductTagsHidden" />
+            </div>
+
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="closeModal('addProductModal')"
                     class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
@@ -110,3 +124,20 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Initialize Tag Manager for Add Product Modal
+    document.addEventListener('DOMContentLoaded', () => {
+        const productTagManager = initializeTagManager({
+            inputId: 'addProductTagsInput',
+            dropdownId: 'addProductTagsDropdown',
+            selectedTagsId: 'addProductSelectedTags',
+            hiddenInputId: 'addProductTagsHidden',
+            searchUrl: '{{ route('tags.search') }}',
+            createUrl: '{{ route('tags.store') }}',
+            existingTags: {},
+        });
+
+        productTagManager.submitForm('#addProductModal form');
+    });
+</script>

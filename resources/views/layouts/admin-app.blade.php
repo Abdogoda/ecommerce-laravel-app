@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title', 'E-Commerce Admin')</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
@@ -17,6 +18,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('assets/js/admin/main.js') }}"></script>
+    <script src="{{ asset('assets/js/admin/tags.js') }}"></script>
 
     <!-- Additional CSS will be inserted here -->
     @stack('styles')

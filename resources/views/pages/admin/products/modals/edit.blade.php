@@ -88,6 +88,32 @@
                     </textarea>
             </div>
 
+            <div>
+                <label for="product_tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+                <div class="relative">
+                    <input type="text" id="editProductTagsInput" placeholder="Search or create tags..."
+                        class="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors"
+                        autocomplete="off" />
+                    <div id="editProductTagsDropdown"
+                        class="hidden absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-40 overflow-y-auto">
+                    </div>
+                </div>
+                <div id="editProductSelectedTags" class="flex flex-wrap gap-2 mt-3">
+                    @foreach ($product->tags as $tag)
+                        <span
+                            class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium flex items-center gap-2">
+                            <i class="fas fa-tag"></i>
+                            {{ $tag->name }}
+                            <button type="button" class="text-purple-300 hover:text-purple-200 remove-tag-btn"
+                                data-tag-id="{{ $tag->id }}">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </span>
+                    @endforeach
+                </div>
+                <input type="hidden" name="tags" id="editProductTagsHidden" />
+            </div>
+
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="closeModal('editModal')"
                     class="px-6 py-2 bg-gray-600/50 hover:bg-gray-600/70 rounded-lg text-white font-medium transition-colors">
@@ -101,6 +127,29 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Initialize Tag Manager for Edit Product Modal
+    document.addEventListener('DOMContentLoaded', () => {
+        const existingTags = {
+            @foreach ($product->tags as $tag)
+                '{{ $tag->id }}': '{{ $tag->name }}',
+            @endforeach
+        };
+
+        const editProductTagManager = initializeTagManager({
+            inputId: 'editProductTagsInput',
+            dropdownId: 'editProductTagsDropdown',
+            selectedTagsId: 'editProductSelectedTags',
+            hiddenInputId: 'editProductTagsHidden',
+            searchUrl: '{{ route('tags.search') }}',
+            createUrl: '{{ route('tags.store') }}',
+            existingTags: existingTags,
+        });
+
+        editProductTagManager.submitForm('#editModal form');
+    });
+</script>
 
 <script>
     function toggleCheckbox(fieldName) {

@@ -14,7 +14,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::withCount('products')->latest()->paginate(20);
+        $categories = Category::with('tags')->withCount('products')->latest()->paginate(20);
         return view('pages.admin.categories.index', compact('categories'));
     }
 
@@ -27,7 +27,13 @@ class CategoryController extends Controller
             $validated['icon'] = $iconPath;
         }
 
-        Category::create($validated);
+        $category = Category::create($validated);
+
+        // Check if tags were submitted (even if empty array, which means delete all tags)
+        if ($request->has('_tags_submitted') || $request->has('tags')) {
+            $tags = $request->input('tags', []);
+            $category->syncTags($tags);
+        }
 
         return redirect()
             ->route('admin.categories.index')
@@ -36,13 +42,8 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $category->load('products');
+        $category->load('products', 'tags');
         return view('pages.admin.categories.show', compact('category'));
-    }
-
-    public function edit(Category $category)
-    {
-        //
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
@@ -59,6 +60,12 @@ class CategoryController extends Controller
         }
 
         $category->update($validated);
+
+        // Check if tags were submitted (even if empty array, which means delete all tags)
+        if ($request->has('_tags_submitted') || $request->has('tags')) {
+            $tags = $request->input('tags', []);
+            $category->syncTags($tags);
+        }
 
         return redirect()
             ->route('admin.categories.show', $category)

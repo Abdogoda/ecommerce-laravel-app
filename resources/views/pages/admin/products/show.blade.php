@@ -147,6 +147,20 @@
                                 </div>
                             </div>
 
+                            @if ($product->tags->count() > 0)
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-300 mb-2">Tags</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach ($product->tags as $tag)
+                                            <span
+                                                class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium">
+                                                <i class="fas fa-tag mr-1"></i>{{ $tag->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                             <div>
                                 <h3 class="text-lg font-semibold mb-2">Price</h3>
                                 <div class="flex items-center space-x-3">

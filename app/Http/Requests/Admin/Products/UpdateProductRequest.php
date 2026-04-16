@@ -21,6 +21,18 @@ class UpdateProductRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'is_active' => 'nullable|in:on,off',
             'is_featured' => 'nullable|in:on,off',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|string|max:50',
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        // Filter out empty tag strings
+        if ($this->has('tags') && is_array($this->tags)) {
+            $this->merge([
+                'tags' => array_filter($this->tags, fn($tag) => trim($tag) !== ''),
+            ]);
+        }
     }
 }

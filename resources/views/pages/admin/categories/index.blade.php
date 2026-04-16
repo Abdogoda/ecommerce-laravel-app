@@ -45,6 +45,9 @@
                             Category
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                            Tags
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                             Products
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -79,6 +82,24 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
+                                @if ($category->tags->count() > 0)
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach ($category->tags->take(2) as $tag)
+                                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+                                                {{ $tag->name }}
+                                            </span>
+                                        @endforeach
+                                        @if ($category->tags->count() > 2)
+                                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+                                                +{{ $category->tags->count() - 2 }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-gray-500 text-xs">No tags</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
                                 <span class="text-white">{{ $category->products_count }} products</span>
                             </td>
                             <td class="px-6 py-4">
@@ -96,7 +117,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-4 text-center text-gray-400">
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-400">
                                 No categories found.
                             </td>
                         </tr>
@@ -171,7 +192,8 @@
                         Fontawesome Icon
                         <p class="text-gray-500 text-xs">Ex: <code>fas fa-laptop</code></p>
                     </label>
-                    <input type="text" name="icon" id="iconClassInput" placeholder="Enter your fontawesome icon class"
+                    <input type="text" name="icon" id="iconClassInput"
+                        placeholder="Enter your fontawesome icon class"
                         class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     @error('icon')
                         <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
@@ -200,6 +222,20 @@
                     </select>
                 </div>
 
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Tags</label>
+                    <div class="relative">
+                        <input type="text" id="addCategoryTagsInput" placeholder="Search or create tags..."
+                            class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            autocomplete="off" />
+                        <div id="addCategoryTagsDropdown"
+                            class="hidden absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-40 overflow-y-auto">
+                        </div>
+                    </div>
+                    <div id="addCategorySelectedTags" class="flex flex-wrap gap-2 mt-3"></div>
+                    <input type="hidden" name="tags" id="addCategoryTagsHidden" />
+                </div>
+
                 <div class="flex gap-3 pt-4 border-t border-white/10">
                     <button type="button" onclick="closeModal('addCategoryModal')"
                         class="flex-1 btn-gray px-6 py-3 rounded-xl text-white font-bold">
@@ -218,5 +254,20 @@
             document.getElementById('iconClassDiv').classList.toggle('hidden');
             document.getElementById('iconImageDiv').classList.toggle('hidden');
         }
+
+        // Initialize Tag Manager for Add Category Modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryTagManager = initializeTagManager({
+                inputId: 'addCategoryTagsInput',
+                dropdownId: 'addCategoryTagsDropdown',
+                selectedTagsId: 'addCategorySelectedTags',
+                hiddenInputId: 'addCategoryTagsHidden',
+                searchUrl: '{{ route('tags.search') }}',
+                createUrl: '{{ route('tags.store') }}',
+                existingTags: {},
+            });
+
+            categoryTagManager.submitForm('#addCategoryModal form');
+        });
     </script>
 @endsection

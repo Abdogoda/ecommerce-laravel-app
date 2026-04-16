@@ -54,7 +54,26 @@
                             class="fas fa-{{ $category->is_active ? 'check-circle' : 'times-circle' }} text-{{ $category->is_active ? 'green' : 'red' }}-400 mr-2"></i>
                         <span class="text-sm">{{ $category->is_active ? 'Active' : 'Inactive' }} Status</span>
                     </div>
+                    @if ($category->tags->count() > 0)
+                        <div class="glass px-4 py-2 rounded-xl">
+                            <i class="fas fa-tags text-purple-400 mr-2"></i>
+                            <span class="text-sm">{{ $category->tags->count() }} Tags</span>
+                        </div>
+                    @endif
                 </div>
+
+                @if ($category->tags->count() > 0)
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-300 mb-3">Tags</h3>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ($category->tags as $tag)
+                                <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium">
+                                    <i class="fas fa-tag mr-1"></i>{{ $tag->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
 
                 <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
                     @can(\App\Enums\PermissionEnum::EDIT_CATEGORIES->value)
@@ -261,6 +280,32 @@
                             class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ $category->description }}</textarea>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2" for="category-tags">Tags</label>
+                        <div class="relative">
+                            <input type="text" id="editCategoryTagsInput" placeholder="Search or create tags..."
+                                class="w-full glass px-4 py-3 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autocomplete="off" />
+                            <div id="editCategoryTagsDropdown"
+                                class="hidden absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-40 overflow-y-auto">
+                            </div>
+                        </div>
+                        <div id="editCategorySelectedTags" class="flex flex-wrap gap-2 mt-3">
+                            @foreach ($category->tags as $tag)
+                                <span
+                                    class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium flex items-center gap-2">
+                                    <i class="fas fa-tag"></i>
+                                    {{ $tag->name }}
+                                    <button type="button" class="text-purple-300 hover:text-purple-200 remove-tag-btn"
+                                        data-tag-id="{{ $tag->id }}">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </span>
+                            @endforeach
+                        </div>
+                        <input type="hidden" name="tags" id="editCategoryTagsHidden" />
+                    </div>
+
                     <div class="flex items-center space-x-4">
                         <button type="button" onclick="closeModal('editCategoryModal')"
                             class="flex-1 glass px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-colors">
@@ -274,6 +319,29 @@
                 </form>
             </div>
         </div>
+
+        <script>
+            // Initialize Tag Manager for Edit Category Modal
+            document.addEventListener('DOMContentLoaded', () => {
+                const existingTags = {
+                    @foreach ($category->tags as $tag)
+                        '{{ $tag->id }}': '{{ $tag->name }}',
+                    @endforeach
+                };
+
+                const editCategoryTagManager = initializeTagManager({
+                    inputId: 'editCategoryTagsInput',
+                    dropdownId: 'editCategoryTagsDropdown',
+                    selectedTagsId: 'editCategorySelectedTags',
+                    hiddenInputId: 'editCategoryTagsHidden',
+                    searchUrl: '{{ route('tags.search') }}',
+                    createUrl: '{{ route('tags.store') }}',
+                    existingTags: existingTags,
+                });
+
+                editCategoryTagManager.submitForm('#editCategoryModal form');
+            });
+        </script>
     @endcan
 
     @can(\App\Enums\PermissionEnum::DELETE_CATEGORIES->value)

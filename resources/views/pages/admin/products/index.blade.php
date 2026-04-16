@@ -92,6 +92,9 @@
                                 Category
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                Tags
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Price
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -121,6 +124,26 @@
                                     <span
                                         class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">{{ $product->category->name }}</span>
                                 </td>
+                                <td class="px-6 py-4">
+                                    @if ($product->tags->count() > 0)
+                                        <div class="flex flex-wrap gap-1">
+                                            @foreach ($product->tags->take(2) as $tag)
+                                                <span
+                                                    class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+                                                    {{ $tag->name }}
+                                                </span>
+                                            @endforeach
+                                            @if ($product->tags->count() > 2)
+                                                <span
+                                                    class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs">
+                                                    +{{ $product->tags->count() - 2 }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-gray-500 text-xs">No tags</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-white">${{ number_format($product->price, 2) }}</td>
                                 <td class="px-6 py-4">
                                     <span
@@ -139,7 +162,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-400">
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-400">
                                     No products found.
                                 </td>
                             </tr>

@@ -22,6 +22,8 @@ class StoreProductRequest extends FormRequest
             'is_active' => 'required|boolean',
             'images' => 'required|array|min:1',
             'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:4096',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|string|max:50',
         ];
     }
 
@@ -30,5 +32,12 @@ class StoreProductRequest extends FormRequest
         $this->merge([
             'is_active' => $this->is_active === '1' || $this->is_active === 1 ? true : false,
         ]);
+
+        // Filter out empty tag strings
+        if ($this->has('tags') && is_array($this->tags)) {
+            $this->merge([
+                'tags' => array_filter($this->tags, fn($tag) => trim($tag) !== ''),
+            ]);
+        }
     }
 }

@@ -15,7 +15,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category')->latest();
+        $query = Product::with('category', 'tags')->latest();
         
         $stats = [
             'total' => Product::count(),
@@ -71,12 +71,18 @@ class ProductController extends Controller
             }
         }
 
+        // Check if tags were submitted (even if empty array, which means delete all tags)
+        if ($request->has('_tags_submitted') || $request->has('tags')) {
+            $tags = $request->input('tags', []);
+            $product->syncTags($tags);
+        }
+
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     public function show(Product $product)
     {
-        $product->load('category', 'media');
+        $product->load('category', 'media', 'tags');
 
         $similarProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
@@ -93,6 +99,12 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
         $product->update($validated);
+
+        // Check if tags were submitted (even if empty array, which means delete all tags)
+        if ($request->has('_tags_submitted') || $request->has('tags')) {
+            $tags = $request->input('tags', []);
+            $product->syncTags($tags);
+        }
 
         return redirect()->route('admin.products.show', $product)->with('success', 'Product updated successfully.');
     }

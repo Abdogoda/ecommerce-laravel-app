@@ -10,12 +10,13 @@ use Spatie\Activitylog\Models\Concerns\HasActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Spatie\Tags\HasTags;
 
 #[Fillable(['name', 'description', 'slug', 'icon', 'is_active'])]
 class Category extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory, HasActivity, HasSlug;
+    use HasFactory, HasActivity, HasSlug, HasTags;
 
     public function casts(): array
     {
