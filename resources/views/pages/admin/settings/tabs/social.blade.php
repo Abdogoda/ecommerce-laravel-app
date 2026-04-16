@@ -10,7 +10,7 @@
 
         <!-- Facebook -->
         <div class="form-group">
-            <label for="facebook" class="text-gray-400 mb-2 block flex items-center">
+            <label for="facebook" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-facebook text-blue-600 mr-2"></i>
                 Facebook Profile
             </label>
@@ -25,7 +25,7 @@
 
         <!-- Twitter -->
         <div class="form-group">
-            <label for="twitter" class="text-gray-400 mb-2 block flex items-center">
+            <label for="twitter" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-twitter text-sky-500 mr-2"></i>
                 Twitter Profile
             </label>
@@ -40,7 +40,7 @@
 
         <!-- Instagram -->
         <div class="form-group">
-            <label for="instagram" class="text-gray-400 mb-2 block flex items-center">
+            <label for="instagram" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-instagram text-pink-600 mr-2"></i>
                 Instagram Profile
             </label>
@@ -55,7 +55,7 @@
 
         <!-- TikTok -->
         <div class="form-group">
-            <label for="tiktok" class="text-gray-400 mb-2 block flex items-center">
+            <label for="tiktok" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-tiktok text-black dark:text-white mr-2"></i>
                 TikTok Profile
             </label>
@@ -70,7 +70,7 @@
 
         <!-- YouTube -->
         <div class="form-group">
-            <label for="youtube" class="text-gray-400 mb-2 block flex items-center">
+            <label for="youtube" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-youtube text-red-600 mr-2"></i>
                 YouTube Channel
             </label>
@@ -85,7 +85,7 @@
 
         <!-- WhatsApp -->
         <div class="form-group">
-            <label for="whatsapp" class="text-gray-400 mb-2 block flex items-center">
+            <label for="whatsapp" class="text-gray-400 mb-2 flex items-center">
                 <i class="fab fa-whatsapp text-green-500 mr-2"></i>
                 WhatsApp Number
             </label>
