@@ -27,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with('generalSettings', app(\App\Settings\GeneralSettings::class));
             $view->with('socialSettings', app(\App\Settings\SocialSettings::class));
         });
+
+        // Register a blade directive for currency formatting
+        \Illuminate\Support\Facades\Blade::directive('currency', function ($expression) {
+            return "<?php echo \App\Helpers\CurrencyHelper::formatPrice({$expression}); ?>";
+        });
     }
 }

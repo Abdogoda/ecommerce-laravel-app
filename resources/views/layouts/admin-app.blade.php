@@ -5,8 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@yield('title', 'E-Commerce Admin')</title>
-    <link rel="shortcut icon" href="{{ asset('assets/icon.png') }}" type="image/png" />
+    @php
+        $storeName = $generalSettings->name ?? 'E-Commerce';
+        $favicon =
+            $generalSettings->favicon ?? null
+                ? asset('storage/' . $generalSettings->favicon)
+                : asset('assets/icon.png');
+    @endphp
+    <title>@yield('title', $storeName . ' - Admin')</title>
+    <link rel="shortcut icon" href="{{ $favicon }}" type="image/png" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,10 +45,15 @@
                 <div class="flex items-center space-x-3">
                     <div
                         class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-store text-white text-lg"></i>
+                        @if (isset($generalSettings) && $generalSettings->logo)
+                            <img src="{{ asset('storage/' . $generalSettings->logo) }}" alt="Logo"
+                                class="w-full h-full rounded-xl object-contain" />
+                        @else
+                            <i class="fas fa-store text-white text-lg"></i>
+                        @endif
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-white">E-Commerce</h2>
+                        <h2 class="text-xl font-bold text-white">{{ $storeName ?? 'E-Commerce' }}</h2>
                         <p class="text-xs text-gray-400">Admin Panel</p>
                     </div>
                 </div>
@@ -213,7 +225,7 @@
                             <div>
                                 <a href="{{ route('admin.dashboard') }}"
                                     class="text-xl font-bold text-white hover:text-purple-600 transition-colors">
-                                    E-Commerce
+                                    {{ $storeName ?? 'E-Commerce' }}
                                 </a>
                                 <p class="text-xs text-gray-400">Admin Panel</p>
                             </div>

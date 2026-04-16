@@ -4,8 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title', 'E-Commerce')</title>
-    <link rel="shortcut icon" href="{{ asset('assets/icon.png') }}" type="image/png" />
+    @php
+        $storeName = $generalSettings->name ?? 'E-Commerce';
+        $favicon =
+            $generalSettings->favicon ?? null
+                ? asset('storage/' . $generalSettings->favicon)
+                : asset('assets/icon.png');
+    @endphp
+    <title>@yield('title', $storeName)</title>
+    <link rel="shortcut icon" href="{{ $favicon }}" type="image/png" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +40,7 @@
         <div class="w-full md:max-w-7xl mx-auto flex justify-between items-center gap-3">
             <h1 class="text-2xl font-bold animate-fade-in-left">
                 <a href="" class="hover:text-blue-400 transition-colors duration-300">
-                    <i class="fas fa-store mr-2 text-blue-400"></i>E-Commerce
+                    <i class="fas fa-store mr-2 text-blue-400"></i>{{ $storeName ?? 'E-Commerce' }}
                 </a>
             </h1>
 
