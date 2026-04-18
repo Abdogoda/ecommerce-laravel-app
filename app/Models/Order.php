@@ -28,8 +28,12 @@ class Order extends Model
             'shipping_cost' => 'decimal:2',
             'total' => 'decimal:2',
             'shipped_at' => 'datetime',
-            'status' => 'enum:pending,processing,shipped,delivered,cancelled',
         ];
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'order_number';
     }
 
     // ─── Relationships ────────────────────────────────────────────────────────

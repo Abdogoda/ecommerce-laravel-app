@@ -91,10 +91,39 @@ function getProductQuantityInCart(productId) {
   return product ? product.quantity : 0;
 }
 
-// Get total price of cart
-function getTotalPrice() {
+// Get subtotal price of cart
+function getSubtotal() {
   let cart = getCart();
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+
+// Get total price of cart (deprecated, use getSubtotal instead)
+function getTotalPrice() {
+  return getSubtotal();
+}
+
+// Calculate tax based on subtotal
+function calculateTax(subtotal, taxRate = 0, taxIncluded = false) {
+  if (taxIncluded) {
+    return subtotal - (subtotal / (1 + taxRate));
+  }
+  return subtotal * taxRate;
+}
+
+// Get shipping fee based on subtotal
+function getShippingFee(subtotal, defaultShippingFee = 0, freeShippingAbove = 0) {
+  if (freeShippingAbove > 0 && subtotal >= freeShippingAbove) {
+    return 0;
+  }
+  return defaultShippingFee;
+}
+
+// Get total with tax and shipping
+function getTotalWithTax(taxRate = 0, taxIncluded = false, defaultShippingFee = 0, freeShippingAbove = 0) {
+  const subtotal = getSubtotal();
+  const tax = calculateTax(subtotal, taxRate, taxIncluded);
+  const shipping = getShippingFee(subtotal, defaultShippingFee, freeShippingAbove);
+  return subtotal + tax + shipping;
 }
 
 // Clear the entire cart
@@ -190,6 +219,10 @@ window.updateCartItem = updateCartItem;
 window.updateCartBadge = updateCartBadge;
 window.clearCart = clearCart;
 window.getCart = getCart;
+window.getSubtotal = getSubtotal;
 window.getTotalPrice = getTotalPrice;
+window.calculateTax = calculateTax;
+window.getShippingFee = getShippingFee;
+window.getTotalWithTax = getTotalWithTax;
 window.getCartItemsWithQuantity = getCartItemsWithQuantity;
 window.getProductQuantityInCart = getProductQuantityInCart;
