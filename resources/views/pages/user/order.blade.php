@@ -228,12 +228,32 @@
                         @php
                             $statusProgression = ['pending', 'processing', 'shipped', 'completed'];
                             $statusConfig = [
-                                'pending' => ['color' => 'yellow', 'icon' => 'clock', 'label' => 'Pending', 'message' => 'Order has been placed and is awaiting confirmation'],
-                                'processing' => ['color' => 'blue', 'icon' => 'cog', 'label' => 'Processing', 'message' => 'Order is being prepared for shipment'],
-                                'shipped' => ['color' => 'purple', 'icon' => 'truck', 'label' => 'Shipped', 'message' => 'Your order is on the way'],
-                                'completed' => ['color' => 'green', 'icon' => 'check-circle', 'label' => 'Completed', 'message' => 'Order has been delivered successfully'],
+                                'pending' => [
+                                    'color' => 'yellow',
+                                    'icon' => 'clock',
+                                    'label' => 'Pending',
+                                    'message' => 'Order has been placed and is awaiting confirmation',
+                                ],
+                                'processing' => [
+                                    'color' => 'blue',
+                                    'icon' => 'cog',
+                                    'label' => 'Processing',
+                                    'message' => 'Order is being prepared for shipment',
+                                ],
+                                'shipped' => [
+                                    'color' => 'purple',
+                                    'icon' => 'truck',
+                                    'label' => 'Shipped',
+                                    'message' => 'Your order is on the way',
+                                ],
+                                'completed' => [
+                                    'color' => 'green',
+                                    'icon' => 'check-circle',
+                                    'label' => 'Completed',
+                                    'message' => 'Order has been delivered successfully',
+                                ],
                             ];
-                            
+
                             // Get current status index
                             $currentStatusIndex = array_search($order->status, $statusProgression);
                             // Get statuses that have happened (up to current status)
@@ -246,11 +266,13 @@
                                     <div class="relative flex items-start">
                                         <div
                                             class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-{{ $statusConfig[$status]['color'] }}-500 to-{{ $statusConfig[$status]['color'] }}-600 rounded-full flex items-center justify-center shadow-lg">
-                                            <i class="fas fa-{{ $statusConfig[$status]['icon'] }} {{ $status === 'processing' && $order->status === 'processing' ? 'fa-spin' : '' }} text-white text-xl"></i>
+                                            <i
+                                                class="fas fa-{{ $statusConfig[$status]['icon'] }} {{ $status === 'processing' && $order->status === 'processing' ? 'fa-spin' : '' }} text-white text-xl"></i>
                                         </div>
                                         <div class="ml-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 flex-1">
                                             <div class="flex items-center justify-between mb-2">
-                                                <h4 class="text-lg font-semibold text-{{ $statusConfig[$status]['color'] }}-400">
+                                                <h4
+                                                    class="text-lg font-semibold text-{{ $statusConfig[$status]['color'] }}-400">
                                                     {{ $statusConfig[$status]['label'] }}
                                                 </h4>
                                                 <span class="text-sm text-gray-400">

@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 
 // USER STATIC ROUTES
 Route::get('/', HomeController::class)->name('home');
@@ -30,5 +31,5 @@ Route::middleware('auth')->group(function(){
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
-    Route::view('/profile', 'pages.user.profile')->name('profile');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 });

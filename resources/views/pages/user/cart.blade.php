@@ -15,87 +15,6 @@
                 <!-- Cart Items -->
                 <div class="lg:col-span-2 animate-fade-in-left">
                     <div id="cart-items" class="space-y-6">
-                        <!-- Sample Cart Item 1 -->
-                        <div
-                            class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="relative overflow-hidden rounded-xl">
-                                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                                            alt="Premium Headphones" class="w-20 h-20 object-cover" />
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xl font-semibold text-white mb-1">
-                                            Premium Headphones
-                                        </h3>
-                                        <p class="text-gray-400 text-sm mb-2">
-                                            High-quality wireless headphones
-                                        </p>
-                                        <p class="text-2xl font-bold text-blue-400">$99.99</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2">
-                                        <button onclick="updateQuantity(1, -1)"
-                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
-                                            <i class="fas fa-minus text-xs"></i>
-                                        </button>
-                                        <span id="quantity-1"
-                                            class="text-lg font-semibold min-w-[2rem] text-center">1</span>
-                                        <button onclick="updateQuantity(1, 1)"
-                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
-                                            <i class="fas fa-plus text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <button onclick="removeFromCart(1)"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25">
-                                        <i class="fas fa-trash mr-2"></i>Remove
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Sample Cart Item 2 -->
-                        <div
-                            class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="relative overflow-hidden rounded-xl">
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
-                                            alt="Smart Watch Pro" class="w-20 h-20 object-cover" />
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xl font-semibold text-white mb-1">
-                                            Smart Watch Pro
-                                        </h3>
-                                        <p class="text-gray-400 text-sm mb-2">
-                                            Advanced fitness tracking
-                                        </p>
-                                        <p class="text-2xl font-bold text-purple-400">$149.99</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex items-center space-x-3 bg-gray-700/50 rounded-xl p-2">
-                                        <button onclick="updateQuantity(2, -1)"
-                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
-                                            <i class="fas fa-minus text-xs"></i>
-                                        </button>
-                                        <span id="quantity-2"
-                                            class="text-lg font-semibold min-w-[2rem] text-center">1</span>
-                                        <button onclick="updateQuantity(2, 1)"
-                                            class="w-8 h-8 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300 flex items-center justify-center">
-                                            <i class="fas fa-plus text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <button onclick="removeFromCart(2)"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg hover:shadow-red-500/25">
-                                        <i class="fas fa-trash mr-2"></i>Remove
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Empty cart message (hidden by default) -->
                         <div id="empty-cart" class="text-center text-gray-400 hidden py-12">
@@ -117,21 +36,9 @@
                         </h3>
 
                         <div class="space-y-4 mb-6">
-                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
+                            <div class="flex justify-between items-center py-3 border-b border-blue-500">
                                 <span class="text-gray-300">Subtotal:</span>
                                 <span class="text-white font-semibold" id="cart-subtotal">$249.98</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
-                                <span class="text-gray-300">Shipping:</span>
-                                <span class="text-green-400 font-semibold">Free</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2 border-b border-gray-700">
-                                <span class="text-gray-300">Tax:</span>
-                                <span class="text-white font-semibold">$25.00</span>
-                            </div>
-                            <div class="flex justify-between items-center py-3 border-t-2 border-blue-500">
-                                <span class="text-xl font-bold text-white">Total:</span>
-                                <span id="cart-total" class="text-2xl font-bold text-blue-400">$274.98</span>
                             </div>
                         </div>
 

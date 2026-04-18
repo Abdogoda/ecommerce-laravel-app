@@ -195,6 +195,7 @@
         // Load order summary on page load
         document.addEventListener('DOMContentLoaded', () => {
             if (cart.length === 0) {
+                {{ session()->forget('info') }}
                 {{ session()->flash('warning', 'Your cart is empty. Please add items to your cart before checking out.') }}
                 window.location.href =
                     "{{ route('products.index') }}";

@@ -344,83 +344,105 @@
                 <div id="ordersTab" class="tab-content hidden">
                     <div class="flex items-center justify-between mb-8">
                         <h3 class="text-2xl font-bold text-white flex items-center">
-                            <i class="fas fa-shopping-bag mr-3 text-orange-400"></i>My
+                            <i class="fas fa-shopping-bag mr-3 text-orange-400"></i>Latest
                             Orders
                         </h3>
+                        <a href="{{ route('orders.index') }}"
+                            class="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+                            View All <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
                     </div>
 
-                    <div class="bg-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/50 overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-800/80 border-b border-gray-600">
-                                    <tr>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            #
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            Order Number
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            Date
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            Total
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                            Status
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-600/50">
-                                    <tr class="hover:bg-gray-600/30 transition-all duration-300">
-                                        <td class="py-4 px-6 text-gray-300">1</td>
-                                        <td class="py-4 px-6">
-                                            <a href="#"
-                                                class="font-bold text-blue-400 hover:text-blue-300 transition-colors">#ORD-001</a>
-                                        </td>
-                                        <td class="py-4 px-6 text-gray-300">
-                                            Dec 15, 2024 2:30 PM
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <span class="text-green-400 font-semibold">$129.99</span>
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                                                <i class="fas fa-check-circle mr-1"></i>
-                                                Completed
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-600/30 transition-all duration-300">
-                                        <td class="py-4 px-6 text-gray-300">2</td>
-                                        <td class="py-4 px-6">
-                                            <a href="#"
-                                                class="font-bold text-blue-400 hover:text-blue-300 transition-colors">#ORD-002</a>
-                                        </td>
-                                        <td class="py-4 px-6 text-gray-300">
-                                            Dec 12, 2024 1:15 PM
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <span class="text-green-400 font-semibold">$89.50</span>
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                                                <i class="fas fa-clock mr-1"></i>
-                                                Processing
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    @if ($orders->count() > 0)
+                        <div class="bg-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/50 overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-800/80 border-b border-gray-600">
+                                        <tr>
+                                            <th
+                                                class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                                Order #
+                                            </th>
+                                            <th
+                                                class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                                Date
+                                            </th>
+                                            <th
+                                                class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                                Items
+                                            </th>
+                                            <th
+                                                class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                                Total
+                                            </th>
+                                            <th
+                                                class="py-4 px-6 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-600/50">
+                                        @foreach ($orders as $order)
+                                            <tr class="hover:bg-gray-600/30 transition-all duration-300">
+                                                <td class="py-4 px-6">
+                                                    <a href="{{ route('orders.show', $order) }}"
+                                                        class="font-bold text-blue-400 hover:text-blue-300 transition-colors">
+                                                        {{ $order->order_number }}
+                                                    </a>
+                                                </td>
+                                                <td class="py-4 px-6 text-gray-300">
+                                                    {{ $order->created_at->format('M d, Y h:i A') }}
+                                                </td>
+                                                <td class="py-4 px-6 text-gray-300">
+                                                    {{ $order->items_count ?? $order->items->count() }} item(s)
+                                                </td>
+                                                <td class="py-4 px-6">
+                                                    <span
+                                                        class="text-green-400 font-semibold">${{ number_format($order->total, 2) }}</span>
+                                                </td>
+                                                <td class="py-4 px-6">
+                                                    @php
+                                                        $statusConfig = [
+                                                            'pending' => ['color' => 'yellow', 'icon' => 'clock'],
+                                                            'processing' => ['color' => 'blue', 'icon' => 'cog'],
+                                                            'shipped' => ['color' => 'purple', 'icon' => 'truck'],
+                                                            'completed' => [
+                                                                'color' => 'green',
+                                                                'icon' => 'check-circle',
+                                                            ],
+                                                            'cancelled' => ['color' => 'red', 'icon' => 'times-circle'],
+                                                        ];
+                                                        $config = $statusConfig[$order->status] ?? [
+                                                            'color' => 'gray',
+                                                            'icon' => 'question-circle',
+                                                        ];
+                                                    @endphp
+                                                    <span
+                                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $config['color'] }}-500/20 text-{{ $config['color'] }}-400 border border-{{ $config['color'] }}-500/30">
+                                                        <i class="fas fa-{{ $config['icon'] }} mr-1"></i>
+                                                        {{ ucfirst($order->status) }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="text-center py-12">
+                            <div
+                                class="inline-flex items-center justify-center w-20 h-20 bg-gray-700/50 rounded-full mb-4">
+                                <i class="fas fa-shopping-cart text-2xl text-gray-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">No Orders Yet</h3>
+                            <p class="text-gray-400 mb-6">You haven't placed any orders yet</p>
+                            <a href="{{ route('products.index') }}"
+                                class="inline-flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
+                                <i class="fas fa-shopping-bags mr-2"></i>Start Shopping
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

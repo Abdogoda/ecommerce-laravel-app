@@ -140,9 +140,8 @@ function displayCartItems() {
   let cart = getCart();
   let cartContainer = document.getElementById("cart-items");
   let subTotalPriceContainer = document.getElementById("cart-subtotal");
-  let totalPriceContainer = document.getElementById("cart-total");
 
-  if (!cartContainer || !subTotalPriceContainer || !totalPriceContainer) return;
+  if (!cartContainer || !subTotalPriceContainer) return;
 
   cartContainer.innerHTML = "";
 
@@ -150,7 +149,6 @@ function displayCartItems() {
     cartContainer.innerHTML =
       "<p class='text-center text-gray-600'>Your cart is empty.</p>";
     subTotalPriceContainer.innerText = "$0.00";
-    totalPriceContainer.innerText = "$0.00";
     return;
   }
 
@@ -178,7 +176,6 @@ function displayCartItems() {
   });
 
   subTotalPriceContainer.innerText = `$${getTotalPrice().toFixed(2)}`;
-  totalPriceContainer.innerText = `$${parseFloat(getTotalPrice().toFixed(2)) + 25.0}`; // Assuming a flat shipping fee of $25.00
 }
 
 function displayCartButton() {
