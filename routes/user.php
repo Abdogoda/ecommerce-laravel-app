@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function(){
     Route::view('/checkout', 'pages.user.checkout')->name('checkout');
     Route::post('/checkout', CheckoutController::class)->name('checkout.process');
 
-    Route::view('/orders', 'pages.user.orders')->name('orders.index');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     Route::view('/profile', 'pages.user.profile')->name('profile');

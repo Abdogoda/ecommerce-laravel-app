@@ -80,6 +80,11 @@ class CheckoutController extends Controller
                 'total' => $total,
             ]);
 
+            $order->statuses()->create([
+                'name' => 'pending',
+                'description' => 'Order created and pending shipment.',
+            ]);
+
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
             return back()->withErrors(['checkout' => 'An error occurred while processing your order: ' . $e->getMessage()]);
