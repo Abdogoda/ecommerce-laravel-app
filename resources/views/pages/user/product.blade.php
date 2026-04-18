@@ -109,7 +109,8 @@
                         <!-- Quantity Selector -->
                         @if ($product->stock > 0)
                             <div class="mb-8">
-                                <h4 class="font-semibold text-gray-200 mb-4">Quantity</h4>
+                                <h4 class="font-semibold text-gray-200 mb-4">Quantity <span id="cartCountBadge"
+                                        class="text-xs text-blue-400 ml-2">(In cart: 0)</span></h4>
                                 <div class="flex items-center space-x-4">
                                     <button onclick="decrementQuantity()" id="decrementBtn"
                                         class="w-12 h-12 bg-gray-700/50 hover:bg-gray-600/50 rounded-lg text-white flex items-center justify-center transition-all duration-300">
@@ -130,7 +131,7 @@
                         <div class="space-y-4">
                             @if ($product->stock > 0)
                                 <button
-                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, getQuantity(), '{{ $product->media->first()?->getUrl() ?? '' }}')"
+                                    onclick="addToCartWithUpdate({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, getQuantity(), '{{ $product->media->first()?->getUrl() ?? '' }}')"
                                     class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl text-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
                                     <i class="fas fa-cart-plus mr-2"></i>Add to Cart
                                 </button>
@@ -238,6 +239,21 @@
     </main>
 
     <script>
+        const productId = {{ $product->id }};
+
+        function updateCartCount() {
+            const cartCount = getProductQuantityInCart(productId);
+            const cartCountBadge = document.getElementById('cartCountBadge');
+            if (cartCountBadge) {
+                cartCountBadge.innerText = `(In cart: ${cartCount})`;
+            }
+        }
+
+        function addToCartWithUpdate(productId, name, price, quantity = 1, image = "") {
+            addToCart(productId, name, price, quantity, image);
+            updateCartCount();
+        }
+
         function getQuantity() {
             const input = document.getElementById('quantityInput');
             return input ? parseInt(input.value) || 1 : 1;
@@ -257,5 +273,10 @@
                 input.value = parseInt(input.value) - 1;
             }
         }
+
+        // Initialize cart count on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+        });
     </script>
 @endsection

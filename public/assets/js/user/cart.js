@@ -84,6 +84,13 @@ function updateCartItem(productId, quantity) {
   displayCartItems(); // Refresh cart items
 }
 
+// Get quantity of a specific product in cart
+function getProductQuantityInCart(productId) {
+  let cart = getCart();
+  let product = cart.find((item) => item.id === productId);
+  return product ? product.quantity : 0;
+}
+
 // Get total price of cart
 function getTotalPrice() {
   let cart = getCart();
@@ -185,3 +192,4 @@ window.clearCart = clearCart;
 window.getCart = getCart;
 window.getTotalPrice = getTotalPrice;
 window.getCartItemsWithQuantity = getCartItemsWithQuantity;
+window.getProductQuantityInCart = getProductQuantityInCart;
