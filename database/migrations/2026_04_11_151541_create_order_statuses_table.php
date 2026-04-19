@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->enum('name', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
             $table->string('description')->nullable();
+
+            $table->unique(['order_id', 'name']);
             $table->timestamps();
         });
     }

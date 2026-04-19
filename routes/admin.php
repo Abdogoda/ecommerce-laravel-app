@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\SearchController;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
     Route::view('/', 'pages.admin.dashboard')->name('dashboard');
@@ -82,12 +83,16 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::get('/', 'index')->name('index');
         Route::get('/{message}', 'show')->name('show');
         Route::put('/{message}', 'update')->name('update');
-        Route::delete('/{message}', 'destroy')->name('destroy');
+        Route::delete('/{message}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_MESSAGES->value]);
         Route::post('/mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
         Route::post('/delete-multiple', 'deleteMultiple')->name('deleteMultiple');
     });
 
-    Route::view('products/{id}/edit', 'pages.admin.edit_product')->name('products.edit');
-    Route::view('orders', 'pages.admin.orders')->name('orders.index');
-    Route::view('orders/{id}', 'pages.admin.order_details')->name('orders.show');
+    // Order Routes
+    Route::controller(OrderController::class)->prefix('orders')->name('orders.')->middleware(['can:'.PermissionEnum::VIEW_ORDERS->value])->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{order}', 'show')->name('show');
+        Route::put('/{order}/status', 'updateStatus')->name('updateStatus')->middleware(['can:'.PermissionEnum::EDIT_ORDERS->value]);
+        Route::delete('/{order}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ORDERS->value]);
+    });
 });
