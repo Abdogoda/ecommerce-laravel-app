@@ -1,7 +1,5 @@
 # 🛍️ Spatie E-Commerce Platform
 
-> **A Feature-Rich, Multifunctional E-Commerce Platform Built Entirely on Spatie's Arsenal of Excellence**
-
 An enterprise-grade e-commerce application that demonstrates the power and versatility of Spatie's ecosystem. This project is a testament to building scalable, maintainable, and feature-complete Laravel applications using battle-tested packages from the industry's most trusted maintainer.
 
 ---
