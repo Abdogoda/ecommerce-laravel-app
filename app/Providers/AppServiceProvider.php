@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with('orderSettings', app(\App\Settings\OrderSettings::class));
             $view->with('unreadMessageCount', Message::where('is_read', false)->count());
             $view->with('pendingOrderCount', Order::where('status', 'pending')->count());
+            
+            // Add unread notifications count (system-wide for all admins)
+            $view->with('unreadNotificationCount', \Illuminate\Notifications\DatabaseNotification::whereNull('read_at')->count());
         });
 
         // Register observers

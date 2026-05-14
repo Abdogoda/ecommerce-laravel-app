@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\OrderController;
 
@@ -76,6 +77,15 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::post('/order', 'updateOrder')->name('updateOrder')->middleware(['can:'.PermissionEnum::EDIT_ORDER_SETTINGS->value]);
         Route::post('/social', 'updateSocial')->name('updateSocial')->middleware(['can:'.PermissionEnum::EDIT_SOCIAL_SETTINGS->value]);
         Route::post('/notifications', 'updateNotifications')->name('updateNotifications')->middleware(['can:'.PermissionEnum::EDIT_NOTIFICATION_SETTINGS->value]);
+    });
+
+    // Notification Routes
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{notification}', 'show')->name('show');
+        Route::delete('/{notification}', 'destroy')->name('destroy');
+        Route::post('/mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
+        Route::post('/delete-multiple', 'deleteMultiple')->name('deleteMultiple');
     });
 
     // Message Routes

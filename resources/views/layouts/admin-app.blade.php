@@ -164,6 +164,19 @@
                     </p>
                     <ul class="space-y-1">
 
+                        <!-- Notifications -->
+                        <li>
+                            <a href="{{ route('admin.notifications.index') }}"
+                                class="sidebar-item {{ request()->routeIs('admin.notifications.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                <i
+                                    class="fas fa-bell text-orange-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="font-medium">Notifications</span>
+                                @if ($unreadNotificationCount > 0)
+                                    <span
+                                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">{{ $unreadNotificationCount }}</span>
+                                @endif
+                            </a>
+                        </li>
 
                         @can(\App\Enums\PermissionEnum::VIEW_MESSAGES->value)
                             <!-- Messages -->
@@ -268,13 +281,13 @@
                         <i class="fas fa-search"></i>
                     </button>
                     <!-- Notifications -->
-                    <a href="{{ route('admin.messages.index') }}"
+                    <a href="{{ route('admin.notifications.index') }}"
                         class="glass p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative"
-                        title="Unread Messages">
+                        title="Notifications">
                         <i class="fas fa-bell"></i>
-                        @if ($unreadMessageCount > 0)
+                        @if ($unreadNotificationCount > 0)
                             <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">{{ $unreadMessageCount }}</span>
+                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">{{ $unreadNotificationCount }}</span>
                         @endif
                     </a>
 
