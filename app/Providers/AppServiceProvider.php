@@ -6,6 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Message;
+use App\Models\Order;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('socialSettings', app(\App\Settings\SocialSettings::class));
             $view->with('orderSettings', app(\App\Settings\OrderSettings::class));
             $view->with('unreadMessageCount', Message::where('is_read', false)->count());
+            $view->with('pendingOrderCount', Order::where('status', 'pending')->count());
         });
 
         // Register a blade directive for currency formatting

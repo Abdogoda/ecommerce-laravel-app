@@ -153,6 +153,10 @@
                                     <i
                                         class="fas fa-shopping-cart text-red-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
                                     <span class="font-medium">Orders</span>
+                                    @if ($pendingOrderCount > 0)
+                                        <span
+                                            class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">{{ $pendingOrderCount }}</span>
+                                    @endif
                                 </a>
                             </li>
                         </ul>
