@@ -33,10 +33,13 @@ class AppServiceProvider extends ServiceProvider
             $view->with('pendingOrderCount', Order::where('status', 'pending')->count());
         });
 
+        // Register observers
+        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
+
         // Register a blade directive for currency formatting
         \Illuminate\Support\Facades\Blade::directive('currency', function ($expression) {
             return "<?php echo \App\Helpers\CurrencyHelper::formatPrice({$expression}); ?>";
 });
-}
 
+}
 }

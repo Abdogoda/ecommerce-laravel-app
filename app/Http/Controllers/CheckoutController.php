@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Http\Requests\CheckoutRequest;
+use App\Notifications\NewOrderNotification;
+use Illuminate\Support\Facades\Notification;
 
 class CheckoutController extends Controller
 {
@@ -82,6 +84,11 @@ class CheckoutController extends Controller
                 'name' => 'pending',
                 'description' => 'Order created and pending shipment.',
             ]);
+
+            $adminEmail = app(\App\Settings\NotificationSettings::class)->admin_notification_email;
+            if ($adminEmail) {
+                Notification::route('mail', $adminEmail)->notify(new NewOrderNotification($order));
+            }
 
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {

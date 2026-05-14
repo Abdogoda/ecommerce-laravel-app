@@ -38,20 +38,44 @@ class OrderController extends Controller
             'status' => 'required|string|in:pending,processing,shipped,delivered,cancelled'
         ]);
 
+        // If the status is the same, no need to update
         if ($order->status === $validated['status']) {
             return redirect()->route('admin.orders.show', $order)->with('info', 'Order status is already ' . ucfirst($validated['status']) . '.');
         }
 
-        if ($validated['status'] === 'shipped' && !$order->shipped_at) {
-            $order->shipped_at = now();
-        }
-
+        // Prevent status changes if order is already cancelled or delivered
         if (in_array($order->status, ['cancelled', 'delivered'])) {
             return redirect()->route('admin.orders.show', $order)->with('warning', 'Cannot change status of an order that is already ' . ucfirst($order->status) . '.');
         }
 
+        // Set shipped_at timestamp when order is marked as shipped
+        if ($validated['status'] === 'shipped' && !$order->shipped_at) {
+            $order->shipped_at = now();
+        }
+
+        // Decrease stock for each product when order moves from pending to processing
+        if(in_array($validated['status'], ['processing', 'shipped', 'delivered']) && $order->status === 'pending') {
+            foreach ($order->items as $item) {
+                if ($item->product->stock < $item->quantity) {
+                    return redirect()->route('admin.orders.show', $order)->with('error', 'Not enough stock for product: ' . $item->product_name);
+                }
+                $product = $item->product;
+                $product->decrement('stock', $item->quantity);
+            }
+        }
+
+        // Increase stock if order is cancelled after being processed
+        if($validated['status'] === 'cancelled' && in_array($order->status, ['processing', 'shipped', 'delivered'])) {
+            foreach ($order->items as $item) {
+                $product = $item->product;
+                $product->increment('stock', $item->quantity);
+            }
+        }
+
+        // Update order status
         $order->update(['status' => $validated['status']]);
         
+        // Log status change in order statuses table
         $order->statuses()->create([
             'name' => $validated['status'],
             'description' => "Status changed to " . ucfirst($validated['status'])

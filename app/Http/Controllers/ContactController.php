@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMessageRequest;
 use App\Models\Message;
+use App\Notifications\NewMessageNotification;
+use Illuminate\Support\Facades\Notification;
 
 class ContactController extends Controller
 {
@@ -11,7 +13,12 @@ class ContactController extends Controller
     {
         $validated = $request->validated();
 
-        Message::create($validated);
+        $message = Message::create($validated);
+
+        $adminEmail = app(\App\Settings\NotificationSettings::class)->admin_notification_email;
+        if ($adminEmail) {
+            Notification::route('mail', $adminEmail)->notify(new NewMessageNotification($message));
+        }
 
         return redirect()
             ->route('home')
