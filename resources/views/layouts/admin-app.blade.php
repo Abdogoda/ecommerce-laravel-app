@@ -79,25 +79,29 @@
                             </a>
                         </li>
 
-                        <!-- Users Management -->
-                        <li>
-                            <a href="{{ route('admin.users.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-users text-green-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Users</span>
-                            </a>
-                        </li>
+                        @can(\App\Enums\PermissionEnum::VIEW_USERS->value)
+                            <!-- Users Management -->
+                            <li>
+                                <a href="{{ route('admin.users.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-users text-green-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Users</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <!-- Roles -->
-                        <li>
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.roles.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-user-shield text-purple-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Roles</span>
-                            </a>
-                        </li>
+                        @can(\App\Enums\PermissionEnum::VIEW_ROLES->value)
+                            <!-- Roles -->
+                            <li>
+                                <a href="{{ route('admin.roles.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.roles.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-user-shield text-purple-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Roles</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </div>
 
@@ -107,45 +111,53 @@
                         Catalog
                     </p>
                     <ul class="space-y-1">
-                        <!-- Categories -->
-                        <li>
-                            <a href="{{ route('admin.categories.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.categories.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-tags text-yellow-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Categories</span>
-                            </a>
-                        </li>
 
-                        <!-- Products -->
-                        <li>
-                            <a href="{{ route('admin.products.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.products.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-box text-orange-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Products</span>
-                            </a>
-                        </li>
+                        @can(\App\Enums\PermissionEnum::VIEW_CATEGORIES->value)
+                            <!-- Categories -->
+                            <li>
+                                <a href="{{ route('admin.categories.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.categories.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-tags text-yellow-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Categories</span>
+                                </a>
+                            </li>
+                        @endcan
+
+
+                        @can(\App\Enums\PermissionEnum::VIEW_PRODUCTS->value)
+                            <!-- Products -->
+                            <li>
+                                <a href="{{ route('admin.products.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.products.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-box text-orange-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Products</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </div>
 
                 <!-- Sales & Communication -->
-                <div class="mb-8">
-                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                        Sales
-                    </p>
-                    <ul class="space-y-1">
-                        <!-- Orders -->
-                        <li>
-                            <a href="{{ route('admin.orders.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-shopping-cart text-red-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Orders</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                @can(\App\Enums\PermissionEnum::VIEW_ORDERS->value)
+                    <div class="mb-8">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                            Sales
+                        </p>
+                        <ul class="space-y-1">
+                            <!-- Orders -->
+                            <li>
+                                <a href="{{ route('admin.orders.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-shopping-cart text-red-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Orders</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                @endcan
 
                 <!-- Reports -->
                 <div class="mb-8">
@@ -154,29 +166,35 @@
                     </p>
                     <ul class="space-y-1">
 
-                        <!-- Messages -->
-                        <li>
-                            <a href="{{ route('admin.messages.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.messages.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Messages</span>
-                                @if ($unreadMessageCount > 0)
-                                    <span
-                                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">{{ $unreadMessageCount }}</span>
-                                @endif
-                            </a>
-                        </li>
 
-                        <!-- Activities -->
-                        <li>
-                            <a href="{{ route('admin.activities.index') }}"
-                                class="sidebar-item {{ request()->routeIs('admin.activities.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
-                                <i
-                                    class="fas fa-history text-pink-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
-                                <span class="font-medium">Activities</span>
-                            </a>
-                        </li>
+                        @can(\App\Enums\PermissionEnum::VIEW_MESSAGES->value)
+                            <!-- Messages -->
+                            <li>
+                                <a href="{{ route('admin.messages.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.messages.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-envelope text-cyan-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Messages</span>
+                                    @if ($unreadMessageCount > 0)
+                                        <span
+                                            class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">{{ $unreadMessageCount }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                        @endcan
+
+
+                        @can(\App\Enums\PermissionEnum::VIEW_ACTIVITIES->value)
+                            <!-- Activities -->
+                            <li>
+                                <a href="{{ route('admin.activities.index') }}"
+                                    class="sidebar-item {{ request()->routeIs('admin.activities.index') ? 'active' : '' }} flex items-center p-3 rounded-xl text-gray-300 hover:text-white group">
+                                    <i
+                                        class="fas fa-history text-pink-500 w-5 mr-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="font-medium">Activities</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </div>
 
