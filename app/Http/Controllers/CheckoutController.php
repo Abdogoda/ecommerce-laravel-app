@@ -57,10 +57,8 @@ class CheckoutController extends Controller
             $orderSettings = app(\App\Settings\OrderSettings::class);
 
             $tax = 0;
-            if ($generalSettings->tax_included) {
-                $tax = $subtotal - ($subtotal / (1 + $generalSettings->tax_rate));
-            } else {
-                $tax = $subtotal * $generalSettings->tax_rate;
+            if ($generalSettings->tax_included && $generalSettings->tax_rate > 0) {
+                $tax = $subtotal * $generalSettings->tax_rate / 100;
             }
 
             $shipping = 0;

@@ -103,11 +103,8 @@ function getTotalPrice() {
 }
 
 // Calculate tax based on subtotal
-function calculateTax(subtotal, taxRate = 0, taxIncluded = false) {
-  if (taxIncluded) {
-    return subtotal - (subtotal / (1 + taxRate));
-  }
-  return subtotal * taxRate;
+function calculateTax(subtotal, taxRate = 0) {
+  return subtotal - (subtotal / (1 + taxRate));
 }
 
 // Get shipping fee based on subtotal

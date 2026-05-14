@@ -127,9 +127,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="form-group">
                     <label for="tax_rate" class="text-gray-400 mb-2 block">Tax Rate (%)</label>
-                    <input type="number" id="tax_rate" name="tax_rate" step="0.01"
+                    <input type="number" id="tax_rate" name="tax_rate" step="1" min="0" max="99"
                         class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="14.00"
+                        placeholder="12"
                         value="{{ isset($general) && isset($general->tax_rate) ? $general->tax_rate : 0 }}" />
                     @error('tax_rate')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

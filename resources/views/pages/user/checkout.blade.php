@@ -116,10 +116,12 @@
                                     <span>Shipping:</span>
                                     <span id="shippingAmount">$0.00</span>
                                 </div>
-                                <div class="flex justify-between text-gray-300">
-                                    <span>Tax:</span>
-                                    <span id="taxAmount">$0.00</span>
-                                </div>
+                                @if ($generalSettings->tax_included && $generalSettings->tax_rate > 0)
+                                    <div class="flex justify-between text-gray-300">
+                                        <span>Tax ({{ $generalSettings->tax_rate }}%):</span>
+                                        <span id="taxAmount">$0.00</span>
+                                    </div>
+                                @endif
                                 <div class="border-t border-gray-600 pt-3">
                                     <div class="flex justify-between text-xl font-bold text-white">
                                         <span>Total:</span>
@@ -143,7 +145,7 @@
     <script>
         // Get settings from data attributes
         const container = document.getElementById('checkoutContainer');
-        const taxRate = {{ $generalSettings->tax_rate }} || 0;
+        const taxRate = {{ $generalSettings->tax_rate / 100 }} || 0;
         const taxIncluded = {{ $generalSettings->tax_included ? 'true' : 'false' }};
         const defaultShipping = {{ $orderSettings->default_shipping_fee }} || 0;
         const freeShippingAbove = {{ $orderSettings->free_shipping_above }} || 0;
@@ -181,15 +183,20 @@
         // Update order totals
         function updateOrderTotals() {
             const subtotal = getSubtotal();
-            const tax = calculateTax(subtotal, taxRate, taxIncluded);
+            let tax = 0;
+            if (taxIncluded && taxRate > 0) {
+                tax = calculateTax(subtotal, taxRate);
+            }
             const shipping = getShippingFee(subtotal, defaultShipping, freeShippingAbove);
             const total = subtotal + tax + shipping;
 
             document.getElementById('subtotalAmount').innerText = `$${subtotal.toFixed(2)}`;
-            document.getElementById('taxAmount').innerText = `$${tax.toFixed(2)}`;
             document.getElementById('shippingAmount').innerText = `$${shipping.toFixed(2)}`;
             document.getElementById('totalAmount').innerText = `$${total.toFixed(2)}`;
             document.getElementById('placeOrderText').innerText = `Place Order - $${total.toFixed(2)}`;
+            if (taxIncluded && taxRate > 0) {
+                document.getElementById('taxAmount').innerText = `$${tax.toFixed(2)}`;
+            }
         }
 
         // Load order summary on page load
