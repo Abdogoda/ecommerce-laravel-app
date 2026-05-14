@@ -142,7 +142,7 @@
                 @if ($products->count() > 0)
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                         @forelse($products as $product)
-                            <x-product-card :product="$product" theme="blue" :index="$loop->index" />
+                            <x-product-card :product="$product" :index="$loop->index" />
                         @empty
                         @endforelse
                     </div>

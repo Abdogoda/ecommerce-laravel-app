@@ -116,7 +116,7 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    @if ($product->stock > 5)
+                                    @if ($product->stock > $orderSettings->low_stock_threshold)
                                         <span
                                             class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center">
                                             <i class="fas fa-check-circle mr-1 text-xs"></i>
@@ -214,7 +214,7 @@
                                     <img src="{{ $item->getPrimaryImageUrl() }}" alt="iPhone 15"
                                         class="w-full h-36 object-cover rounded-lg" />
 
-                                    @if ($item->stock > 5)
+                                    @if ($item->stock > $orderSettings->low_stock_threshold)
                                         <div
                                             class="absolute top-2 right-2 bg-green-500 px-2 py-1 rounded-full text-xs text-white">
                                             In Stock

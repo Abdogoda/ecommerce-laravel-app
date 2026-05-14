@@ -52,13 +52,9 @@ class SettingController extends Controller
 
     public function updateOrder(UpdateOrderSettingsRequest $request, OrderSettings $orders)
     {
-        $orders->auto_confirm         = $request->boolean('auto_confirm');
-        $orders->cancel_after_minutes = $request->cancel_after_minutes;
-        $orders->allow_guest_orders   = $request->boolean('allow_guest_orders');
         $orders->free_shipping_above  = $request->free_shipping_above;
         $orders->default_shipping_fee = $request->default_shipping_fee;
         $orders->low_stock_threshold  = $request->low_stock_threshold;
-        $orders->allow_out_of_stock   = $request->boolean('allow_out_of_stock');
         $orders->save();
 
         activity()->causedBy(auth()->user())->event('OrderSettingsUpdated')->log('Order settings updated');

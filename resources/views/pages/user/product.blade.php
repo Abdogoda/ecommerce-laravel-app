@@ -84,7 +84,7 @@
                                 <div class="flex items-center space-x-2">
                                     @if ($product->stock > 0)
                                         <span class="inline-block w-2 h-2 bg-green-400 rounded-full"></span>
-                                        <span class="text-green-400">In Stock ({{ $product->stock }})</span>
+                                        <span class="text-green-400">In Stock</span>
                                     @else
                                         <span class="inline-block w-2 h-2 bg-red-400 rounded-full"></span>
                                         <span class="text-red-400">Out of Stock</span>

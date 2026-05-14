@@ -5,72 +5,62 @@
     <form action="{{ route('admin.settings.updateOrder') }}" method="POST" class="space-y-6">
         @csrf
 
-        <!-- Auto Confirm Orders -->
-        <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-1">Auto Confirm Orders</h4>
-                    <p class="text-gray-400 text-sm">Automatically move orders from Pending to Processing when payment is
-                        confirmed</p>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="auto_confirm" id="auto_confirm" class="sr-only peer"
-                        {{ isset($order) && isset($order->auto_confirm) && $order->auto_confirm ? 'checked' : '' }} />
-                    <div
-                        class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+        <!--  TODO: Remove the processing box and make inputs editable when the order settings are implemented in the backend. -->
+        <div class="processing-box is-processing rounded-lg space-y-6">
+            <!-- Auto Confirm Orders -->
+            <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-1">Auto Confirm Orders</h4>
+                        <p class="text-gray-400 text-sm">Automatically move orders from Pending to Processing when
+                            payment is
+                            confirmed</p>
                     </div>
-                </label>
-            </div>
-        </div>
-
-        <!-- Allow Guest Orders -->
-        <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-1">Allow Guest Orders</h4>
-                    <p class="text-gray-400 text-sm">Allow customers to place orders without creating an account</p>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="auto_confirm" id="auto_confirm" class="sr-only peer" disabled
+                            {{ isset($order) && isset($order->auto_confirm) && $order->auto_confirm ? 'checked' : '' }} />
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                        </div>
+                    </label>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="allow_guest_orders" id="allow_guest_orders" class="sr-only peer"
-                        {{ isset($order) && isset($order->allow_guest_orders) && $order->allow_guest_orders ? 'checked' : '' }} />
-                    <div
-                        class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
-                    </div>
-                </label>
             </div>
-        </div>
 
-        <!-- Allow Out of Stock -->
-        <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-1">Allow Out of Stock Orders</h4>
-                    <p class="text-gray-400 text-sm">Allow customers to order products when stock is zero</p>
+            <!-- Allow Guest Orders -->
+            <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-1">Allow Guest Orders</h4>
+                        <p class="text-gray-400 text-sm">Allow customers to place orders without creating an account</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="allow_guest_orders" id="allow_guest_orders" class="sr-only peer"
+                            disabled
+                            {{ isset($order) && isset($order->allow_guest_orders) && $order->allow_guest_orders ? 'checked' : '' }} />
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                        </div>
+                    </label>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="allow_out_of_stock" id="allow_out_of_stock" class="sr-only peer"
-                        {{ isset($order) && isset($order->allow_out_of_stock) && $order->allow_out_of_stock ? 'checked' : '' }} />
-                    <div
-                        class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
-                    </div>
-                </label>
             </div>
-        </div>
 
-        <!-- Cancel Orders Setting -->
-        <div class="form-group">
-            <label for="cancel_after_minutes" class="text-gray-400 mb-2 block">
-                Cancel Unpaid Orders After (minutes)
-            </label>
-            <input type="number" id="cancel_after_minutes" name="cancel_after_minutes"
-                class="form-input w-full px-4 py-3 glass rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="0 (disabled)"
-                value="{{ isset($order) && isset($order->cancel_after_minutes) ? $order->cancel_after_minutes : 0 }}"
-                min="0" />
-            <p class="text-gray-500 text-sm mt-2">Set to 0 to disable automatic cancellation</p>
-            @error('cancel_after_minutes')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+            <!-- Allow Out of Stock -->
+            <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-1">Allow Out of Stock Orders</h4>
+                        <p class="text-gray-400 text-sm">Allow customers to order products when stock is zero</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="allow_out_of_stock" id="allow_out_of_stock" class="sr-only peer"
+                            disabled
+                            {{ isset($order) && isset($order->allow_out_of_stock) && $order->allow_out_of_stock ? 'checked' : '' }} />
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <!-- Shipping Settings -->

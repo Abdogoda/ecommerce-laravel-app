@@ -416,3 +416,53 @@ body.modal-open
     opacity: 1;
   }
 }
+
+/* Processing/Under Development Box - CSS Only */
+.processing-box {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.processing-box.is-processing {
+  pointer-events: none;
+}
+
+.processing-box.is-processing > :not(.processing-overlay) {
+  filter: blur(1px);
+  opacity: 0.7;
+}
+
+/* Overlay created with ::before pseudo-element */
+.processing-box.is-processing::before {
+  content: "⚙\A Feature Under Processing\AWe're working on this...";
+  white-space: pre-line;
+  text-align: center;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 30, 0.4) 0%,
+    rgba(30, 30, 30, 0.4) 100%
+  );
+  backdrop-filter: blur(1px);
+  border: 2px dashed rgba(59, 130, 246, 0.8);
+  border-radius: inherit;
+  z-index: 50;
+  pointer-events: auto;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: rotate 2s linear infinite;
+}
+
+/* Text styling for subtext line */
+.processing-box.is-processing::before {
+  line-height: 1.6;
+}

@@ -225,7 +225,7 @@
                                 <td class="px-6 py-4 text-white">${{ number_format($product->price, 2) }}</td>
                                 <td class="px-6 py-4">
                                     <span
-                                        class="text-{{ $product->stock > 5 ? 'green' : ($product->stock > 0 ? 'yellow' : 'red') }}-400">{{ $product->stock }}
+                                        class="text-{{ $product->stock > $orderSettings->low_stock_threshold ? 'green' : ($product->stock > 0 ? 'yellow' : 'red') }}-400">{{ $product->stock }}
                                         units</span>
                                 </td>
                                 <td class="px-6 py-4">

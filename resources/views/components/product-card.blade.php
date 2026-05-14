@@ -1,10 +1,9 @@
-@props([
-    'product',
-    'theme' => 'blue', // blue, orange, purple, etc.
-    'index' => 0,
-])
+@props(['product', 'theme' => null, 'index' => 0])
 
 @php
+    $themeNames = ['blue', 'purple'];
+    $theme = $theme ?? $themeNames[$index % count($themeNames)];
+
     $themes = [
         'blue' => [
             'badge' => 'bg-blue-500',
@@ -20,10 +19,30 @@
             'shadow' => 'hover:shadow-orange-500/25',
             'price-color' => 'text-orange-400',
         ],
+        'purple' => [
+            'badge' => 'bg-purple-500',
+            'hover-text' => 'group-hover:text-purple-400',
+            'button' => 'from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700',
+            'shadow' => 'hover:shadow-purple-500/25',
+            'price-color' => 'text-purple-400',
+        ],
+        'green' => [
+            'badge' => 'bg-green-500',
+            'hover-text' => 'group-hover:text-green-400',
+            'button' => 'from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700',
+            'shadow' => 'hover:shadow-green-500/25',
+            'price-color' => 'text-green-400',
+        ],
     ];
 
     $themeConfig = $themes[$theme] ?? $themes['blue'];
     $isBadgeNew = $product->created_at->diffInDays() < 7;
+    $stockStatus =
+        $product->stock > 0
+            ? ($product->stock > $orderSettings->low_stock_threshold
+                ? 'in-stock'
+                : 'low-stock')
+            : 'out-of-stock';
 @endphp
 
 <div class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl {{ $themeConfig['shadow'] }} transition-all duration-300 hover:scale-105 transform animate-fade-in-up"
@@ -47,13 +66,19 @@
                 <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
                     Featured
                 </span>
-            @endif
-        </div>
-        <div class="absolute top-4 left-4">
-            @if ($isBadgeNew)
+            @elseif ($isBadgeNew)
                 <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
                     New
                 </span>
+            @endif
+        </div>
+        <div class="absolute top-4 left-4">
+            @if ($stockStatus === 'in-stock')
+                <span class=" bg-green-500 text-white px-3 py-1 text-sm font-semibold rounded-full">In Stock</span>
+            @elseif ($stockStatus === 'low-stock')
+                <span class=" bg-yellow-500 text-white px-3 py-1 text-sm font-semibold rounded-full">Low Stock</span>
+            @else
+                <span class=" bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded-full">Out of Stock</span>
             @endif
         </div>
     </div>

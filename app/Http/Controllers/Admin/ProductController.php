@@ -16,11 +16,12 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::with('category', 'tags')->latest();
+        $orderSettings = app(\App\Settings\OrderSettings::class);
         
         $stats = [
             'total' => Product::count(),
             'in_stock' => Product::where('stock', '>', 0)->count(),
-            'low_stock' => Product::where('stock', '<=', 5)->count(),
+            'low_stock' => Product::where('stock', '<=', $orderSettings->low_stock_threshold)->count(),
             'out_of_stock' => Product::where('stock', 0)->count(),
         ];
 
@@ -50,7 +51,7 @@ class ProductController extends Controller
             if ($status === 'in_stock') {
                 $query->where('stock', '>', 0);
             } elseif ($status === 'low_stock') {
-                $query->where('stock', '<=', 5)->where('stock', '>', 0);
+                $query->where('stock', '<=', $orderSettings->low_stock_threshold)->where('stock', '>', 0);
             } elseif ($status === 'out_of_stock') {
                 $query->where('stock', 0);
             }
