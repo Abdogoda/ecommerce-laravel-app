@@ -14,11 +14,11 @@ class UpdateNotificationSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'notify_admin_new_order' => 'boolean',
-            'notify_admin_new_message' => 'boolean',
-            'notify_admin_low_stock' => 'boolean',
-            'notify_customer_order_confirmed' => 'boolean',
-            'notify_customer_order_shipped' => 'boolean',
+            'notify_admin_new_order' => 'nullable|in:on,off',
+            'notify_admin_new_message' => 'nullable|in:on,off',
+            'notify_admin_low_stock' => 'nullable|in:on,off',
+            'notify_customer_order_confirmed' => 'nullable|in:on,off',
+            'notify_customer_order_shipped' => 'nullable|in:on,off',
             'admin_notification_email' => 'required|email',
         ];
     }
