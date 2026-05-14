@@ -41,7 +41,7 @@
                                                     'pending' => ['color' => 'yellow', 'icon' => 'clock'],
                                                     'processing' => ['color' => 'blue', 'icon' => 'cog'],
                                                     'shipped' => ['color' => 'purple', 'icon' => 'truck'],
-                                                    'completed' => ['color' => 'green', 'icon' => 'check-circle'],
+                                                    'delivered' => ['color' => 'green', 'icon' => 'check-circle'],
                                                     'cancelled' => ['color' => 'red', 'icon' => 'times-circle'],
                                                 ];
                                                 $config = $statusConfig[$order->status] ?? [

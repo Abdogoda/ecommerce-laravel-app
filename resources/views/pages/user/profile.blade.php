@@ -406,7 +406,7 @@
                                                             'pending' => ['color' => 'yellow', 'icon' => 'clock'],
                                                             'processing' => ['color' => 'blue', 'icon' => 'cog'],
                                                             'shipped' => ['color' => 'purple', 'icon' => 'truck'],
-                                                            'completed' => [
+                                                            'delivered' => [
                                                                 'color' => 'green',
                                                                 'icon' => 'check-circle',
                                                             ],

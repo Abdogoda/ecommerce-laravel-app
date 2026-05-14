@@ -88,7 +88,7 @@
                                         'pending' => ['color' => 'yellow', 'icon' => 'clock'],
                                         'processing' => ['color' => 'blue', 'icon' => 'cog'],
                                         'shipped' => ['color' => 'purple', 'icon' => 'truck'],
-                                        'completed' => ['color' => 'green', 'icon' => 'check-circle'],
+                                        'delivered' => ['color' => 'green', 'icon' => 'check-circle'],
                                         'cancelled' => ['color' => 'red', 'icon' => 'times-circle'],
                                     ];
                                     $config = $statusConfig[$order->status] ?? [
@@ -226,7 +226,7 @@
                     <div class="relative">
                         <!-- Status Timeline -->
                         @php
-                            $statusProgression = ['pending', 'processing', 'shipped', 'completed'];
+                            $statusProgression = ['pending', 'processing', 'shipped', 'delivered'];
                             $statusConfig = [
                                 'pending' => [
                                     'color' => 'yellow',
@@ -246,10 +246,10 @@
                                     'label' => 'Shipped',
                                     'message' => 'Your order is on the way',
                                 ],
-                                'completed' => [
+                                'delivered' => [
                                     'color' => 'green',
                                     'icon' => 'check-circle',
-                                    'label' => 'Completed',
+                                    'label' => 'Delivered',
                                     'message' => 'Order has been delivered successfully',
                                 ],
                             ];
