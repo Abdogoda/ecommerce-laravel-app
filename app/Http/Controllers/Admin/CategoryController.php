@@ -37,7 +37,9 @@ class CategoryController extends Controller
             $query->having('products_count', '<=', $maxProducts);
         }
 
-        $categories = $query->paginate(20)->withQueryString();
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+
+        $categories = $query->paginate($items_per_page)->withQueryString();
         $locales = config('app.locales', [config('app.locale')]);
         return view('pages.admin.categories.index', compact('categories', 'locales'));
     }

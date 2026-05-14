@@ -36,7 +36,9 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->latest()->paginate(20)->withQueryString();
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+
+        $users = $query->latest()->paginate($items_per_page)->withQueryString();
         
         $roles = Role::all();
         $stats = [

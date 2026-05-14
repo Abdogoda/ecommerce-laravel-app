@@ -10,9 +10,11 @@ class OrderController extends Controller
 {
     public function index()
     {
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+
         $orders = Order::with('user')
             ->latest()
-            ->paginate(15);
+            ->paginate($items_per_page);
 
         $stats = [
             'total' => Order::count(),

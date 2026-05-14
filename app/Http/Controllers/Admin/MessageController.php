@@ -12,9 +12,11 @@ class MessageController extends Controller
 
     public function index()
     {
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+
         $messages = Message::with('user')
             ->latest()
-            ->paginate(20);
+            ->paginate($items_per_page);
 
         $stats = [
             'total_messages' => Message::count(),

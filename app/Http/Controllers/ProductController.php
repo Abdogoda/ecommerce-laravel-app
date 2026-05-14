@@ -62,7 +62,9 @@ class ProductController extends Controller
                 $query->latest();
         }
 
-        $products = $query->paginate(12);
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+        
+        $products = $query->paginate($items_per_page);
         $categories = Category::where('is_active', true)->get();
 
         return view('pages.user.products', compact('products', 'categories'));

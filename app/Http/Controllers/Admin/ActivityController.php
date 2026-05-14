@@ -50,8 +50,9 @@ class ActivityController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
-        $activities = $query->paginate(50)->withQueryString();
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
 
+        $activities = $query->paginate($items_per_page)->withQueryString();
         return view('pages.admin.activities.index', compact('activities', 'users', 'stats'));
     }
 

@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Products\StoreProductRequest;
 use App\Http\Requests\Admin\Products\UpdateProductRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\ImageRequest;
 
@@ -57,7 +56,9 @@ class ProductController extends Controller
             }
         }
 
-        $products = $query->paginate(20)->withQueryString();
+        $items_per_page = app(\App\Settings\GeneralSettings::class)->items_per_page ?? 12;
+
+        $products = $query->paginate($items_per_page)->withQueryString();
         return view('pages.admin.products.index', compact('products', 'categories', 'stats', 'locales'));
     }
 
