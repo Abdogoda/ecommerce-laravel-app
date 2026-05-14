@@ -44,6 +44,8 @@ class SettingController extends Controller
         }
 
         $general->save();
+        
+        activity()->causedBy(auth()->user())->event('GeneralSettingsUpdated')->log('General settings updated');
 
         return redirect()->back()->with('success', 'General settings updated successfully.');
     }
@@ -59,6 +61,8 @@ class SettingController extends Controller
         $orders->allow_out_of_stock   = $request->boolean('allow_out_of_stock');
         $orders->save();
 
+        activity()->causedBy(auth()->user())->event('OrderSettingsUpdated')->log('Order settings updated');
+
         return redirect()->back()->with('success', 'Order settings updated successfully.');
     }
 
@@ -71,6 +75,8 @@ class SettingController extends Controller
         $social->whatsapp  = $request->whatsapp;
         $social->tiktok    = $request->tiktok;
         $social->save();
+
+        activity()->causedBy(auth()->user())->event('SocialSettingsUpdated')->log('Social settings updated');
 
         return redirect()->back()->with('success', 'Social settings updated successfully.');
     }
@@ -85,6 +91,8 @@ class SettingController extends Controller
         $notifications->admin_notification_email = $request->input('admin_notification_email');
 
         $notifications->save();
+
+        activity()->causedBy(auth()->user())->event('NotificationSettingsUpdated')->log('Notification settings updated');
 
         return redirect()->back()->with('success', 'Notification settings updated successfully.');
     }
