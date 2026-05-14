@@ -2,7 +2,8 @@
 <div id="generalTab" class="tab-content">
     <h3 class="text-xl font-bold text-white mb-6">General Settings</h3>
 
-    <form action="{{ route('admin.settings.updateGeneral') }}" method="POST" class="space-y-6">
+    <form action="{{ route('admin.settings.updateGeneral') }}" method="POST" enctype="multipart/form-data"
+        class="space-y-6">
         @csrf
 
         <!-- Store Name and Email -->
@@ -160,6 +161,43 @@
                         class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
                     </div>
                 </label>
+            </div>
+        </div>
+
+        <!-- Logo and Favicon Upload -->
+        <div class="bg-gray-700/30 p-6 rounded-xl border border-white/10">
+            <h4 class="text-lg font-semibold text-white mb-4">Branding</h4>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    <label for="logo" class="text-gray-400 mb-2 block">Store Logo</label>
+                    @if (isset($general) && !empty($general->logo))
+                        <div class="mb-3">
+                            <img src="{{ asset('storage/' . $general->logo) }}" alt="Store Logo"
+                                class="h-10 w-10 rounded-lg border border-white/10 bg-white/5 p-1" />
+                        </div>
+                    @endif
+                    <input type="file" id="logo" name="logo"
+                        class="form-input w-full px-4 py-3 glass rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                    @error('logo')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="favicon" class="text-gray-400 mb-2 block">Favicon</label>
+                    @if (isset($general) && !empty($general->favicon))
+                        <div class="mb-3">
+                            <img src="{{ asset('storage/' . $general->favicon) }}" alt="Favicon"
+                                class="h-10 w-10 rounded-lg border border-white/10 bg-white/5 p-1" />
+                        </div>
+                    @endif
+                    <input type="file" id="favicon" name="favicon"
+                        class="form-input w-full px-4 py-3 glass rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                    @error('favicon')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
         </div>
 

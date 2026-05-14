@@ -35,6 +35,14 @@ class SettingController extends Controller
         $general->maintenance_mode = $request->has('maintenance_mode');
         $general->tax_included = $request->has('tax_included');
 
+        if ($request->hasFile('logo')) {
+            $general->logo = $request->file('logo')->store('settings', 'public');
+        }
+
+        if ($request->hasFile('favicon')) {
+            $general->favicon = $request->file('favicon')->store('settings', 'public');
+        }
+
         $general->save();
 
         return redirect()->back()->with('success', 'General settings updated successfully.');

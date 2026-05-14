@@ -25,6 +25,8 @@ class UpdateGeneralSettingsRequest extends FormRequest
             'tax_included'      => 'boolean',
             'maintenance_mode'  => 'boolean',
             'items_per_page'    => 'required|integer|min:5|max:100',
+            'logo'              => 'nullable|image|max:2048',
+            'favicon'           => 'nullable|image|max:1024',
         ];
     }
 }

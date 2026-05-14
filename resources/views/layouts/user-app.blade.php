@@ -42,7 +42,7 @@
                 <a href="" class="hover:text-blue-400 transition-colors duration-300 flex items-center gap-2">
                     @if (isset($generalSettings) && $generalSettings->logo)
                         <img src="{{ asset('storage/' . $generalSettings->logo) }}" alt="Logo"
-                            class="w-36 h-36 rounded-xl object-contain" />
+                            class="w-10 h-10 rounded-xl object-contain" />
                     @else
                         <i class="fas fa-store text-blue-400"></i>
                     @endif
