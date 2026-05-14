@@ -371,7 +371,7 @@
                             </div>
                             <div>
                                 <h3 class="text-xl font-semibold text-white">Email Us</h3>
-                                <p class="text-gray-400">support@ecommerce.com</p>
+                                <p class="text-gray-400">{{ $generalSettings->email ?? 'Not provided' }}</p>
                             </div>
                         </div>
 
@@ -383,7 +383,7 @@
                             </div>
                             <div>
                                 <h3 class="text-xl font-semibold text-white">Call Us</h3>
-                                <p class="text-gray-400">+1 (555) 123-4567</p>
+                                <p class="text-gray-400">{{ $generalSettings->phone ?? 'Not provided' }}</p>
                             </div>
                         </div>
 
@@ -395,7 +395,8 @@
                             </div>
                             <div>
                                 <h3 class="text-xl font-semibold text-white">Visit Us</h3>
-                                <p class="text-gray-400">123 Commerce St, City, State</p>
+                                <p class="text-gray-400">{{ $generalSettings->address ?? 'Not provided' }}
+                                </p>
                             </div>
                         </div>
                     </div>

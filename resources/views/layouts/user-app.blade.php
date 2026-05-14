@@ -39,8 +39,14 @@
     <header class="bg-gray-800/95 backdrop-blur-sm py-6 px-6 animate-fade-in-down shadow-2xl sticky top-0 z-50">
         <div class="w-full md:max-w-7xl mx-auto flex justify-between items-center gap-3">
             <h1 class="text-2xl font-bold animate-fade-in-left">
-                <a href="" class="hover:text-blue-400 transition-colors duration-300">
-                    <i class="fas fa-store mr-2 text-blue-400"></i>{{ $storeName ?? 'E-Commerce' }}
+                <a href="" class="hover:text-blue-400 transition-colors duration-300 flex items-center gap-2">
+                    @if (isset($generalSettings) && $generalSettings->logo)
+                        <img src="{{ asset('storage/' . $generalSettings->logo) }}" alt="Logo"
+                            class="w-36 h-36 rounded-xl object-contain" />
+                    @else
+                        <i class="fas fa-store text-blue-400"></i>
+                    @endif
+                    {{ $storeName ?? 'E-Commerce' }}
                 </a>
             </h1>
 
