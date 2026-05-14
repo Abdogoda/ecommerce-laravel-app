@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Models\Concerns\HasActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'order_number', 'user_id', 'status', 
@@ -18,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
-    use HasFactory;
+    use HasFactory, HasActivity;
 
     public function casts()
     {
@@ -34,6 +36,17 @@ class Order extends Model
     public function getRouteKeyName()
     {
         return 'order_number';
+    }
+
+    // ___ Activity Log ────────────────────────────────────────────────────────
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['order_number', 'user_id', 'status', 'total'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function(string $eventName){
+                return "Order has been {$eventName}";
+            });
     }
 
     // ─── Relationships ────────────────────────────────────────────────────────
