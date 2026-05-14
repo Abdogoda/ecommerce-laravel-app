@@ -1,5 +1,7 @@
 @extends('layouts.admin-app')
 
+@section('title', 'Admin Settings')
+
 @section('content')
     <!-- Page Header -->
     <div class="mb-8">
