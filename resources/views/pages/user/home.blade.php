@@ -155,7 +155,7 @@
 
             <!-- Mobile View All Button -->
             <div class="text-center mt-12 md:hidden">
-                <a href="../user/categories.html"
+                <a href="{{ route('categories.index') }}"
                     class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
                     <span>View All Categories</span>
                     <i class="fas fa-arrow-right ml-2"></i>
@@ -175,108 +175,17 @@
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Featured Product 1 -->
-                <div
-                    class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-100">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                            alt="Premium Headphones"
-                            class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">Hot</span>
-                        </div>
+                @forelse($featuredProducts ?? [] as $product)
+                    <x-product-card :product="$product" theme="blue" :index="$loop->index" />
+                @empty
+                    <div class="col-span-full text-center text-gray-400 py-8">
+                        No featured products available
                     </div>
-                    <div class="p-6">
-                        <h3
-                            class="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
-                            Premium Headphones
-                        </h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                            High-quality wireless headphones with noise cancellation
-                            technology.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-1">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="text-gray-400 text-sm ml-2">(4.9)</span>
-                            </div>
-                            <p class="text-2xl font-bold text-blue-400">$99.99</p>
-                        </div>
-                        <button
-                            onclick="
-                  addToCart(
-                    1,
-                    'Premium Headphones',
-                    99.99,
-                    1,
-                    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                  )
-                "
-                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105">
-                            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Featured Product 2 -->
-                <div
-                    class="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-200">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                            alt="Smart Watch"
-                            class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">New</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3
-                            class="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300">
-                            Smart Watch Pro
-                        </h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                            Advanced fitness tracking with heart rate monitoring and GPS.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-1">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-gray-400"></i>
-                                <span class="text-gray-400 text-sm ml-2">(4.2)</span>
-                            </div>
-                            <p class="text-2xl font-bold text-purple-400">$149.99</p>
-                        </div>
-                        <button
-                            onclick="
-                  addToCart(
-                    2,
-                    'Smart Watch Pro',
-                    149.99,
-                    1,
-                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                  )
-                "
-                            class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 transform hover:scale-105">
-                            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                        </button>
-                    </div>
-                </div>
+                @endforelse
             </div>
 
             <div class="text-center mt-12 animate-fade-in-up delay-500">
-                <a href="products.html"
+                <a href="{{ route('products.index') }}"
                     class="inline-flex items-center bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 transform hover:shadow-lg font-semibold">
                     <i class="fas fa-eye mr-2"></i>View All Products
                 </a>
@@ -295,56 +204,13 @@
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- New Product 1 -->
-                <div
-                    class="group bg-gray-700/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 transform animate-fade-in-up delay-100">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                            alt="Running Shoes"
-                            class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        </div>
-                        <div class="absolute top-4 left-4">
-                            <span
-                                class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">Just
-                                Arrived!</span>
-                        </div>
+                @forelse($newProducts ?? [] as $product)
+                    <x-product-card :product="$product" theme="orange" :index="$loop->index" />
+                @empty
+                    <div class="col-span-full text-center text-gray-400 py-8">
+                        No new products available
                     </div>
-                    <div class="p-6">
-                        <h3
-                            class="text-xl font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300">
-                            Nike Running Shoes
-                        </h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                            Comfortable and stylish running shoes for your daily workout.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-1">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="text-gray-400 text-sm ml-2">(5.0)</span>
-                            </div>
-                            <p class="text-2xl font-bold text-orange-400">$79.99</p>
-                        </div>
-                        <button
-                            onclick="
-                  addToCart(
-                    3,
-                    'Nike Running Shoes',
-                    79.99,
-                    1,
-                    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                  )
-                "
-                            class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25 transform hover:scale-105">
-                            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                        </button>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

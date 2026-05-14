@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -11,8 +12,22 @@ class HomeController extends Controller
         $categories = Category::where('is_active', true)
             ->withCount('products')
             ->latest()
-            ->get(6);
+            ->limit(6)
+            ->get();
 
-        return view('pages.user.home', compact('categories'));
+        $featuredProducts = Product::where('is_active', true)
+            ->where('is_featured', true)
+            ->with('media')
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        $newProducts = Product::where('is_active', true)
+            ->with('media')
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        return view('pages.user.home', compact('categories', 'featuredProducts', 'newProducts'));
     }
 }
