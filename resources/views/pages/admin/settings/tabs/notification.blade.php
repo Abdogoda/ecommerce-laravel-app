@@ -102,31 +102,12 @@
                         <i class="fas fa-check-circle text-green-400 mr-2"></i>
                         Order Confirmed
                     </h5>
-                    <p class="text-gray-400 text-sm">Send confirmation email when order is confirmed</p>
+                    <p class="text-gray-400 text-sm">Send confirmation email when order status changes</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="notify_customer_order_confirmed" id="notify_customer_order_confirmed"
-                        class="sr-only peer"
-                        {{ isset($notification) && isset($notification->notify_customer_order_confirmed) && $notification->notify_customer_order_confirmed ? 'checked' : '' }} />
-                    <div
-                        class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
-                    </div>
-                </label>
-            </div>
-
-            <!-- Order Shipped Notification -->
-            <div class="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                <div>
-                    <h5 class="text-white font-medium mb-1">
-                        <i class="fas fa-truck text-blue-400 mr-2"></i>
-                        Order Shipped
-                    </h5>
-                    <p class="text-gray-400 text-sm">Send tracking information when order is shipped</p>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="notify_customer_order_shipped" id="notify_customer_order_shipped"
-                        class="sr-only peer"
-                        {{ isset($notification) && isset($notification->notify_customer_order_shipped) && $notification->notify_customer_order_shipped ? 'checked' : '' }} />
+                    <input type="checkbox" name="notify_customer_order_status_changed"
+                        id="notify_customer_order_status_changed" class="sr-only peer"
+                        {{ isset($notification) && isset($notification->notify_customer_order_status_changed) && $notification->notify_customer_order_status_changed ? 'checked' : '' }} />
                     <div
                         class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
                     </div>

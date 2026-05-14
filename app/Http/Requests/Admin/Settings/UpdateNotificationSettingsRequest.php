@@ -17,8 +17,7 @@ class UpdateNotificationSettingsRequest extends FormRequest
             'notify_admin_new_order' => 'nullable|in:on,off',
             'notify_admin_new_message' => 'nullable|in:on,off',
             'notify_admin_low_stock' => 'nullable|in:on,off',
-            'notify_customer_order_confirmed' => 'nullable|in:on,off',
-            'notify_customer_order_shipped' => 'nullable|in:on,off',
+            'notify_customer_order_status_changed' => 'nullable|in:on,off',
             'admin_notification_email' => 'required|email',
         ];
     }

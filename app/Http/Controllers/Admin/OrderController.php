@@ -74,6 +74,12 @@ class OrderController extends Controller
 
         // Update order status
         $order->update(['status' => $validated['status']]);
+
+        // Send notification to user about status change
+        $notificationSettings = app(\App\Settings\NotificationSettings::class);
+        if($notificationSettings->notify_customer_order_status_changed) {
+            $order->user->notify(new \App\Notifications\OrderStatusChangedNotification($order));
+        }
         
         // Log status change in order statuses table
         $order->statuses()->create([

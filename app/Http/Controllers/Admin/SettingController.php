@@ -82,8 +82,7 @@ class SettingController extends Controller
         $notifications->notify_admin_new_order = $request->has('notify_admin_new_order');
         $notifications->notify_admin_new_message = $request->has('notify_admin_new_message');
         $notifications->notify_admin_low_stock = $request->has('notify_admin_low_stock');
-        $notifications->notify_customer_order_confirmed = $request->has('notify_customer_order_confirmed');
-        $notifications->notify_customer_order_shipped = $request->has('notify_customer_order_shipped');
+        $notifications->notify_customer_order_status_changed = $request->has('notify_customer_order_status_changed');
         $notifications->admin_notification_email = $request->input('admin_notification_email');
 
         $notifications->save();
