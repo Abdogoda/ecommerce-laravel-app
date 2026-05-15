@@ -9,6 +9,7 @@ use App\Http\Requests\PasswordRequiredRequest;
 use App\Models\User;
 use Spatie\Activitylog\Models\Activity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {

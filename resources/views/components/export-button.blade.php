@@ -70,76 +70,36 @@
         }
     });
 
-    async function submitExport(table, mode) {
-        // Collect table data
+    function submitExport(table, mode) {
         const tableData = collectTableData();
         const filters = new URLSearchParams(window.location.search);
         const filtersObj = Object.fromEntries(filters);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
-        try {
-            const response = await fetch(
-                mode === 'filtered' ?
-                '{{ route('admin.export.filtered') }}' :
-                '{{ route('admin.export.all') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-                    },
-                    body: JSON.stringify({
-                        table: table,
-                        filters: filtersObj,
-                        data: mode === 'filtered' ? tableData : null
-                    })
-                }
-            );
+        // Create form and submit directly
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = mode === 'filtered' ? '{{ route('admin.export.filtered') }}' : '{{ route('admin.export.all') }}';
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Server Error:', response.status, errorText);
-                throw new Error(`Export failed: ${response.statusText}`);
-            }
+        // Add fields
+        const addField = (name, value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        };
 
-            // Check content type
-            const contentType = response.headers.get('Content-Type');
-            console.log('Response Content-Type:', contentType);
-
-            // Download the file
-            const blob = await response.blob();
-            console.log('Blob size:', blob.size, 'Type:', blob.type);
-
-            // Check if response is error (HTML)
-            if (blob.type.includes('text/html')) {
-                const text = await blob.text();
-                console.error('Server returned HTML instead of Excel:', text.substring(0, 500));
-                throw new Error('Server returned an error. Check console for details.');
-            }
-
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-
-            // Get filename from Content-Disposition header or generate one
-            const contentDisposition = response.headers.get('Content-Disposition');
-            let filename = `export_${new Date().getTime()}.xlsx`;
-
-            if (contentDisposition) {
-                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-                if (filenameMatch && filenameMatch[1]) {
-                    filename = filenameMatch[1];
-                }
-            }
-
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-            console.log('Export successful:', filename);
-        } catch (error) {
-            console.error('Export error:', error);
-            alert('Export failed: ' + error.message);
+        addField('_token', csrfToken);
+        addField('table', table);
+        addField('filters', JSON.stringify(filtersObj));
+        if (mode === 'filtered') {
+            addField('data', JSON.stringify(tableData));
         }
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
     }
 
     function collectTableData() {

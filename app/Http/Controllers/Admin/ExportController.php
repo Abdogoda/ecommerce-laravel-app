@@ -32,6 +32,14 @@ class ExportController extends Controller
             $data = $request->input('data', []); // Table data from frontend
             $filters = $request->input('filters', []);
 
+            // Parse JSON strings if they come as form data
+            if (is_string($data)) {
+                $data = json_decode($data, true) ?? [];
+            }
+            if (is_string($filters)) {
+                $filters = json_decode($filters, true) ?? [];
+            }
+
             // Map table names to models and export classes
             $tableConfig = [
                 'users' => ['model' => User::class, 'export' => UserExport::class],
