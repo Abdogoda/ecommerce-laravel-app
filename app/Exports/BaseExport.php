@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 abstract class BaseExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
 {
     protected Collection $data;
+    protected bool $isDirectData = false;
 
     abstract public function getColumns(): array;
 
@@ -25,11 +26,25 @@ abstract class BaseExport implements FromCollection, WithHeadings, WithStyles, S
     public function setData(Collection $data): self
     {
         $this->data = $data;
+        $this->isDirectData = false;
+        return $this;
+    }
+
+    public function setDirectData(Collection $data): self
+    {
+        $this->data = $data;
+        $this->isDirectData = true;
         return $this;
     }
 
     public function collection()
     {
+        if ($this->isDirectData) {
+            // Data is already formatted from frontend, return as-is
+            return $this->data;
+        }
+
+        // Format data from database records
         return $this->data->map(function ($record) {
             return $this->formatRow($record);
         });

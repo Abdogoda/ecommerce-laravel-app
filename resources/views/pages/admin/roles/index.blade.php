@@ -80,16 +80,7 @@
                     System Roles
                 </h2>
                 <div class="flex gap-3">
-                    <a href="{{ route('admin.roles.exportFiltered') }}"
-                        class="btn-info px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
-                        title="Export currently displayed data">
-                        <i class="fas fa-download mr-2"></i>Export Displayed
-                    </a>
-                    <a href="{{ route('admin.roles.exportAll') }}"
-                        class="btn-success px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
-                        title="Export entire table">
-                        <i class="fas fa-file-excel mr-2"></i>Export All
-                    </a>
+                    <x-export-button :table="'roles'" />
                 </div>
             </div>
         </div>

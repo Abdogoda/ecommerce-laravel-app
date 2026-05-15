@@ -7,11 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Activities\ClearActivityRequest;
 use App\Http\Requests\PasswordRequiredRequest;
 use App\Models\User;
-use App\Exports\ActivityExport;
-use App\Services\ExportService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
@@ -78,32 +75,5 @@ class ActivityController extends Controller
         activity()->causedBy(auth()->user())->event('ActivitiesCleared')->log("Cleared {$deletedCount} activities with filters - User ID: ". ($clearActivityRequest->input('user_id') ?? 'None') .", From: ". ($clearActivityRequest->input('from_date') ?? 'Any') .", To: ". ($clearActivityRequest->input('to_date') ?? 'Any'));
 
         return redirect()->route('admin.activities.index')->with('success', "{$deletedCount} activity logs were deleted successfully.");
-    }
-
-    public function exportFiltered(Request $request)
-    {
-        $query = Activity::with(['causer', 'subject'])->latest();
-
-        if ($search = $request->input('search')) {
-            $query->where('description', 'like', "%{$search}%");
-        }
-
-        if ($causerId = $request->input('user_id')) {
-            $query->where('causer_type', User::class)->where('causer_id', $causerId);
-        }
-
-        if ($from = $request->input('from')) {
-            $query->whereDate('created_at', '>=', $from);
-        }
-        if ($to = $request->input('to')) {
-            $query->whereDate('created_at', '<=', $to);
-        }
-
-        return ExportService::exportFiltered($query, ActivityExport::class);
-    }
-
-    public function exportAll()
-    {
-        return ExportService::exportAll(Activity::class, ActivityExport::class);
     }
 }

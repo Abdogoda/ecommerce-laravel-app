@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ExportController;
 
 Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefix('admin')->name('admin.')->group(function(){
     Route::get('/', DashboardController::class)->name('dashboard');
@@ -20,6 +21,12 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
     Route::view('profile', 'pages.admin.profile')->name('profile');
     
     Route::get('search', SearchController::class)->name('search')->middleware('throttle:60,1');
+    
+    // Global Export Routes
+    Route::controller(ExportController::class)->prefix('export')->name('export.')->group(function () {
+        Route::post('/filtered', 'exportFiltered')->name('filtered');
+        Route::post('/all', 'exportAll')->name('all');
+    });
 
     // User management routes
     Route::controller(UserController::class)->middleware(['can:'.PermissionEnum::VIEW_USERS->value])->prefix('users')->name('users.')->group(function () {
@@ -30,8 +37,6 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::put('/{user}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_USERS->value]);
         Route::put('/{user}/roles', 'assignRole')->name('assignRole')->middleware(['can:'.PermissionEnum::ASSIGN_ROLES->value]);
         Route::delete('/{user}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_USERS->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Role management routes
@@ -41,16 +46,12 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::put('/{role}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::put('/{role}/permissions', 'updatePermissions')->name('updatePermissions')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::delete('/{role}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ROLES->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Activity log route
     Route::controller(ActivityController::class)->middleware(['can:'.PermissionEnum::VIEW_ACTIVITIES->value])->prefix('activities')->name('activities.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'clear')->name('clear')->middleware(['can:'.PermissionEnum::CLEAR_ACTIVITIES->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Category Routes
@@ -60,8 +61,6 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::post('/', 'store')->name('store')->middleware(['can:'.PermissionEnum::CREATE_CATEGORIES->value]);
         Route::put('/{category}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_CATEGORIES->value]);
         Route::delete('/{category}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_CATEGORIES->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Product Routes
@@ -77,8 +76,6 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::get('/{product}/edit', 'edit')->name('edit')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::put('/{product}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_PRODUCTS->value]);
         Route::delete('/{product}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_PRODUCTS->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Settings Routes
@@ -97,8 +94,6 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::delete('/{notification}', 'destroy')->name('destroy');
         Route::post('/mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
         Route::post('/delete-multiple', 'deleteMultiple')->name('deleteMultiple');
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Message Routes
@@ -117,7 +112,5 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::get('/{order}', 'show')->name('show');
         Route::put('/{order}/status', 'updateStatus')->name('updateStatus')->middleware(['can:'.PermissionEnum::EDIT_ORDERS->value]);
         Route::delete('/{order}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ORDERS->value]);
-        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
-        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 });

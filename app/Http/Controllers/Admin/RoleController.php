@@ -8,8 +8,6 @@ use App\Http\Requests\Admin\Roles\UpdateRolePermissionsRequest;
 use App\Http\Requests\Admin\Roles\UpdateRoleRequest;
 use App\Http\Requests\PasswordRequiredRequest;
 use App\Models\User;
-use App\Exports\RoleExport;
-use App\Services\ExportService;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -52,14 +50,4 @@ class RoleController extends Controller
         return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
     }
 
-    public function exportFiltered()
-    {
-        $query = Role::with(['permissions', 'users']);
-        return ExportService::exportFiltered($query, RoleExport::class);
-    }
-
-    public function exportAll()
-    {
-        return ExportService::exportAll(Role::class, RoleExport::class);
-    }
 }

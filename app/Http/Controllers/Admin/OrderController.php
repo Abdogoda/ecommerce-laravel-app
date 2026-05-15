@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Exports\OrderExport;
-use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Settings\NotificationSettings;
@@ -145,14 +143,4 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully.');
     }
 
-    public function exportFiltered()
-    {
-        $query = Order::with('user');
-        return ExportService::exportFiltered($query, OrderExport::class);
-    }
-
-    public function exportAll()
-    {
-        return ExportService::exportAll(Order::class, OrderExport::class);
-    }
 }

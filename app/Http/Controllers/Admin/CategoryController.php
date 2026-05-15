@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Http\Requests\Admin\Categories\StoreCategoryRequest;
 use App\Http\Requests\Admin\Categories\UpdateCategoryRequest;
-use App\Exports\CategoryExport;
-use App\Services\ExportService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -157,28 +155,4 @@ class CategoryController extends Controller
             ->with('success', 'Category deleted successfully!');
     }
 
-    public function exportFiltered(Request $request)
-    {
-        $query = Category::with('tags');
-
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
-        }
-
-        if ($status = $request->input('status')) {
-            if ($status === 'active') {
-                $query->where('is_active', true);
-            } elseif ($status === 'inactive') {
-                $query->where('is_active', false);
-            }
-        }
-
-        return ExportService::exportFiltered($query, CategoryExport::class);
-    }
-
-    public function exportAll()
-    {
-        return ExportService::exportAll(Category::class, CategoryExport::class);
-    }
 }
