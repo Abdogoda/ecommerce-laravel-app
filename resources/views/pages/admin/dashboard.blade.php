@@ -24,18 +24,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-400 text-sm font-medium">Total Orders</p>
-                    <p class="text-3xl font-bold text-white mt-2">0</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-400 text-sm font-medium">+12%</span>
-                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
-                    </div>
+                    <p class="text-3xl font-bold text-white mt-2">{{ $stats['orders'] }}</p>
                 </div>
                 <div class="bg-blue-500/20 p-3 rounded-xl">
                     <i class="fas fa-shopping-cart text-blue-400 text-xl"></i>
                 </div>
-            </div>
-            <div class="mt-4 bg-gray-700/30 rounded-full h-2">
-                <div class="progress-bar bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
             </div>
         </div>
 
@@ -44,18 +37,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-400 text-sm font-medium">Total Products</p>
-                    <p class="text-3xl font-bold text-white mt-2">0</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-400 text-sm font-medium">+8%</span>
-                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
-                    </div>
+                    <p class="text-3xl font-bold text-white mt-2">{{ $stats['products'] }}</p>
                 </div>
                 <div class="bg-emerald-500/20 p-3 rounded-xl">
                     <i class="fas fa-box text-emerald-400 text-xl"></i>
                 </div>
-            </div>
-            <div class="mt-4 bg-gray-700/30 rounded-full h-2">
-                <div class="progress-bar bg-emerald-500 h-2 rounded-full" style="width: 65%"></div>
             </div>
         </div>
 
@@ -64,18 +50,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-400 text-sm font-medium">Total Users</p>
-                    <p class="text-3xl font-bold text-white mt-2">0</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-400 text-sm font-medium">+23%</span>
-                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
-                    </div>
+                    <p class="text-3xl font-bold text-white mt-2">{{ $stats['users'] }}</p>
                 </div>
                 <div class="bg-purple-500/20 p-3 rounded-xl">
                     <i class="fas fa-users text-purple-400 text-xl"></i>
                 </div>
-            </div>
-            <div class="mt-4 bg-gray-700/30 rounded-full h-2">
-                <div class="progress-bar bg-purple-500 h-2 rounded-full" style="width: 85%"></div>
             </div>
         </div>
 
@@ -84,18 +63,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-400 text-sm font-medium">Total Revenue</p>
-                    <p class="text-3xl font-bold text-white mt-2">0</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-400 text-sm font-medium">+18%</span>
-                        <span class="text-gray-500 text-sm ml-2">vs last month</span>
-                    </div>
+                    <p class="text-3xl font-bold text-white mt-2">{{ $stats['revenue'] }}</p>
                 </div>
                 <div class="bg-amber-500/20 p-3 rounded-xl">
                     <i class="fas fa-dollar-sign text-amber-400 text-xl"></i>
                 </div>
-            </div>
-            <div class="mt-4 bg-gray-700/30 rounded-full h-2">
-                <div class="progress-bar bg-amber-500 h-2 rounded-full" style="width: 90%"></div>
             </div>
         </div>
     </div>
@@ -108,7 +80,7 @@
                 <h3 class="text-lg font-semibold text-white">Categories</h3>
                 <i class="fas fa-tags text-yellow-400"></i>
             </div>
-            <p class="text-2xl font-bold text-white">0</p>
+            <p class="text-2xl font-bold text-white">{{ $stats['categories'] }}</p>
             <p class="text-gray-400 text-sm mt-1">Active categories</p>
         </div>
 
@@ -118,8 +90,10 @@
                 <h3 class="text-lg font-semibold text-white">Verified Users</h3>
                 <i class="fas fa-user-check text-green-400"></i>
             </div>
-            <p class="text-2xl font-bold text-white">0</p>
-            <p class="text-gray-400 text-sm mt-1">91% verification rate</p>
+            <p class="text-2xl font-bold text-white">{{ $stats['verified_users'] }}</p>
+            <p class="text-gray-400 text-sm mt-1">
+                {{ $stats['verified_users'] > 0 ? number_format(($stats['verified_users'] / $stats['users']) * 100) : 0 }}%
+                verification rate</p>
         </div>
 
         <!-- Pending Messages -->
@@ -128,11 +102,12 @@
                 <h3 class="text-lg font-semibold text-white">Messages</h3>
                 <div class="relative">
                     <i class="fas fa-envelope text-cyan-400"></i>
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">0</span>
+                    <span
+                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{{ $stats['unread_messages'] }}</span>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-white">0</p>
-            <p class="text-gray-400 text-sm mt-1">3 unread messages</p>
+            <p class="text-2xl font-bold text-white">{{ $stats['messages'] }}</p>
+            <p class="text-gray-400 text-sm mt-1">{{ $stats['unread_messages'] }} unread messages</p>
         </div>
     </div>
 
