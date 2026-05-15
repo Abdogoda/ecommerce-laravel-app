@@ -150,9 +150,19 @@
                 <!-- Search Button -->
                 <div class="flex gap-3">
                     <button type="submit"
-                        class="btn-primary px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300">
+                        class="btn-gray px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300">
                         <i class="fas fa-search mr-2"></i>Search
                     </button>
+                    <a href="{{ route('admin.products.exportFiltered', request()->query()) }}"
+                        class="btn-info px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
+                        title="Export currently displayed data">
+                        <i class="fas fa-download mr-2"></i>Export Displayed
+                    </a>
+                    <a href="{{ route('admin.products.exportAll') }}"
+                        class="btn-success px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
+                        title="Export entire table">
+                        <i class="fas fa-file-excel mr-2"></i>Export All
+                    </a>
                 </div>
             </form>
         </div>

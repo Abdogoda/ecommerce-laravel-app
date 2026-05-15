@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\Users\CreateUserRequest;
 use App\Http\Requests\Admin\Users\UpdateUserRequest;
 use App\Http\Requests\PasswordRequiredRequest;
 use App\Models\User;
+use App\Exports\UserExport;
+use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -109,5 +111,36 @@ class UserController extends Controller
         activity()->causedBy(auth()->user())->performedOn($user)->event('RolesAssigned')->log('Roles assigned: '. implode(', ', $validated['roles']) ?? 'None');
         
         return redirect()->route('admin.users.index')->with('success', 'User roles updated successfully.');
+    }
+
+    public function exportFiltered(Request $request)
+    {
+        $query = User::with('roles');
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        if ($status = $request->input('status')) {
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($roleId = $request->input('role_id')) {
+            $query->whereHas('roles', function ($q) use ($roleId) {
+                $q->where('id', $roleId);
+            });
+        }
+
+        return ExportService::exportFiltered($query, UserExport::class);
+    }
+
+    public function exportAll()
+    {
+        return ExportService::exportAll(User::class, UserExport::class);
     }
 }

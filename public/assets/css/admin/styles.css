@@ -181,6 +181,16 @@ body.modal-open
   box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
 }
 
+.btn-info {
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
 /* Table row animations */
 .table-row {
   transition: all 0.3s ease;

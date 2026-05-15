@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Http\Requests\Admin\Products\StoreProductRequest;
 use App\Http\Requests\Admin\Products\UpdateProductRequest;
 use App\Models\Category;
+use App\Exports\ProductExport;
+use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\ImageRequest;
@@ -199,5 +201,47 @@ class ProductController extends Controller
         $media->delete();
         
         return redirect()->route('admin.products.show', $product)->with('success', 'Image deleted successfully.');
+    }
+
+    public function exportFiltered(Request $request)
+    {
+        $query = Product::with('category', 'tags');
+        $orderSettings = app(\App\Settings\OrderSettings::class);
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        if ($categoryId = $request->input('category_id')) {
+            $query->whereHas('category', function ($q) use ($categoryId) {
+                $q->where('id', $categoryId);
+            });
+        }
+
+        if ($minPrice = $request->input('min_price')) {
+            $query->where('price', '>=', $minPrice);
+        }
+
+        if ($maxPrice = $request->input('max_price')) {
+            $query->where('price', '<=', $maxPrice);
+        }
+
+        if ($status = $request->input('status')) {
+            if ($status === 'in_stock') {
+                $query->where('stock', '>', 0);
+            } elseif ($status === 'low_stock') {
+                $query->where('stock', '<=', $orderSettings->low_stock_threshold)->where('stock', '>', 0);
+            } elseif ($status === 'out_of_stock') {
+                $query->where('stock', 0);
+            }
+        }
+
+        return ExportService::exportFiltered($query, ProductExport::class);
+    }
+
+    public function exportAll()
+    {
+        return ExportService::exportAll(Product::class, ProductExport::class);
     }
 }
