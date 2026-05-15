@@ -65,6 +65,18 @@
         <div class="p-6 border-b border-white/10">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h2 class="text-xl font-bold text-white">All Notifications</h2>
+                <div class="flex gap-3">
+                    <a href="{{ route('admin.notifications.exportFiltered') }}"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-medium text-sm flex items-center transition-colors hover:shadow-xl"
+                        title="Export currently displayed data">
+                        <i class="fas fa-download mr-2"></i>Export Displayed
+                    </a>
+                    <a href="{{ route('admin.notifications.exportAll') }}"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium text-sm flex items-center transition-colors hover:shadow-xl"
+                        title="Export entire table">
+                        <i class="fas fa-file-excel mr-2"></i>Export All
+                    </a>
+                </div>
             </div>
         </div>
 

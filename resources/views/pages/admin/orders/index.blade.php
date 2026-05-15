@@ -86,7 +86,7 @@
                     All Orders
                 </h2>
                 <div class="flex items-center space-x-3">
-                    <form method="GET" class="flex items-center space-x-3">
+                    <form method="GET" class="flex items-center space-x-3 flex-wrap">
                         <select name="status" onchange="this.form.submit()"
                             class="glass bg-white/5 text-white border-0 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
                             <option value="">All Status</option>
@@ -99,6 +99,19 @@
                             <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled
                             </option>
                         </select>
+
+                        <!-- Export Buttons -->
+                        <a href="{{ route('admin.orders.exportFiltered', request()->query()) }}"
+                            class="btn-info px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
+                            title="Export currently displayed data">
+                            <i class="fas fa-download mr-2"></i>Export Displayed
+                        </a>
+                        <a href="{{ route('admin.orders.exportAll') }}"
+                            class="btn-success px-6 py-2 rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300"
+                            title="Export entire table">
+                            <i class="fas fa-file-excel mr-2"></i>Export All
+                        </a>
+                    </form>
                     </form>
                 </div>
             </div>

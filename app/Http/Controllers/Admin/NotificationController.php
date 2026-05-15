@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Exports\NotificationExport;
+use App\Services\ExportService;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
@@ -61,5 +63,16 @@ class NotificationController extends Controller
         $notification->delete();
         
         return back()->with('success', 'Notification deleted');
+    }
+
+    public function exportFiltered()
+    {
+        $query = DatabaseNotification::latest();
+        return ExportService::exportFiltered($query, NotificationExport::class);
+    }
+
+    public function exportAll()
+    {
+        return ExportService::exportAll(DatabaseNotification::class, NotificationExport::class);
     }
 }

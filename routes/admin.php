@@ -41,12 +41,16 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::put('/{role}', 'update')->name('update')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::put('/{role}/permissions', 'updatePermissions')->name('updatePermissions')->middleware(['can:'.PermissionEnum::EDIT_ROLES->value]);
         Route::delete('/{role}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ROLES->value]);
+        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
+        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Activity log route
     Route::controller(ActivityController::class)->middleware(['can:'.PermissionEnum::VIEW_ACTIVITIES->value])->prefix('activities')->name('activities.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'clear')->name('clear')->middleware(['can:'.PermissionEnum::CLEAR_ACTIVITIES->value]);
+        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
+        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Category Routes
@@ -93,6 +97,8 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::delete('/{notification}', 'destroy')->name('destroy');
         Route::post('/mark-all-as-read', 'markAllAsRead')->name('markAllAsRead');
         Route::post('/delete-multiple', 'deleteMultiple')->name('deleteMultiple');
+        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
+        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 
     // Message Routes
@@ -111,5 +117,7 @@ Route::middleware(['auth', 'can:'.PermissionEnum::VIEW_DASHBOARD->value])->prefi
         Route::get('/{order}', 'show')->name('show');
         Route::put('/{order}/status', 'updateStatus')->name('updateStatus')->middleware(['can:'.PermissionEnum::EDIT_ORDERS->value]);
         Route::delete('/{order}', 'destroy')->name('destroy')->middleware(['can:'.PermissionEnum::DELETE_ORDERS->value]);
+        Route::get('/export/filtered', 'exportFiltered')->name('exportFiltered');
+        Route::get('/export/all', 'exportAll')->name('exportAll');
     });
 });
