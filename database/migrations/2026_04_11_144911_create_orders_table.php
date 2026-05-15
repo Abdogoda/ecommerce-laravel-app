@@ -34,6 +34,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->timestamp('shipped_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
         });
     }

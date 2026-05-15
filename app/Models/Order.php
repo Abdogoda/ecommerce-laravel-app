@@ -15,7 +15,7 @@ use Spatie\Activitylog\Support\LogOptions;
     'subtotal', 'tax', 'shipping_cost', 'total', 
     'first_name', 'last_name', 'email', 'phone', 
     'street_address', 'city', 'state', 'country', 'zip_code', 
-    'notes', 'shipped_at'
+    'notes', 'shipped_at', 'delivered_at'
 ])]
 class Order extends Model
 {
@@ -30,6 +30,7 @@ class Order extends Model
             'shipping_cost' => 'decimal:2',
             'total' => 'decimal:2',
             'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
         ];
     }
 

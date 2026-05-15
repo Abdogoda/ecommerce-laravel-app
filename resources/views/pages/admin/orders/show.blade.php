@@ -270,7 +270,7 @@
 
                 <!-- Status Timeline -->
                 <div class="space-y-6">
-                    @forelse($order->statuses()->orderBy('created_at', 'desc')->get() as $index => $status)
+                    @forelse($order->statuses()->latest('id')->get() as $index => $status)
                         @php
                             $isLatest = $index === 0;
                             $statusClasses = match ($status->name) {
