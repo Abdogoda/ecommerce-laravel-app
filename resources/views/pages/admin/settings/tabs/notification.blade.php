@@ -95,14 +95,14 @@
                 <h4 class="text-lg font-semibold text-white">Customer Notifications</h4>
             </div>
 
-            <!-- Order Confirmed Notification -->
+            <!-- Order Status Changed Notification -->
             <div class="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg mb-4">
                 <div>
                     <h5 class="text-white font-medium mb-1">
                         <i class="fas fa-check-circle text-green-400 mr-2"></i>
-                        Order Confirmed
+                        Order Status Changed
                     </h5>
-                    <p class="text-gray-400 text-sm">Send confirmation email when order status changes</p>
+                    <p class="text-gray-400 text-sm">Send notification when order status changes</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" name="notify_customer_order_status_changed"
