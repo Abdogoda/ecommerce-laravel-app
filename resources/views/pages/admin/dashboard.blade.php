@@ -193,69 +193,27 @@
         Chart.defaults.borderColor = "rgba(255, 255, 255, 0.1)";
         Chart.defaults.backgroundColor = "rgba(255, 255, 255, 0.05)";
 
-        // Sample data
+        // Real data from controller
         const monthlyData = {
-            labels: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
-            orders: [45, 52, 38, 65, 59, 78, 85, 72, 91, 88, 94, 105],
-            revenue: [
-                4500, 5200, 3800, 6500, 5900, 7800, 8500, 7200, 9100, 8800, 9400,
-                10500,
-            ],
+            labels: @json($monthlyData['labels']),
+            orders: @json($monthlyData['orders']),
+            revenue: @json($monthlyData['revenue']),
         };
 
         const categoryData = {
-            labels: [
-                "Electronics",
-                "Clothing",
-                "Books",
-                "Home & Garden",
-                "Sports",
-                "Beauty",
-            ],
-            data: [25, 18, 12, 20, 15, 10],
-            colors: [
-                "#3B82F6",
-                "#10B981",
-                "#F59E0B",
-                "#EF4444",
-                "#8B5CF6",
-                "#EC4899",
-            ],
+            labels: @json($categoryData['labels']),
+            data: @json($categoryData['data']),
+            colors: @json($categoryData['colors']),
         };
 
         const topProducts = {
-            labels: [
-                "iPhone 13",
-                "Samsung TV",
-                "MacBook Pro",
-                "Nike Shoes",
-                "Canon Camera",
-            ],
-            data: [45, 38, 32, 28, 25],
+            labels: @json($topProducts['labels']),
+            data: @json($topProducts['data']),
         };
 
         const topUsers = {
-            labels: [
-                "John Doe",
-                "Jane Smith",
-                "Mike Wilson",
-                "Sarah Johnson",
-                "Tom Brown",
-            ],
-            data: [15, 12, 10, 8, 7],
+            labels: @json($topCustomers['labels']),
+            data: @json($topCustomers['data']),
         };
 
         // Orders Chart
