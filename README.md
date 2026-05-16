@@ -83,6 +83,8 @@ Every feature is intentionally designed. Every package is strategically integrat
 | **Code Quality**      | Laravel Pint (PHP linting)        |
 | **Package Manager**   | Composer 2.0+                     |
 | **Node Tooling**      | npm with Vite                     |
+| **Data Export**       | Maatwebsite Excel 3.1             |
+| **Log Viewer**        | Opcodesio Log Viewer 3.24         |
 
 ---
 
@@ -420,6 +422,15 @@ ecommerce-spatie-app/
 │   ├── Casts/                          # Custom attribute casting
 │   ├── Enums/
 │   │   └── PermissionEnum.php          # Permission definitions
+│   ├── Exports/                        # Excel/CSV exporters
+│   │   ├── BaseExport.php              # Base export class
+│   │   ├── ActivityExport.php          # Activity log exports
+│   │   ├── CategoryExport.php          # Category exports
+│   │   ├── NotificationExport.php      # Notification exports
+│   │   ├── OrderExport.php             # Order exports
+│   │   ├── ProductExport.php           # Product exports
+│   │   ├── RoleExport.php              # Role exports
+│   │   └── UserExport.php              # User exports
 │   ├── Helpers/
 │   │   └── CurrencyHelper.php          # Currency formatting utilities
 │   ├── Http/
@@ -438,9 +449,19 @@ ecommerce-spatie-app/
 │   │   ├── OrderItem.php               # Order line items
 │   │   ├── OrderStatus.php             # Order status tracking
 │   │   └── Message.php                 # Customer messages
+│   ├── Notifications/                  # Notification classes
+│   │   ├── LowStockNotification.php    # Low stock alerts
+│   │   ├── NewMessageNotification.php  # New message alerts
+│   │   ├── NewOrderNotification.php    # New order alerts
+│   │   └── OrderStatusChangedNotification.php # Order status updates
+│   ├── Observers/                      # Model event observers
+│   │   └── ProductObserver.php         # Product event handling
 │   ├── Policies/                       # Authorization policies
 │   ├── Providers/
 │   │   └── AppServiceProvider.php      # Service registration
+│   ├── Services/                       # Application services
+│   │   ├── ExportService.php           # Export operations
+│   │   └── MediaLibrary/               # Media processing services
 │   └── Settings/                       # Application settings classes
 │       ├── GeneralSettings.php
 │       ├── NotificationSettings.php
@@ -698,6 +719,55 @@ echo $product->name; // Uses current app locale
 @foreach(config('app.supported_locales') as $locale)
     {{ $product->getTranslation('name', $locale) }}
 @endforeach
+```
+
+### Messaging System
+
+```php
+use App\Models\Message;
+
+// Send a message from customer
+$message = Message::create([
+    'user_id' => auth()->id(),
+    'subject' => 'Question about order',
+    'body' => 'When will my order ship?',
+]);
+
+// Retrieve messages for a user
+$inbox = Message::where('user_id', auth()->id())
+    ->latest()
+    ->paginate(15);
+
+// Send notification on new message
+$user->notify(new NewMessageNotification($message));
+
+// Mark as read
+$message->update(['read_at' => now()]);
+```
+
+### Notifications
+
+```php
+use App\Notifications\NewOrderNotification;
+use App\Notifications\OrderStatusChangedNotification;
+use App\Notifications\LowStockNotification;
+
+// Notify admin of new order
+$admin->notify(new NewOrderNotification($order));
+
+// Notify customer of status change
+$customer->notify(new OrderStatusChangedNotification($order));
+
+// Alert on low stock
+if ($product->stock < 10) {
+    admin()->notify(new LowStockNotification($product));
+}
+
+// Check notification settings
+$settings = app(NotificationSettings::class);
+if ($settings->enable_email_notifications) {
+    $user->notifyNow(new NewOrderNotification($order));
+}
 ```
 
 ---
