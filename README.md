@@ -1,5 +1,7 @@
 # 🛍️ E-Commerce Platform
 
+![App Screenshot — Dashboard](Screenshots/Screenshot%20(9).png)
+
 An enterprise-grade e-commerce application that demonstrates the power and versatility of Spatie's ecosystem. This project is a testament to building scalable, maintainable, and feature-complete Laravel applications using battle-tested packages from the industry's most trusted maintainer.
 
 ---
