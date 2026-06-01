@@ -1,4 +1,4 @@
-# 🛍️ Spatie E-Commerce Platform
+# 🛍️ E-Commerce Platform
 
 An enterprise-grade e-commerce application that demonstrates the power and versatility of Spatie's ecosystem. This project is a testament to building scalable, maintainable, and feature-complete Laravel applications using battle-tested packages from the industry's most trusted maintainer.
 
@@ -16,8 +16,7 @@ An enterprise-grade e-commerce application that demonstrates the power and versa
 - [Architecture Highlights](#architecture-highlights)
 - [Testing](#testing)
 - [Performance](#performance)
-- [Contributing](#contributing)
-- [License](#license)
+- [Screenshots](#screenshots)
 
 ---
 
@@ -895,3 +894,26 @@ tests/
 - Tailwind CSS with JIT compilation
 - Responsive image serving via Media Library
 - Asset versioning for cache busting
+
+---
+
+## Screenshots
+
+Screenshots of the application are included in the repository's `Screenshots` directory. See the [screenshots table](#screenshots-table) below for direct links to each image.
+
+### Screenshots Table
+
+| Filename            | Link                                                                   |
+| ------------------- | ---------------------------------------------------------------------- |
+| Screenshot (1).png  | [Screenshots/Screenshot (1).png](<Screenshots/Screenshot%20(1).png>)   |
+| Screenshot (2).png  | [Screenshots/Screenshot (2).png](<Screenshots/Screenshot%20(2).png>)   |
+| Screenshot (3).png  | [Screenshots/Screenshot (3).png](<Screenshots/Screenshot%20(3).png>)   |
+| Screenshot (4).png  | [Screenshots/Screenshot (4).png](<Screenshots/Screenshot%20(4).png>)   |
+| Screenshot (5).png  | [Screenshots/Screenshot%20(5).png](<Screenshots/Screenshot%20(5).png>) |
+| Screenshot (6).png  | [Screenshots/Screenshot%20(6).png](<Screenshots/Screenshot%20(6).png>) |
+| Screenshot (7).png  | [Screenshots/Screenshot%20(7).png](<Screenshots/Screenshot%20(7).png>) |
+| Screenshot (8).png  | [Screenshots/Screenshot%20(8).png](<Screenshots/Screenshot%20(8).png>) |
+| Screenshot (9).png  | [Screenshots/Screenshot (9).png](<Screenshots/Screenshot%20(9).png>)   |
+| Screenshot (10).png | [Screenshots/Screenshot (10).png](<Screenshots/Screenshot%20(10).png>) |
+| Screenshot (11).png | [Screenshots/Screenshot (11).png](<Screenshots/Screenshot%20(11).png>) |
+| Screenshot (12).png | [Screenshots/Screenshot (12).png](<Screenshots/Screenshot%20(12).png>) |
